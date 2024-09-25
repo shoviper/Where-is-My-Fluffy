@@ -22,10 +22,11 @@ public class SecurityConfig {
                 .cors(withDefaults()) // Enable CORS
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions().disable())
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/", "/h2-console/**").permitAll();
-                    auth.anyRequest().authenticated();
-                })
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                // .authorizeHttpRequests(auth -> {
+                //     auth.requestMatchers("/", "/h2-console/**").permitAll();
+                //     auth.anyRequest().authenticated();
+                // })
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(new CustomAuthenticationSuccessHandler())
                         .authorizationEndpoint(authorization -> authorization

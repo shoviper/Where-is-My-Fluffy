@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     `name` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) NOT NULL UNIQUE,
     `phone` VARCHAR(20),
-    `location_id` INT
+    `location_id` VARCHAR(100)
 );
 
 -- Create Pets Table
@@ -35,3 +35,7 @@ CREATE TABLE IF NOT EXISTS `post` (
     FOREIGN KEY (`pet_id`) REFERENCES `pet`(id) ON DELETE CASCADE,
     FOREIGN KEY (`owner_id`) REFERENCES `user`(id) ON DELETE CASCADE
 );
+
+
+-- -- Insert a user into the user table
+-- INSERT INTO `user` (id, name, email, phone, location_id) VALUES (1, 'John Doe', 'john@example.com', '0123456789', 'bangkok');

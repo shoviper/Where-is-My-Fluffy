@@ -12,6 +12,14 @@ public class PetService {
     @Autowired
     private PetRepository petRepository;
 
+    public Pet getPet(int petId) {
+        return petRepository.findById(petId).orElseThrow();
+    }
+
+    public Iterable<Pet> getPets() {
+        return petRepository.findAll();
+    }
+
     public Pet savePet(Pet pet) {
         return petRepository.save(pet);
     }
