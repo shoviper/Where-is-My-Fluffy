@@ -27,7 +27,7 @@ export default {
 		async fetchUserProfile() {
 			try {
 				const response = await axios.get(
-					'http://localhost:8080/profile',
+					'http://localhost:8080/api/v1/profile',
 					{
 						withCredentials: true, // Add this line to include credentials
 					}

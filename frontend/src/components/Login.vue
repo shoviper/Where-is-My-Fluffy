@@ -18,29 +18,46 @@ export default {
 	setup() {
 		const user = ref(null);
 
-		const loginWithGoogle = () => {
-			window.location.href =
-				'http://localhost:8080/oauth2/authorization/google';
-		};
-
-		const loginWithGithub = () => {
-			window.location.href =
-				'http://localhost:8080/oauth2/authorization/github';
-		};
-
-		// Function to retrieve user data from URL query params
-		const getUserDataFromUrl = () => {
-			const params = new URLSearchParams(window.location.search);
-			const name = params.get('name');
-			const email = params.get('email');
-
-			if (name && email) {
-				user.value = { name, email };
+		const loginWithGoogle = async () => {
+			try {
+				const response = await axios.get(
+					'http://localhost:8080/login/oauth2/code/google',
+					{ withCredentials: true }
+				);
+				console.log('Login request sent, awaiting backend OAuth flow');
+			} catch (error) {
+				console.error('Error during Google login:', error);
 			}
 		};
 
-		// Call the function on component mount
-		onMounted(getUserDataFromUrl);
+		const loginWithGithub = async () => {
+			try {
+				const response = await axios.get(
+					'http://localhost:8080/login/oauth2/code/github',
+					{ withCredentials: true }
+				);
+				console.log('Login request sent, awaiting backend OAuth flow');
+			} catch (error) {
+				console.error('Error during GitHub login:', error);
+			}
+		};
+
+		const fetchUser = async () => {
+			try {
+				const response = await axios.get('http://localhost:8080/user', {
+					withCredentials: true,
+				});
+				if (response.data) {
+					user.value = response.data;
+				}
+			} catch (error) {
+				console.error('Error fetching user data:', error);
+			}
+		};
+
+		onMounted(() => {
+			fetchUser(); // Check if user is already logged in
+		});
 
 		return { loginWithGoogle, loginWithGithub, user };
 	},
@@ -48,7 +65,6 @@ export default {
 </script>
 
 <style>
-/* Add your styles here */
 button {
 	margin: 10px;
 	padding: 10px 20px;
