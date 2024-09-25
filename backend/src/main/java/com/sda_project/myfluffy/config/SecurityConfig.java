@@ -19,26 +19,49 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .cors(withDefaults())  // Enable CORS
+                .cors(withDefaults()) // Enable CORS
                 .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions().disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/").permitAll();
+                    auth.requestMatchers("/", "/h2-console/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(new CustomAuthenticationSuccessHandler())
                         .authorizationEndpoint(authorization -> authorization
-                                .baseUri("/oauth2/authorize"))
-                )
+                                .baseUri("/oauth2/authorize")))
                 .formLogin(withDefaults())
                 .logout(logout -> logout
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/")
-                    .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID")
-                )
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID"))
                 .build();
     }
+
+    // @Bean
+    // SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    //     return http
+    //             .cors(withDefaults())  // Enable CORS
+    //             .csrf(csrf -> csrf.disable())
+    //             .authorizeHttpRequests(auth -> {
+    //                 auth.requestMatchers("/","/h2-console").permitAll();
+    //                 auth.anyRequest().authenticated();
+    //             })
+    //             .oauth2Login(oauth2 -> oauth2
+    //                     .successHandler(new CustomAuthenticationSuccessHandler())
+    //                     .authorizationEndpoint(authorization -> authorization
+    //                             .baseUri("/oauth2/authorize"))
+    //             )
+    //             .formLogin(withDefaults())
+    //             .logout(logout -> logout
+    //                 .logoutUrl("/logout")
+    //                 .logoutSuccessUrl("/")
+    //                 .invalidateHttpSession(true)
+    //                 .deleteCookies("JSESSIONID")
+    //             )
+    //             .build();
+    // }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
