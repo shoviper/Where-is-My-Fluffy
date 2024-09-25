@@ -1,4 +1,4 @@
-package com.sda_project.myfluffy.model;
+package com.sda_project.myfluffy.utils;
 
 // Observable Interface
 public interface Observable {

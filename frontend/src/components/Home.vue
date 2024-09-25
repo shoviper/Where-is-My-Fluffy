@@ -2,40 +2,50 @@
 	<div>
 		<h1>Home</h1>
 		<div v-if="user">
+			<img :src="user.picture" alt="User Picture" />
 			<h2>Welcome, {{ user.name }}!</h2>
 			<p>Email: {{ user.email }}</p>
+			<p>All data: {{ user }}</p>
+			<button @click="logout">Logout</button>
 		</div>
 		<div v-else>
 			<p>Loading user profile...</p>
 		</div>
+		<button @click="goToLogin">Login</button>
 	</div>
 </template>
 
 <script>
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 
 export default {
 	data() {
 		return {
-			user: null, // Initialize user data
+			user: null,
 		};
 	},
 	mounted() {
-		this.fetchUserProfile(); // Call the method to fetch user profile when the component mounts
+		this.fetchUserProfile();
 	},
 	methods: {
 		async fetchUserProfile() {
 			try {
 				const response = await axios.get(
-					'http://localhost:8080/api/v1/profile',
+					'http://localhost:8080/profile',
 					{
-						withCredentials: true, // Add this line to include credentials
+						withCredentials: true,
 					}
 				);
-				this.user = response.data; // Assign the response data to the user property
+				this.user = response.data;
 			} catch (error) {
-				console.error('Error fetching user profile:', error); // Handle errors
+				console.error('Error fetching user profile:', error);
 			}
+		},
+		goToLogin() {
+			this.$router.push('/login');
+		},
+		logout() {
+			window.location.href = 'http://localhost:8080/logout';
 		},
 	},
 };

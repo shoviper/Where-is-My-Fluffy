@@ -1,9 +1,11 @@
 // model/Post.java
-package com.sda_project.myfluffy.model;
+package com.sda_project.myfluffy.post;
 
 // import javax.persistence.*;
 
+import com.sda_project.myfluffy.pet.Pet;
 import jakarta.persistence.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 @Entity
 @Table(name = "posts")
@@ -21,6 +23,9 @@ public abstract class Post {
     // Abstract methods and constructors go here...
 
     // Getter and Setter methods
+
+    public static interface PostRepository extends JpaRepository<Post, Integer> {
+    }
 }
 
 // Define subclasses for MissingPetPost, FoundPetPost, and AlertPost similarly

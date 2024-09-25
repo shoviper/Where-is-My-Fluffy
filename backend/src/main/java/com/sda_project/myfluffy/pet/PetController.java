@@ -1,11 +1,9 @@
 // controller/PetController.java
-package com.sda_project.myfluffy.controller;
+package com.sda_project.myfluffy.pet;
 
-import com.sda_project.myfluffy.model.Pet;
-import com.sda_project.myfluffy.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.sda_project.myfluffy.model.Status;
+import com.sda_project.myfluffy.enums.Status;
 
 @RestController
 @RequestMapping("/pets")

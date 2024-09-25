@@ -1,9 +1,11 @@
 // model/User.java
-package com.sda_project.myfluffy.model;
+package com.sda_project.myfluffy.user;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sda_project.myfluffy.utils.Observer;
+import com.sda_project.myfluffy.pet.Pet;
 import jakarta.persistence.*;
 
 // import java.util.Observable;

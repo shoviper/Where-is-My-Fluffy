@@ -1,7 +1,6 @@
 // repository/UserRepository.java
-package com.sda_project.myfluffy.repository;
+package com.sda_project.myfluffy.user;
 
-import com.sda_project.myfluffy.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Integer> {

@@ -1,9 +1,14 @@
 // model/Pet.java
-package com.sda_project.myfluffy.model;
+package com.sda_project.myfluffy.pet;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sda_project.myfluffy.enums.Status;
+import com.sda_project.myfluffy.utils.Observable;
+import com.sda_project.myfluffy.utils.Observer;
+import com.sda_project.myfluffy.post.Post;
+import com.sda_project.myfluffy.user.User;
 import jakarta.persistence.*;
 // import java.util.Observable;
 // import java.util.Observer;
