@@ -41,9 +41,11 @@ export default {
 				console.error('Error fetching user profile:', error);
 			}
 		},
+
 		goToLogin() {
 			this.$router.push('/login');
 		},
+
 		logout() {
 			window.location.href = 'http://localhost:8080/logout';
 		},
