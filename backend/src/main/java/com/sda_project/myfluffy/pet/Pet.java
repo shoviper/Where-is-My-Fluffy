@@ -19,9 +19,13 @@ public class Pet implements Observable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
+
     private float age;
+
     private String description;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 

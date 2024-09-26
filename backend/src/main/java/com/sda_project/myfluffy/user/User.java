@@ -30,8 +30,6 @@ public class User implements Observer {
 
     // Getter and Setter methods
 
-    // Getter and Setter methods
-
     public int getId() {
         return id;
     }
