@@ -10,7 +10,7 @@ import java.io.IOException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
+public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Value("${frontend.url}")
     private String frontendUrl;
