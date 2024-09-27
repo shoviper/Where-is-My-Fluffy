@@ -1,8 +1,6 @@
 // service/PetService.java
-package com.sda_project.myfluffy.service;
+package com.sda_project.myfluffy.pet;
 
-import com.sda_project.myfluffy.model.Pet;
-import com.sda_project.myfluffy.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.sda_project.myfluffy.model.Status;
