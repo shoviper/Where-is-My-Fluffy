@@ -1,4 +1,4 @@
-package com.sda_project.myfluffy.controller;
+package com.sda_project.myfluffy.pet;
 
 import com.sda_project.myfluffy.user.User;
 
@@ -45,4 +45,3 @@ class CreatePetRequest {
         this.owner = owner;
     }
 }
-

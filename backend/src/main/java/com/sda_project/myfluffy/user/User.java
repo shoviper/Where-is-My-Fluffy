@@ -1,9 +1,6 @@
 // model/User.java
 package com.sda_project.myfluffy.user;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.sda_project.myfluffy.utils.Observer;
 import com.sda_project.myfluffy.pet.Pet;
 import jakarta.persistence.*;
@@ -14,19 +11,19 @@ public class User implements Observer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name="phone", length=20)
+    @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name="location", length=100)
+    @Column(name = "location", length = 100)
     private String location;
 
     // Observer Method
