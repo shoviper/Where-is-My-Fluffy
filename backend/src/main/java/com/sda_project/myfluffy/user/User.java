@@ -8,19 +8,26 @@ import com.sda_project.myfluffy.utils.Observer;
 import com.sda_project.myfluffy.pet.Pet;
 import jakarta.persistence.*;
 
-// import java.util.Observable;
-// import java.util.Observer;
-
 @Entity
 @Table(name = "users")
 public class User implements Observer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private int id;
 
+    @Column(name="name")
     private String name;
+
+    @Column(name="email")
     private String email;
+
+    @Column(name="phone", length=20)
     private String phone;
+
+    @Column(name="location", length=100)
+    private String location;
 
     // Observer Method
     @Override
@@ -29,8 +36,6 @@ public class User implements Observer {
     }
 
     // Observer Methods and constructors go here...
-
-    // Getter and Setter methods
 
     // Getter and Setter methods
 
@@ -50,6 +55,28 @@ public class User implements Observer {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "owner")
-    private List<Pet> pets = new ArrayList<>();
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getLocationId() {
+        return location;
+    }
+
+    public void setLocationId(String location) {
+        this.location = location;
+    }
+
 }

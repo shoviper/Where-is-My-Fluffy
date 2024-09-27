@@ -1,12 +1,15 @@
 package com.sda_project.myfluffy.controller;
 
-import com.sda_project.myfluffy.model.User;
+import com.sda_project.myfluffy.user.User;
 
 // DTO to capture only the required fields for pet creation
 class CreatePetRequest {
     private String name;
+
     private float age;
+
     private String description;
+
     private User owner;
 
     // Getters and setters
