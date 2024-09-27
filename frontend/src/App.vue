@@ -22,4 +22,5 @@ export default {
 button {
 	cursor: pointer;
 }
+
 </style>
