@@ -10,25 +10,33 @@ import com.sda_project.myfluffy.enums.Status;
 @RestController
 @RequestMapping("/pets")
 public class PetController {
+
     @Autowired
     private PetService petService;
 
     @GetMapping("/all")
     public Iterable<Pet> getPets() {
-        return petService.getPets();
+        Iterable<Pet> pets = petService.getPets();
+
+        // Print each petId
+        for (Pet pet : pets) {
+            System.out.println("Pet ID: " + pet.getId());
+        }
+
+        return pets;
     }
 
     @GetMapping("/{id}")
     public Pet getPet(@PathVariable int id) {
         return petService.getPet(id);
     }
+
     // POST route to add a new Pet
     @PostMapping
     public ResponseEntity<Pet> addPet(@RequestBody Pet pet) {
         Pet savedPet = petService.savePet(pet);
         return new ResponseEntity<>(savedPet, HttpStatus.CREATED);
     }
-
 
     @PutMapping("/{id}/status")
     public Pet updatePetStatus(@PathVariable int id, @RequestParam String status) {

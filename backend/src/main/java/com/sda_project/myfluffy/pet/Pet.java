@@ -10,26 +10,31 @@ import com.sda_project.myfluffy.utils.Observer;
 import com.sda_project.myfluffy.post.Post;
 import com.sda_project.myfluffy.user.User;
 import jakarta.persistence.*;
-// import java.util.Observable;
-// import java.util.Observer;
 
 @Entity
 @Table(name = "pets")
 public class Pet implements Observable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private int id;
 
+    @Column(name="name")
     private String name;
 
+    @Column(name="age")
     private float age;
 
+    @Column(name="description")
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @Column(name="status")
     private Status status;
 
     @ManyToOne
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
@@ -55,28 +60,20 @@ public class Pet implements Observable {
 
     // Getter and Setter methods
 
-    public int getId() {
-        return id;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
-    public String getName() {
-        return name;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public float getAge() {
-        return age;
-    }
-
-    public void setAge(float age) {
-        this.age = age;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getDescription() {
@@ -87,7 +84,27 @@ public class Pet implements Observable {
         this.description = description;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public float getAge() {
+        return age;
+    }
+
+    public void setAge(float age) {
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
