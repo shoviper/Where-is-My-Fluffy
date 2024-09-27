@@ -18,7 +18,7 @@ public class Pet implements Observable {
     private float age;
     private String description;
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.MISSING; 
 
     @ManyToOne
     private User owner;
@@ -62,6 +62,14 @@ public class Pet implements Observable {
         this.name = name;
     }
 
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     public float getAge() {
         return age;
     }
@@ -80,5 +88,23 @@ public class Pet implements Observable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    // to String method
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "  id:" + id +
+                ", name:'" + name + '\'' +
+                ", age:" + age +
+                ", description:'" + description + '\'' +
+                ", status:" + status +
+                // ", owner:" + owner +
+                // ", posts:" + posts +
+                '}';
     }
 }

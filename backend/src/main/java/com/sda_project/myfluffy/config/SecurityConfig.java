@@ -23,9 +23,10 @@ public class SecurityConfig {
                 .cors(withDefaults()) // Enable CORS
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions().disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/login", "/api/v1/oauth2/token").permitAll()
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                // .authorizeHttpRequests(auth -> auth
+                //         .requestMatchers("/api/v1/login", "/api/v1/oauth2/token").permitAll()
+                //         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(new CustomAuthenticationSuccessHandler())
                         .authorizationEndpoint(authorization -> authorization

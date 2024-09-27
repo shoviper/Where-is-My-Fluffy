@@ -1,8 +1,7 @@
--- Drop tables if they exist
--- DROP TABLE IF EXISTS users;
--- DROP TABLE IF EXISTS post;
--- DROP TABLE IF EXISTS pet;
--- DROP TABLE IF EXISTS user;
+-- -- Drop tables if they exist
+-- DROP TABLE IF EXISTS `posts`;
+-- DROP TABLE IF EXISTS `pets`;
+-- DROP TABLE IF EXISTS `users`;
 
 -- Create Users Table
 CREATE TABLE IF NOT EXISTS `users` (
@@ -36,6 +35,14 @@ CREATE TABLE IF NOT EXISTS `posts` (
     FOREIGN KEY (`owner_id`) REFERENCES `users`(id) ON DELETE CASCADE
 );
 
+-- Insert users into the user table (without specifying the id, let AUTO_INCREMENT handle it)
+INSERT INTO users (name, email, phone, location_id) VALUES ('John Doe', 'john@example.com', '0123456789', 'bangkok');
+INSERT INTO users (name, email, phone, location_id) VALUES ('Jane Mary', 'jane@example.com', '0123456788', 'thailand');
 
--- -- Insert a user into the user table
--- INSERT INTO `user` (id, name, email, phone, location_id) VALUES (1, 'John Doe', 'john@example.com', '0123456789', 'bangkok');
+-- Insert pets into the pet table (without specifying the id, let AUTO_INCREMENT handle it)
+INSERT INTO pets (name, age, description, status, owner_id) VALUES ('Tommy', 2, 'A cute dog', 'MISSING', 1);
+INSERT INTO pets (name, age, description, status, owner_id) VALUES ('Kitty', 1, 'A cute cat', 'FOUND', 2);
+
+-- Insert posts into the post table
+INSERT INTO posts (title, content, pet_id, owner_id) VALUES ('Lost Dog', 'Please help me find my dog', 1, 1);
+INSERT INTO posts (title, content, pet_id, owner_id) VALUES ('Found Cat', 'I found a cat', 2, 2);

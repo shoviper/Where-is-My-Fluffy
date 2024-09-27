@@ -24,11 +24,18 @@ public class PetController {
     public Pet getPet(@PathVariable int id) {
         return petService.getPet(id);
     }
-    // POST route to add a new Pet
+    
+    // Endpoint to create a new pet
     @PostMapping
-    public ResponseEntity<Pet> addPet(@RequestBody Pet pet) {
-        Pet savedPet = petService.savePet(pet);
-        return new ResponseEntity<>(savedPet, HttpStatus.CREATED);
+    public Pet createPet(@RequestBody CreatePetRequest request) {
+        Pet pet = new Pet();
+        pet.setName(request.getName());
+        pet.setAge(request.getAge());
+        pet.setDescription(request.getDescription());
+        pet.setOwner(request.getOwner()); // Assuming owner is passed as User object
+        
+        // Save the pet
+        return petService.savePet(pet);
     }
 
 
