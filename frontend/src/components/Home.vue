@@ -1,6 +1,6 @@
 <template>
-	<div>
-		<h1>Home</h1>
+	<div class="mx-auto my-32 border-solid border-2 border-slate-100 p-6 rounded-lg max-w-96 place-content-center bg-white">
+		<h1 class="text-PINK font-semibold text-2xl ">Home</h1>
 		<div v-if="user">
 			<img :src="user.picture" alt="User Picture" />
 			<h2>Welcome, {{ user.name }}!</h2>
@@ -11,7 +11,7 @@
 		<div v-else>
 			<p>Loading user profile...</p>
 		</div>
-		<button @click="goToLogin">Login</button>
+		<button class="inline-flex items-center rounded-md bg-pink-50 px-2 py-1 text-xs font-medium text-pink-600 ring-1 ring-inset ring-pink-700/10" @click="goToLogin">Login</button>
 	</div>
 </template>
 
