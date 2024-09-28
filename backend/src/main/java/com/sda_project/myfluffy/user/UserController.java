@@ -34,20 +34,20 @@ public class UserController {
                 .body(userDto);
     }
 
-    @GetMapping
-    public ResponseEntity<UserDto> fetchUserDetailsById(@RequestBody Integer id) {
-        UserDto customerDto = iUserService.fetchAccount(id);
-        return ResponseEntity.
-                status(HttpStatus.OK)
-                .body(customerDto);
-    }
+    // @GetMapping
+    // public ResponseEntity<UserDto> fetchUserDetailsById(@RequestBody Integer id) {
+    //     UserDto customerDto = iUserService.fetchAccount(id);
+    //     return ResponseEntity.
+    //             status(HttpStatus.OK)
+    //             .body(customerDto);
+    // }
 
-    @GetMapping
-    public ResponseEntity<UserDto> fetchUserDetailsByEmail(@RequestBody String email) {
-        UserDto customerDto = iUserService.fetchAccount(email);
-        return ResponseEntity.
-                status(HttpStatus.OK)
-                .body(customerDto);
-    }
+    // @GetMapping
+    // public ResponseEntity<UserDto> fetchUserDetailsByEmail(@RequestBody String email) {
+    //     UserDto customerDto = iUserService.fetchAccount(email);
+    //     return ResponseEntity.
+    //             status(HttpStatus.OK)
+    //             .body(customerDto);
+    // }
 
 }
