@@ -28,7 +28,9 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserDto> profile(@AuthenticationPrincipal OAuth2User principal) {
         UserDto userDto = iUserService.fetchMe(principal);
-        return ResponseEntity.status(HttpStatus.OK).body(userDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userDto);
     }
 
 }
