@@ -39,6 +39,9 @@ public class Pet implements Observable {
     @Column(name="status")
     private Status status;
 
+    @Column(name = "owner_id")
+    private Long ownerId;
+
     private transient List<Observer> observers = new ArrayList<>();
 
     // Observable Methods

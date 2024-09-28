@@ -1,14 +1,18 @@
 package com.sda_project.myfluffy.user;
 
+import com.sda_project.myfluffy.dto.PetDto;
 import com.sda_project.myfluffy.dto.UserDto;
 import com.sda_project.myfluffy.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.exception.UnauthorizedException;
 import com.sda_project.myfluffy.exception.UserAlreadyExistsException;
 import com.sda_project.myfluffy.mapper.UserMapper;
+import com.sda_project.myfluffy.pet.Pet;
+import com.sda_project.myfluffy.pet.PetRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +20,7 @@ import java.util.Optional;
 public class UserServiceImpl implements IUserService {
 
     private UserRepository userRepository;
+    private PetRepository petRepository;
 
     /**
      * @param oAuth2User - OAuth2User Object
@@ -81,7 +86,17 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public boolean updateUser(UserDto userDto) {
-        return false;
+        boolean isUpdated = false;
+
+        Integer userId = accounts.getCustomerId();
+        Customer customer = customerRepository.findById(customerId).orElseThrow(
+                () -> new ResourceNotFoundException("Customer", "CustomerID", customerId.toString())
+        );
+        CustomerMapper.mapToCustomer(customerDto,customer);
+        customerRepository.save(customer);
+        isUpdated = true;
+
+        return  isUpdated;
     }
 
     /**
@@ -90,6 +105,11 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public boolean deleteUser(String email) {
-        return false;
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User", "email", email)
+        );
+        petRepository.deleteByCustomerId(user.getId());
+        userRepository.deleteById(user.getId());
+        return true;
     }
 }

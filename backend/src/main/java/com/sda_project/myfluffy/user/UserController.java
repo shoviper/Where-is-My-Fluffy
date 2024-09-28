@@ -35,16 +35,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserDto> fetchUserDetailsById(@RequestBody Integer id) {
-        UserDto customerDto = iUserService.fetchAccount(id);
-        return ResponseEntity.
-                status(HttpStatus.OK)
-                .body(customerDto);
-    }
-
-    @GetMapping
     public ResponseEntity<UserDto> fetchUserDetailsByEmail(@RequestBody String email) {
-        UserDto customerDto = iUserService.fetchAccount(email);
+        UserDto customerDto = iUserService.fetchUserByEmail(email);
         return ResponseEntity.
                 status(HttpStatus.OK)
                 .body(customerDto);

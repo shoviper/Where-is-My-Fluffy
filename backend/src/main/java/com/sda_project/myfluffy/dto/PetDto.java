@@ -1,7 +1,6 @@
 package com.sda_project.myfluffy.dto;
 
 import com.sda_project.myfluffy.enums.Status;
-import com.sda_project.myfluffy.user.User;
 import lombok.Data;
 
 @Data
