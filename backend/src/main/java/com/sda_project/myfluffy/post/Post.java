@@ -6,10 +6,15 @@ package com.sda_project.myfluffy.post;
 import com.sda_project.myfluffy.pet.Pet;
 import com.sda_project.myfluffy.user.User;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "posts")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Post {
 
     @Id
@@ -23,57 +28,7 @@ public class Post {
     @Column(name="content")
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "pet_id")
-    private Pet pet;
-
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
-
     // Abstract methods and constructors go here...
-
-    // Getter and Setter methods
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public Pet getPet() {
-        return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
 }
 

@@ -22,20 +22,25 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private CustomLoginSuccessHandler oAuth2LoginSuccessHandler;
-
-    @Autowired
-    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
-
     @Value("${frontend.url}")
     private String frontendUrl;
+
+    private final CustomLoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
+    @Autowired
+    public SecurityConfig(CustomLoginSuccessHandler oAuth2LoginSuccessHandler,
+                          CustomLogoutSuccessHandler customLogoutSuccessHandler) {
+        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+        this.customLogoutSuccessHandler = customLogoutSuccessHandler;
+    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions().disable())
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler))
@@ -59,4 +64,5 @@ public class SecurityConfig {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", configuration);
         return urlBasedCorsConfigurationSource;
     }
+
 }

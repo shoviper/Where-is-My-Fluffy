@@ -10,8 +10,14 @@ import com.sda_project.myfluffy.utils.Observer;
 import com.sda_project.myfluffy.post.Post;
 import com.sda_project.myfluffy.user.User;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "pets")
 public class Pet implements Observable {
 
@@ -33,13 +39,6 @@ public class Pet implements Observable {
     @Column(name="status")
     private Status status;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private User owner;
-
-    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
-    private List<Post> posts = new ArrayList<>();
-
     private transient List<Observer> observers = new ArrayList<>();
 
     // Observable Methods
@@ -58,53 +57,4 @@ public class Pet implements Observable {
         observers.remove(observer);
     }
 
-    // Getter and Setter methods
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public float getAge() {
-        return age;
-    }
-
-    public void setAge(float age) {
-        this.age = age;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }
