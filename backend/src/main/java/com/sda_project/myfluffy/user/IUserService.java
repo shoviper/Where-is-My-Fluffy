@@ -15,4 +15,23 @@ public interface IUserService {
      * @return Accounts Details based on a given oAuth2User
      */
     UserDto fetchMe(OAuth2User oAuth2User);
+
+    /**
+     * @param email - Input Email
+     * @return Users Details based on a given email
+     */
+    UserDto fetchUserByEmail(String email);
+
+    /**
+     * @param userDto - UserDto Object;
+     * @return boolean indicating if the update of User details is successful or not
+     */
+    boolean updateUser(UserDto userDto);
+
+    /**
+     * @param email - Input Email
+     * @return boolean indicating if the delete of User details is successful or not
+     */
+    boolean deleteUser(String email);
+
 }

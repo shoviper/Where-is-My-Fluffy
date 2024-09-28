@@ -18,7 +18,7 @@ public class UserServiceImpl implements IUserService {
     private UserRepository userRepository;
 
     /**
-     * @param oAuth2User - oAuth2User Object
+     * @param oAuth2User - OAuth2User Object
      */
     @Override
     public void createUser(OAuth2User oAuth2User) {
@@ -33,7 +33,20 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
-     * @param oAuth2User - Get oAuth2User
+     * @param oAuth2User - OAuth2User Object
+     * @return User Object
+     */
+    private User createUserFromOAuth2(OAuth2User oAuth2User) {
+        User user = new User();
+        user.setName(oAuth2User.getAttribute("name"));
+        user.setEmail(oAuth2User.getAttribute("email"));
+        // Set other attributes as needed, e.g., location, phone if provided by OAuth2 provider
+
+        return userRepository.save(user);
+    }
+
+    /**
+     * @param oAuth2User - Get OAuth2User
      * @return Accounts Details based on a given oAuth2User
      */
     @Override
@@ -43,18 +56,40 @@ public class UserServiceImpl implements IUserService {
         }
 
         String email = oAuth2User.getAttribute("email");
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User", "email", email)
+        );
 
         return UserMapper.mapToUserDto(user, new UserDto());
     }
 
-    private User createUserFromOAuth2(OAuth2User oAuth2User) {
-        User user = new User();
-        user.setName(oAuth2User.getAttribute("name"));
-        user.setEmail(oAuth2User.getAttribute("email"));
-        // Set other attributes as needed, e.g., location, phone if provided by OAuth2 provider
+    /**
+     * @param email - Input Email
+     * @return Users Details based on a given email
+     */
+    @Override
+    public UserDto fetchUserByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User", "email", email)
+        );
+        return UserMapper.mapToUserDto(user, new UserDto());
+    }
 
-        return userRepository.save(user);
+    /**
+     * @param userDto - UserDto Object;
+     * @return boolean indicating if the update of User details is successful or not
+     */
+    @Override
+    public boolean updateUser(UserDto userDto) {
+        return false;
+    }
+
+    /**
+     * @param email - Input Email
+     * @return boolean indicating if the delete of User details is successful or not
+     */
+    @Override
+    public boolean deleteUser(String email) {
+        return false;
     }
 }
