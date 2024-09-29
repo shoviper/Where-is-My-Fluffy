@@ -44,6 +44,7 @@ public class UserController {
     @PutMapping("/add-phone-number")
     public ResponseEntity<ResponseDto> addPhoneNumber(@AuthenticationPrincipal OAuth2User principal,
                                                       @RequestBody String phoneNumber) {
+        
         iUserService.addPhoneNumber(principal, phoneNumber);
         return ResponseEntity
                 .status(HttpStatus.OK)
