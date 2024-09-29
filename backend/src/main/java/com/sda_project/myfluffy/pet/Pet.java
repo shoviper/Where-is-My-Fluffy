@@ -9,6 +9,8 @@ import com.sda_project.myfluffy.utils.Observable;
 import com.sda_project.myfluffy.utils.Observer;
 import com.sda_project.myfluffy.post.Post;
 import com.sda_project.myfluffy.user.User;
+import com.sda_project.myfluffy.geolocation.Location;
+import com.sda_project.myfluffy.animaltype.Animaltype;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,8 +41,21 @@ public class Pet implements Observable {
     @Column(name="status")
     private Status status;
 
-    @Column(name = "owner_id")
-    private Long ownerId;
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "location_id", nullable = true)
+    private Location location;
+
+    @OneToMany
+    @JoinColumn(name = "pet_id")
+    private List<Post> posts = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "animal_type", nullable = false)
+    private Animaltype animaltype;
 
     private transient List<Observer> observers = new ArrayList<>();
 

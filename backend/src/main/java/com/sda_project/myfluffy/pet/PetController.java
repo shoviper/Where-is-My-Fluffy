@@ -4,6 +4,7 @@ package com.sda_project.myfluffy.pet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import com.sda_project.myfluffy.enums.Status;
 
@@ -31,7 +32,7 @@ public class PetController {
 
 
     @PutMapping("/{id}/status")
-    public Pet updatePetStatus(@PathVariable int id, @RequestParam String status) {
-        return petService.updatePetStatus(id, Status.valueOf(status.toUpperCase()));
+    public Pet updatePetStatus(@PathVariable int id, @RequestParam String status, OAuth2User oAuth2User) {
+        return petService.updatePetStatus(id, Status.valueOf(status.toUpperCase()), oAuth2User);
     }
 }
