@@ -41,5 +41,14 @@ public class UserController {
                 status(HttpStatus.OK)
                 .body(customerDto);
     }
+    @PutMapping("/add-phone-number")
+    public ResponseEntity<ResponseDto> addPhoneNumber(@AuthenticationPrincipal OAuth2User principal,
+                                                      @RequestBody String phoneNumber) {
+        iUserService.addPhoneNumber(principal, phoneNumber);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseDto(UsersConstants.STATUS_200, UsersConstants.MESSAGE_200));
+    }
+
 
 }

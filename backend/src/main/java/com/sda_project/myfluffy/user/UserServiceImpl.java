@@ -80,23 +80,52 @@ public class UserServiceImpl implements IUserService {
         return UserMapper.mapToUserDto(user, new UserDto());
     }
 
+
+    /**
+     * @param oAuth2User - OAuth2User Object
+     * @param phoneNumber - Input Phone Number
+     * @return boolean indicating if the update of User details is successful or not
+     */
+    @Override
+    public boolean addPhoneNumber(OAuth2User oAuth2User, String phoneNumber) {
+        if (oAuth2User == null) {
+            throw new UnauthorizedException("Unauthorized, Please login to update phone number.");
+        }
+
+        String email = oAuth2User.getAttribute("email");
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User", "email", email)
+        );
+
+        user.setPhone(phoneNumber);
+        userRepository.save(user); // Save the updated user with the new phone number
+
+        if (user.getPhone() != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * @param userDto - UserDto Object;
      * @return boolean indicating if the update of User details is successful or not
      */
     @Override
     public boolean updateUser(UserDto userDto) {
-        boolean isUpdated = false;
+        // boolean isUpdated = false;
 
-        Integer userId = accounts.getCustomerId();
-        Customer customer = customerRepository.findById(customerId).orElseThrow(
-                () -> new ResourceNotFoundException("Customer", "CustomerID", customerId.toString())
-        );
-        CustomerMapper.mapToCustomer(customerDto,customer);
-        customerRepository.save(customer);
-        isUpdated = true;
+        // Integer userId = accounts.getCustomerId();
+        // Customer customer = customerRepository.findById(customerId).orElseThrow(
+        //         () -> new ResourceNotFoundException("Customer", "CustomerID", customerId.toString())
+        // );
+        // CustomerMapper.mapToCustomer(customerDto,customer);
+        // customerRepository.save(customer);
+        // isUpdated = true;
 
-        return  isUpdated;
+        // return  isUpdated;
+
+        return false;
     }
 
     /**
@@ -105,11 +134,13 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public boolean deleteUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new ResourceNotFoundException("User", "email", email)
-        );
-        petRepository.deleteByCustomerId(user.getId());
-        userRepository.deleteById(user.getId());
-        return true;
+        // User user = userRepository.findByEmail(email).orElseThrow(
+        //         () -> new ResourceNotFoundException("User", "email", email)
+        // );
+        // petRepository.deleteByCustomerId(user.getId());
+        // userRepository.deleteById(user.getId());
+        // return true;
+        return false;
+
     }
 }

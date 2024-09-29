@@ -39,7 +39,7 @@ public class UserDto {
     @Schema(
             description = "Location details of the User"
     )
-    private String location;
+    private String location_id;
 
     @Schema(
             description = "Pets details of the Customer"

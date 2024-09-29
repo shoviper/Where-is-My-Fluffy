@@ -29,9 +29,9 @@ public class User implements Observer {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "location")
-    private String location;
-
+    @Column(name = "location_id")
+    private Integer locationId;
+    
     // Observer Method
     @Override
     public void update(Pet pet) {

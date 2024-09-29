@@ -29,6 +29,13 @@ public interface IUserService {
     boolean updateUser(UserDto userDto);
 
     /**
+     * @param oAuth2User - OAuth2User Object
+     * @param phoneNumber - Input Phone Number
+     * @return boolean indicating if the update of User details is successful or not
+     */
+    public boolean addPhoneNumber(OAuth2User oAuth2User, String phoneNumber);
+
+    /**
      * @param email - Input Email
      * @return boolean indicating if the delete of User details is successful or not
      */

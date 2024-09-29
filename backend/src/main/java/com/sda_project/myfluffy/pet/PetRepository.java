@@ -13,5 +13,5 @@ public interface PetRepository extends JpaRepository<Pet, Integer> {
 
     @Transactional
     @Modifying
-    void deleteByCustomerId(Integer customerId);
+    void deleteByOwnerId(Integer ownerId);
 }
