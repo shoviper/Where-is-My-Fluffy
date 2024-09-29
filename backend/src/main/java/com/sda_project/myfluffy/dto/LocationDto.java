@@ -13,4 +13,6 @@ public class LocationDto {
 
     private String address;
 
+    private String addressUrl;
+
 }
