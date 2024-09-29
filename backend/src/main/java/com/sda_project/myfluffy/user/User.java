@@ -18,7 +18,7 @@ public class User implements Observer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private int id;
 
     @Column(name = "name")
     private String name;
@@ -29,9 +29,6 @@ public class User implements Observer {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "location_id")
-    private Integer locationId;
-    
     // Observer Method
     @Override
     public void update(Pet pet) {

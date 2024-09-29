@@ -1,8 +1,9 @@
 package com.sda_project.myfluffy.user;
 
+import com.sda_project.myfluffy.dto.PhoneUpdateDto;
 import com.sda_project.myfluffy.dto.ResponseDto;
 import com.sda_project.myfluffy.dto.UserDto;
-import com.sda_project.myfluffy.utils.UsersConstants;
+import com.sda_project.myfluffy.utils.Constants;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ public class UserController {
         iUserService.createUser(principal);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new ResponseDto(UsersConstants.STATUS_201, UsersConstants.MESSAGE_201));
+                .body(new ResponseDto(Constants.STATUS_201, Constants.MESSAGE_201));
     }
 
     @GetMapping("/me")
@@ -34,21 +35,41 @@ public class UserController {
                 .body(userDto);
     }
 
-    @GetMapping
-    public ResponseEntity<UserDto> fetchUserDetailsByEmail(@RequestBody String email) {
-        UserDto customerDto = iUserService.fetchUserByEmail(email);
+    @GetMapping("/{email}")
+    public ResponseEntity<UserDto> fetchUserDetailsByEmail(@PathVariable String email) {
+        UserDto userDto = iUserService.fetchUserByEmail(email);
         return ResponseEntity.
                 status(HttpStatus.OK)
-                .body(customerDto);
-    }
-    @PutMapping("/add-phone-number")
-    public ResponseEntity<ResponseDto> addPhoneNumber(@AuthenticationPrincipal OAuth2User principal,
-                                                      @RequestBody String phoneNumber) {
-        iUserService.addPhoneNumber(principal, phoneNumber);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResponseDto(UsersConstants.STATUS_200, UsersConstants.MESSAGE_200));
+                .body(userDto);
     }
 
+    @PutMapping("/update-phone-number")
+    public ResponseEntity<ResponseDto> updatePhoneNumber(@AuthenticationPrincipal OAuth2User principal,
+                                                         @RequestBody PhoneUpdateDto phoneUpdateDto) {
+        boolean isUpdated = iUserService.updatePhoneNumber(principal, phoneUpdateDto);
+        if(isUpdated) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(Constants.STATUS_200, Constants.MESSAGE_200));
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseDto(Constants.STATUS_417, Constants.MESSAGE_417_UPDATE));
+        }
+    }
+
+    @DeleteMapping("/{email}")
+    public ResponseEntity<ResponseDto> deleteUserDetails(@PathVariable String email) {
+        boolean isDeleted = iUserService.deleteUser(email);
+        if(isDeleted) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseDto(Constants.STATUS_200, Constants.MESSAGE_200));
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.EXPECTATION_FAILED)
+                    .body(new ResponseDto(Constants.STATUS_417, Constants.MESSAGE_417_DELETE));
+        }
+    }
 
 }

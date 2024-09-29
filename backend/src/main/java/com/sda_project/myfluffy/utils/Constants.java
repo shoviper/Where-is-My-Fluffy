@@ -1,13 +1,13 @@
 package com.sda_project.myfluffy.utils;
 
-public class UsersConstants {
+public class Constants {
 
-    private UsersConstants() {
+    private Constants() {
         // restrict instantiation
     }
 
     public static final String STATUS_201 = "201";
-    public static final String MESSAGE_201 = "User created successfully";
+    public static final String MESSAGE_201 = "Created successfully";
     public static final String STATUS_200 = "200";
     public static final String MESSAGE_200 = "Request processed successfully";
     public static final String STATUS_417 = "417";
