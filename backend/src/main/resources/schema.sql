@@ -17,6 +17,17 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(20)
 );
 
+-- Create Users Table
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    phone VARCHAR(20),
+    location_id INT NULL
+    -- FOREIGN KEY (`location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE
+);
+
+
 -- Create Animal type Table
 CREATE TABLE IF NOT EXISTS animal_type (
     type VARCHAR(255) PRIMARY KEY
