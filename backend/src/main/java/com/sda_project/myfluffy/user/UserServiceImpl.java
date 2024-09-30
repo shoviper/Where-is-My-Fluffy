@@ -1,11 +1,10 @@
 package com.sda_project.myfluffy.user;
 
-import com.sda_project.myfluffy.dto.PhoneUpdateDto;
+import com.sda_project.myfluffy.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.dto.UserDto;
 import com.sda_project.myfluffy.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.exception.UnauthorizedException;
 import com.sda_project.myfluffy.exception.UserAlreadyExistsException;
-import com.sda_project.myfluffy.geolocation.LocationRepository;
 import com.sda_project.myfluffy.mapper.UserMapper;
 import com.sda_project.myfluffy.pet.PetRepository;
 import lombok.AllArgsConstructor;
@@ -80,10 +79,10 @@ public class UserServiceImpl implements IUserService {
 
     /**
      * @param oAuth2User  - OAuth2User Object
-     * @param phoneUpdateDto - Input Phone Number
+     * @param userPhoneUpdateDto - Input Phone Number
      */
     @Override
-    public boolean updatePhoneNumber(OAuth2User oAuth2User, PhoneUpdateDto phoneUpdateDto) {
+    public boolean updatePhoneNumber(OAuth2User oAuth2User, UserPhoneUpdateDto userPhoneUpdateDto) {
         boolean isUpdated = false;
 
         if (oAuth2User == null) {
@@ -95,7 +94,7 @@ public class UserServiceImpl implements IUserService {
                 () -> new ResourceNotFoundException("User", "email", email)
         );
 
-        String newPhoneNumber = phoneUpdateDto.getPhone();
+        String newPhoneNumber = userPhoneUpdateDto.getPhone();
 
         if (newPhoneNumber != null && !newPhoneNumber.isEmpty()) {
             user.setPhone(newPhoneNumber);

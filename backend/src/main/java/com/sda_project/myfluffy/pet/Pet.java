@@ -7,10 +7,6 @@ import java.util.List;
 import com.sda_project.myfluffy.enums.Status;
 import com.sda_project.myfluffy.utils.Observable;
 import com.sda_project.myfluffy.utils.Observer;
-import com.sda_project.myfluffy.post.Post;
-import com.sda_project.myfluffy.user.User;
-import com.sda_project.myfluffy.geolocation.Location;
-import com.sda_project.myfluffy.animaltype.Animaltype;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,21 +37,18 @@ public class Pet implements Observable {
     @Column(name="status")
     private Status status;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+    @Column(name="owner_id")
+    private int ownerId;
 
-    @ManyToOne
-    @JoinColumn(name = "location_id", nullable = true)
-    private Location location;
+    @Column(name="location_id")
+    private int locationId;
 
-    @OneToMany
-    @JoinColumn(name = "pet_id")
-    private List<Post> posts = new ArrayList<>();
+    @Column(name="animal_type_id")
+    private int animalTypeId;
 
-    @ManyToOne
-    @JoinColumn(name = "animal_type", nullable = false)
-    private Animaltype animaltype;
+//    @OneToMany
+//    @JoinColumn(name = "pet_id")
+//    private List<Post> posts = new ArrayList<>();
 
     private transient List<Observer> observers = new ArrayList<>();
 

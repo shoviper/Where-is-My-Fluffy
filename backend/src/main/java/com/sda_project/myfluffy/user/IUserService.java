@@ -1,6 +1,6 @@
 package com.sda_project.myfluffy.user;
 
-import com.sda_project.myfluffy.dto.PhoneUpdateDto;
+import com.sda_project.myfluffy.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.dto.UserDto;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -31,9 +31,9 @@ public interface IUserService {
 
     /**
      * @param oAuth2User  - OAuth2User Object
-     * @param phoneUpdateDto - Input Phone Number
+     * @param userPhoneUpdateDto - Input Phone Number
      */
-    boolean updatePhoneNumber(OAuth2User oAuth2User, PhoneUpdateDto phoneUpdateDto);
+    boolean updatePhoneNumber(OAuth2User oAuth2User, UserPhoneUpdateDto userPhoneUpdateDto);
 
     /**
      * @param email - Input Email

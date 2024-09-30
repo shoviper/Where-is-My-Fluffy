@@ -1,6 +1,6 @@
 package com.sda_project.myfluffy.user;
 
-import com.sda_project.myfluffy.dto.PhoneUpdateDto;
+import com.sda_project.myfluffy.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.dto.ResponseDto;
 import com.sda_project.myfluffy.dto.UserDto;
 import com.sda_project.myfluffy.utils.Constants;
@@ -45,8 +45,8 @@ public class UserController {
 
     @PutMapping("/update-phone-number")
     public ResponseEntity<ResponseDto> updatePhoneNumber(@AuthenticationPrincipal OAuth2User principal,
-                                                         @RequestBody PhoneUpdateDto phoneUpdateDto) {
-        boolean isUpdated = iUserService.updatePhoneNumber(principal, phoneUpdateDto);
+                                                         @RequestBody UserPhoneUpdateDto userPhoneUpdateDto) {
+        boolean isUpdated = iUserService.updatePhoneNumber(principal, userPhoneUpdateDto);
         if(isUpdated) {
             return ResponseEntity
                     .status(HttpStatus.OK)

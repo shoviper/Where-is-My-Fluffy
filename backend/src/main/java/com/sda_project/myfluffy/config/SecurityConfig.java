@@ -22,17 +22,17 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${frontend.url}")
-    private String frontendUrl;
-
+    private final String frontendUrl;
     private final CustomLoginSuccessHandler oAuth2LoginSuccessHandler;
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     @Autowired
     public SecurityConfig(CustomLoginSuccessHandler oAuth2LoginSuccessHandler,
-                          CustomLogoutSuccessHandler customLogoutSuccessHandler) {
+                          CustomLogoutSuccessHandler customLogoutSuccessHandler,
+                          @Value("${frontend.url}") String frontendUrl) {
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.customLogoutSuccessHandler = customLogoutSuccessHandler;
+        this.frontendUrl = frontendUrl;
     }
 
     @Bean

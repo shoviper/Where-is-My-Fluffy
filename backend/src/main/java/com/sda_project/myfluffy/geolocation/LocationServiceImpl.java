@@ -1,7 +1,9 @@
 package com.sda_project.myfluffy.geolocation;
 
+import com.sda_project.myfluffy.dto.LocationCreateDto;
 import com.sda_project.myfluffy.dto.LocationDto;
 import com.sda_project.myfluffy.exception.ResourceNotFoundException;
+import com.sda_project.myfluffy.mapper.LocationCreateMapper;
 import com.sda_project.myfluffy.mapper.LocationMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,14 @@ public class LocationServiceImpl implements ILocationService {
         this.locationRepository = locationRepository;
         this.googleMapUrl = googleMapUrl;
     }
+
+    @Override
+    public Location createLocation(LocationCreateDto locationCreateDto) {
+        Location location = new Location();
+        LocationCreateMapper.mapToLocation(locationCreateDto, location);
+        return locationRepository.save(location);
+    }
+
 
     @Override
     public LocationDto fetchLocationById(int id) {

@@ -8,6 +8,6 @@ import lombok.Data;
         name = "Phone",
         description = "Schema to update User's phone number"
 )
-public class PhoneUpdateDto {
+public class UserPhoneUpdateDto {
     private String phone;
 }

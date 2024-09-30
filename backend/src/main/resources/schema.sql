@@ -18,19 +18,20 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Create Users Table
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    phone VARCHAR(20),
-    location_id INT NULL
-    -- FOREIGN KEY (`location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE
-);
+--CREATE TABLE IF NOT EXISTS users (
+--    id INT AUTO_INCREMENT PRIMARY KEY,
+--    name VARCHAR(255) NOT NULL,
+--    email VARCHAR(255) NOT NULL UNIQUE,
+--    phone VARCHAR(20),
+--    location_id INT NULL
+--    FOREIGN KEY (`location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE
+--);
 
 
 -- Create Animal type Table
 CREATE TABLE IF NOT EXISTS animal_type (
-    type VARCHAR(255) PRIMARY KEY
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    type VARCHAR(255)
 );
 
 -- Create Pets Table
@@ -42,9 +43,9 @@ CREATE TABLE IF NOT EXISTS pets (
     status VARCHAR(20) NOT NULL CHECK (status IN ('MISSING', 'FOUND')),
     location_id INT,
     owner_id INT,
-    animal_type VARCHAR(255),
+    animal_type_id INT,
     FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`animal_type`) REFERENCES `animal_type`(`type`) ON DELETE CASCADE,
+    FOREIGN KEY (`animal_type_id`) REFERENCES `animal_type`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE
 );
 
@@ -84,8 +85,8 @@ INSERT INTO animal_type (type) VALUES ('bird');
 INSERT INTO animal_type (type) VALUES ('crocodile');
 
 -- Insert pets into the pet table (without specifying the id, let AUTO_INCREMENT handle it)
-INSERT INTO pets (name, age, description, status, location_id, owner_id, animal_type) VALUES ('Fido', 3, 'A cute dog', 'MISSING', 1, 1, 'dog');
-INSERT INTO pets (name, age, description, status, location_id, owner_id, animal_type) VALUES ('Kitty', 1, 'A cute cat', 'FOUND', 2, 1, 'cat');
+INSERT INTO pets (name, age, description, status, location_id, owner_id, animal_type_id) VALUES ('Fido', 3, 'A cute dog', 'MISSING', 1, 1, 1);
+INSERT INTO pets (name, age, description, status, location_id, owner_id, animal_type_id) VALUES ('Kitty', 1, 'A cute cat', 'FOUND', 2, 1, 2);
 
 -- Insert posts into the post table
 INSERT INTO posts (title, content, type, pet_id, owner_id) VALUES ('Lost Dog', 'Please help me find my dog', 'Missing', 1, 1);
