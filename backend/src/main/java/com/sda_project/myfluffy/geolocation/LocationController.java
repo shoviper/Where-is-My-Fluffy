@@ -12,31 +12,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path="/locations", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = "/locations", produces = { MediaType.APPLICATION_JSON_VALUE })
 @AllArgsConstructor
 public class LocationController {
 
     private ILocationService iLocationService;
 
-    @Operation(
-            summary = "Create Location"
-    )
+    @Operation(summary = "Create Location")
     @PostMapping
     public ResponseEntity<ResponseDto> createLocation(@RequestBody LocationCreateDto locationCreateDto) {
-        Location location = iLocationService.createLocation(locationCreateDto);
+        iLocationService.createLocation(locationCreateDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ResponseDto(Constants.STATUS_201, Constants.MESSAGE_201));
     }
 
-    @Operation(
-            summary = "Get Location by Location Id"
-    )
+    @Operation(summary = "Get Location by Location Id")
     @GetMapping("/{id}")
     public ResponseEntity<LocationDto> fetchLocationDetailsById(@PathVariable int id) {
         LocationDto locationDto = iLocationService.fetchLocationById(id);
-        return ResponseEntity.
-                status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(locationDto);
     }
 }

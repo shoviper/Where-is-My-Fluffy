@@ -104,7 +104,6 @@ public class PetServiceImpl implements IPetService {
         );
         String fetchAnimalType = animalType.getType();
 
-
         PetDto petDto = PetMapper.mapToPetDto(pet, new PetDto());
 
         petDto.setUserDto(fetchedUser);

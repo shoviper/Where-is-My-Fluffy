@@ -1,10 +1,6 @@
 // model/Post.java
 package com.sda_project.myfluffy.post;
 
-// import javax.persistence.*;
-
-import com.sda_project.myfluffy.pet.Pet;
-import com.sda_project.myfluffy.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,13 +15,13 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
-    @Column(name="content")
+    @Column(name = "content")
     private String content;
 
     // Abstract methods and constructors go here...

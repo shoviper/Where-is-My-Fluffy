@@ -2,7 +2,6 @@ package com.sda_project.myfluffy.config;
 
 import com.sda_project.myfluffy.handler.CustomLogoutSuccessHandler;
 import com.sda_project.myfluffy.handler.CustomLoginSuccessHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,10 +25,9 @@ public class SecurityConfig {
     private final CustomLoginSuccessHandler oAuth2LoginSuccessHandler;
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
-    @Autowired
     public SecurityConfig(CustomLoginSuccessHandler oAuth2LoginSuccessHandler,
-                          CustomLogoutSuccessHandler customLogoutSuccessHandler,
-                          @Value("${frontend.url}") String frontendUrl) {
+            CustomLogoutSuccessHandler customLogoutSuccessHandler,
+            @Value("${frontend.url}") String frontendUrl) {
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.customLogoutSuccessHandler = customLogoutSuccessHandler;
         this.frontendUrl = frontendUrl;
