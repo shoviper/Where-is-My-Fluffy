@@ -1,6 +1,7 @@
 package com.sda_project.myfluffy.animal_type;
 
-import com.sda_project.myfluffy.dto.AnimalTypeDto;
+import com.sda_project.myfluffy.dto.animalTypeDto.AnimalTypeDto;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +18,9 @@ public class AnimalTypeController {
 
     private IAnimalTypeService iAnimalTypeService;
 
+    @Operation(
+            summary = "Get Animal Type by Animal Type Id"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<AnimalTypeDto> fetchAnimalTypeByType(@PathVariable int id) {
         AnimalTypeDto animalTypeDto = iAnimalTypeService.fetchAnimalType(id);

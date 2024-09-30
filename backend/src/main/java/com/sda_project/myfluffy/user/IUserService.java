@@ -1,7 +1,7 @@
 package com.sda_project.myfluffy.user;
 
-import com.sda_project.myfluffy.dto.UserPhoneUpdateDto;
-import com.sda_project.myfluffy.dto.UserDto;
+import com.sda_project.myfluffy.dto.userDto.UserPhoneUpdateDto;
+import com.sda_project.myfluffy.dto.userDto.UserDto;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public interface IUserService {

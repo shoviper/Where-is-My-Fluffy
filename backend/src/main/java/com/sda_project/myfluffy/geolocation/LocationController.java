@@ -1,9 +1,10 @@
 package com.sda_project.myfluffy.geolocation;
 
-import com.sda_project.myfluffy.dto.LocationCreateDto;
-import com.sda_project.myfluffy.dto.LocationDto;
-import com.sda_project.myfluffy.dto.ResponseDto;
+import com.sda_project.myfluffy.dto.locationDto.LocationCreateDto;
+import com.sda_project.myfluffy.dto.locationDto.LocationDto;
+import com.sda_project.myfluffy.dto.responseDto.ResponseDto;
 import com.sda_project.myfluffy.utils.Constants;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +18,9 @@ public class LocationController {
 
     private ILocationService iLocationService;
 
+    @Operation(
+            summary = "Create Location"
+    )
     @PostMapping
     public ResponseEntity<ResponseDto> createLocation(@RequestBody LocationCreateDto locationCreateDto) {
         Location location = iLocationService.createLocation(locationCreateDto);
@@ -25,8 +29,11 @@ public class LocationController {
                 .body(new ResponseDto(Constants.STATUS_201, Constants.MESSAGE_201));
     }
 
+    @Operation(
+            summary = "Get Location by Location Id"
+    )
     @GetMapping("/{id}")
-    public ResponseEntity<LocationDto> fetchUserDetailsById(@PathVariable int id) {
+    public ResponseEntity<LocationDto> fetchLocationDetailsById(@PathVariable int id) {
         LocationDto locationDto = iLocationService.fetchLocationById(id);
         return ResponseEntity.
                 status(HttpStatus.OK)

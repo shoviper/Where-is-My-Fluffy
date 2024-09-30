@@ -1,6 +1,6 @@
 package com.sda_project.myfluffy.exception;
 
-import com.sda_project.myfluffy.dto.ErrorResponseDto;
+import com.sda_project.myfluffy.dto.responseDto.ErrorResponseDto;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -81,5 +81,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(InvalidStatusException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidStatusException(InvalidStatusException exception,
+                                                                        WebRequest webRequest){
+        ErrorResponseDto errorResponseDTO = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 }

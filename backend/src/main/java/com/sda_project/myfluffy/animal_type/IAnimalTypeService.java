@@ -1,7 +1,7 @@
 package com.sda_project.myfluffy.animal_type;
 
 
-import com.sda_project.myfluffy.dto.AnimalTypeDto;
+import com.sda_project.myfluffy.dto.animalTypeDto.AnimalTypeDto;
 
 public interface IAnimalTypeService {
 

@@ -1,6 +1,6 @@
 package com.sda_project.myfluffy.animal_type;
 
-import com.sda_project.myfluffy.dto.AnimalTypeDto;
+import com.sda_project.myfluffy.dto.animalTypeDto.AnimalTypeDto;
 import com.sda_project.myfluffy.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.mapper.AnimalTypeMapper;
 import lombok.AllArgsConstructor;

@@ -1,10 +1,10 @@
-package com.sda_project.myfluffy.dto;
+package com.sda_project.myfluffy.dto.petDto;
 
 import com.sda_project.myfluffy.enums.Status;
 import lombok.Data;
 
 @Data
-public class PetDto {
+public class PetCreateDto {
 
     private String name;
 
@@ -14,10 +14,8 @@ public class PetDto {
 
     private String description;
 
+    private String Location;
+
     private Status status;
-
-    private UserDto userDto;
-
-    private LocationDto locationDto;
 
 }

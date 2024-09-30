@@ -1,4 +1,4 @@
-package com.sda_project.myfluffy.dto;
+package com.sda_project.myfluffy.dto.responseDto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

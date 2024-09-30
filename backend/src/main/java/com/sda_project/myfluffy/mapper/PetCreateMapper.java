@@ -1,6 +1,6 @@
 package com.sda_project.myfluffy.mapper;
 
-import com.sda_project.myfluffy.dto.PetCreateDto;
+import com.sda_project.myfluffy.dto.petDto.PetCreateDto;
 import com.sda_project.myfluffy.pet.Pet;
 
 public class PetCreateMapper {

@@ -1,6 +1,5 @@
-package com.sda_project.myfluffy.dto;
+package com.sda_project.myfluffy.dto.locationDto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data

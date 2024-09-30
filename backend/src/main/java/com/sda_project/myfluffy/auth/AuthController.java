@@ -1,5 +1,6 @@
 package com.sda_project.myfluffy.auth;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthController {
 
+    @Operation(
+            summary = "Logout"
+    )
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

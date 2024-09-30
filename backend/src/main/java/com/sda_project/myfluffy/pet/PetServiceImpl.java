@@ -3,7 +3,14 @@ package com.sda_project.myfluffy.pet;
 
 import com.sda_project.myfluffy.animal_type.AnimalType;
 import com.sda_project.myfluffy.animal_type.AnimalTypeRepository;
-import com.sda_project.myfluffy.dto.*;
+import com.sda_project.myfluffy.dto.locationDto.LocationCreateDto;
+import com.sda_project.myfluffy.dto.locationDto.LocationDto;
+import com.sda_project.myfluffy.dto.petDto.PetCreateDto;
+import com.sda_project.myfluffy.dto.petDto.PetDto;
+import com.sda_project.myfluffy.dto.petDto.PetStatusUpdateDto;
+import com.sda_project.myfluffy.dto.userDto.UserDto;
+import com.sda_project.myfluffy.enums.Status;
+import com.sda_project.myfluffy.exception.InvalidStatusException;
 import com.sda_project.myfluffy.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.exception.UnauthorizedException;
 import com.sda_project.myfluffy.geolocation.ILocationService;
@@ -17,9 +24,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -30,17 +35,6 @@ public class PetServiceImpl implements IPetService {
     private LocationRepository locationRepository;
     private ILocationService iLocationService;
     private AnimalTypeRepository animalTypeRepository;
-
-//    public Pet updatePetStatus(int petId, Status status, OAuth2User oAuth2User) {
-//        Pet pet = petRepository.findById(petId).orElseThrow();
-//        int id = Integer.parseInt(oAuth2User.getAttribute("id"));
-//
-//        if (pet.getOwner().getId() != id) {
-//            throw new UnauthorizedException("cannot update other users pets");
-//        }
-//        pet.setStatus(status);
-//        return petRepository.save(pet);
-//    }
 
     /**
      * Creates a new pet with the given PetDto details.
@@ -55,37 +49,32 @@ public class PetServiceImpl implements IPetService {
         }
 
         String email = oAuth2User.getAttribute("email");
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Pet-Owner", "email", email));
 
-        if (optionalUser.isEmpty()) {
-            throw new ResourceNotFoundException("Pet-Owner", "email", email);
-        }
+        AnimalType animalType = animalTypeRepository.findByType(petCreateDto.getAnimalType())
+                .orElseThrow(() -> new ResourceNotFoundException("Pet-AnimalType", "type", petCreateDto.getAnimalType()));
 
-        int ownerId = optionalUser.get().getId();
-
-        String animalType = petCreateDto.getAnimalType();
-        Optional<AnimalType> optionalAnimalType = animalTypeRepository.findByType(animalType);
-
-        if (optionalAnimalType.isEmpty()) {
-            throw new ResourceNotFoundException("Pet-AnimalType", "type", email);
-        }
-
-        int animalTypeId = optionalAnimalType.get().getId();
-
-        LocationCreateDto locationCreateDto = new LocationCreateDto();
-        locationCreateDto.setAddress(petCreateDto.getLocation());
-        Location createdLocation = iLocationService.createLocation(locationCreateDto);
-
-        int locationId = createdLocation.getId();
+        Location createdLocation = createLocationForPet(petCreateDto.getLocation());
 
         Pet pet = PetCreateMapper.mapToPet(petCreateDto, new Pet());
-
-        pet.setOwnerId(ownerId);
-        pet.setLocationId(locationId);
-        pet.setAnimalTypeId(animalTypeId);
+        pet.setOwnerId(user.getId());
+        pet.setLocationId(createdLocation.getId());
+        pet.setAnimalTypeId(animalType.getId());
 
         petRepository.save(pet);
+    }
 
+    /**
+     * Creates a Location entity for a pet from the provided address.
+     *
+     * @param address - The address where the pet is located.
+     * @return The created Location entity.
+     */
+    private Location createLocationForPet(String address) {
+        LocationCreateDto locationCreateDto = new LocationCreateDto();
+        locationCreateDto.setAddress(address);
+        return iLocationService.createLocation(locationCreateDto);
     }
 
     /**
@@ -99,6 +88,7 @@ public class PetServiceImpl implements IPetService {
         Pet pet = petRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Pet", "id", Integer.toString(id))
         );
+
         User user = userRepository.findById(pet.getOwnerId()).orElseThrow(
                 () -> new ResourceNotFoundException("Pet-Owner", "id", Integer.toString(pet.getOwnerId()))
         );
@@ -128,23 +118,93 @@ public class PetServiceImpl implements IPetService {
      * Retrieves the pet details associated with a specific user identified by their OAuth2 credentials.
      *
      * @param oAuth2User - The authenticated OAuth2User object representing the currently logged-in user.
-     * @return An Optional containing the PetDto details associated with the user if found, or an empty.
+     * @return A List of PetDto details associated with the user if found, or an empty list if no pets are found.
      */
     @Override
-    public PetDto fetchMyPet(OAuth2User oAuth2User) {
-        return null;
+    public List<PetDto> fetchMyPet(OAuth2User oAuth2User) {
+        if (oAuth2User == null) {
+            throw new UnauthorizedException("Unauthorized, Please login to get access.");
+        }
+
+        String userEmail = oAuth2User.getAttribute("email");
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new ResourceNotFoundException("User", "email", userEmail)
+        );
+
+        List<Pet> pets = petRepository.findAllByOwnerId(user.getId());
+
+        if (pets.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<PetDto> petDtos = new ArrayList<>();
+
+        for (Pet pet : pets) {
+            UserDto fetchedUser = UserMapper.mapToUserDto(user, new UserDto());
+
+            Location location = locationRepository.findById(pet.getLocationId()).orElseThrow(
+                    () -> new ResourceNotFoundException("Pet-Location", "id", Integer.toString(pet.getLocationId()))
+            );
+            LocationDto fetchedLocation = iLocationService.fetchLocationById(location.getId());
+
+            AnimalType animalType = animalTypeRepository.findById(pet.getAnimalTypeId()).orElseThrow(
+                    () -> new ResourceNotFoundException("Pet-AnimalType", "id", Integer.toString(pet.getAnimalTypeId()))
+            );
+            String fetchAnimalType = animalType.getType();
+
+            PetDto petDto = PetMapper.mapToPetDto(pet, new PetDto());
+            petDto.setUserDto(fetchedUser);
+            petDto.setLocationDto(fetchedLocation);
+            petDto.setAnimalType(fetchAnimalType);
+
+            petDtos.add(petDto);
+        }
+
+        return petDtos;
     }
 
     /**
      * Updates the details of an existing pet.
      *
-     * @param id         - The ID of the pet to be updated.
-     * @param petDto     - The PetDto object containing the updated details of the pet.
      * @param oAuth2User - OAuth2User Object.
+     * @param petStatusUpdateDto - The PetStatusUpdateDto object containing the updated details of the pet.
+     * @return boolean indicating if the update of Pet details is successful or not
      */
     @Override
-    public void updatePet(Long id, PetDto petDto, OAuth2User oAuth2User) {
+    public boolean updatePetStatus(OAuth2User oAuth2User, PetStatusUpdateDto petStatusUpdateDto) {
+        boolean isUpdated = false;
 
+        if (oAuth2User == null) {
+            throw new UnauthorizedException("Unauthorized, Please login to get access.");
+        }
+
+        String userEmail = oAuth2User.getAttribute("email");
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new ResourceNotFoundException("User", "email", userEmail)
+        );
+
+        Pet pet = petRepository.findById(petStatusUpdateDto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Pet", "id", Integer.toString(petStatusUpdateDto.getId()))
+        );
+
+        if (pet.getOwnerId() != user.getId()) {
+            throw new UnauthorizedException("Unauthorized, You do not own this pet.");
+        }
+
+        pet.setStatus(petStatusUpdateDto.getStatus());
+        petRepository.save(pet);
+
+        Status newPetStatus = petStatusUpdateDto.getStatus();
+
+        if (newPetStatus != null) {
+            pet.setStatus(newPetStatus);
+            petRepository.save(pet);
+            isUpdated = true;
+        } else {
+            throw new InvalidStatusException("Status need to match the ENUM type and can not be null.");
+        }
+
+        return isUpdated;
     }
 
     /**
@@ -164,6 +224,37 @@ public class PetServiceImpl implements IPetService {
      */
     @Override
     public List<PetDto> getAllPets() {
-        return List.of();
+        List<Pet> pets = petRepository.findAll();
+
+        if (pets.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<PetDto> petDtos = new ArrayList<>();
+        for (Pet pet : pets) {
+            User user = userRepository.findById(pet.getOwnerId()).orElseThrow(
+                    () -> new ResourceNotFoundException("User", "id", Integer.toString(pet.getOwnerId()))
+            );
+            UserDto fetchedUser = UserMapper.mapToUserDto(user, new UserDto());
+
+            Location location = locationRepository.findById(pet.getLocationId()).orElseThrow(
+                    () -> new ResourceNotFoundException("Location", "id", Integer.toString(pet.getLocationId()))
+            );
+            LocationDto fetchedLocation = LocationMapper.mapToLocationDto(location, new LocationDto());
+
+            AnimalType animalType = animalTypeRepository.findById(pet.getAnimalTypeId()).orElseThrow(
+                    () -> new ResourceNotFoundException("AnimalType", "id", Integer.toString(pet.getAnimalTypeId()))
+            );
+            String fetchAnimalType = animalType.getType();
+
+            PetDto petDto = PetMapper.mapToPetDto(pet, new PetDto());
+            petDto.setUserDto(fetchedUser);
+            petDto.setLocationDto(fetchedLocation);
+            petDto.setAnimalType(fetchAnimalType);
+
+            petDtos.add(petDto);
+        }
+
+        return petDtos;
     }
 }

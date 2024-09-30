@@ -1,7 +1,7 @@
 package com.sda_project.myfluffy.geolocation;
 
-import com.sda_project.myfluffy.dto.LocationCreateDto;
-import com.sda_project.myfluffy.dto.LocationDto;
+import com.sda_project.myfluffy.dto.locationDto.LocationCreateDto;
+import com.sda_project.myfluffy.dto.locationDto.LocationDto;
 import com.sda_project.myfluffy.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.mapper.LocationCreateMapper;
 import com.sda_project.myfluffy.mapper.LocationMapper;

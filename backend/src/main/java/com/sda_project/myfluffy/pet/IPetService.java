@@ -1,7 +1,8 @@
 package com.sda_project.myfluffy.pet;
 
-import com.sda_project.myfluffy.dto.PetCreateDto;
-import com.sda_project.myfluffy.dto.PetDto;
+import com.sda_project.myfluffy.dto.petDto.PetCreateDto;
+import com.sda_project.myfluffy.dto.petDto.PetDto;
+import com.sda_project.myfluffy.dto.petDto.PetStatusUpdateDto;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;
@@ -28,18 +29,18 @@ public interface IPetService {
      * Retrieves the pet details associated with a specific user identified by their OAuth2 credentials.
      *
      * @param oAuth2User - The authenticated OAuth2User object representing the currently logged-in user.
-     * @return The PetDto details associated with the user if found, or an empty.
+     * @return A List of PetDto details associated with the user if found, or an empty list if no pets are found.
      */
-    PetDto fetchMyPet(OAuth2User oAuth2User);
+    List<PetDto> fetchMyPet(OAuth2User oAuth2User);
 
     /**
      * Updates the details of an existing pet.
      *
-     * @param id - The ID of the pet to be updated.
-     * @param petDto - The PetDto object containing the updated details of the pet.
      * @param oAuth2User - OAuth2User Object.
+     * @param petStatusUpdateDto - The PetStatusUpdateDto object containing the updated details of the pet.
+     * @return boolean indicating if the update of Pet details is successful or not
      */
-    void updatePet(Long id, PetDto petDto, OAuth2User oAuth2User);
+    boolean updatePetStatus(OAuth2User oAuth2User, PetStatusUpdateDto petStatusUpdateDto);
 
     /**
      * Deletes a pet from the system based on the given pet ID.
