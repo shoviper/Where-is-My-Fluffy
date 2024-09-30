@@ -35,25 +35,7 @@
       </div>
 
       <!-- Main Content Area (Scrollable) -->
-      <div
-        class="w-1/2 bg-white p-4 shadow-md flex-grow mt-4 overflow-y-auto h-[80vh]"
-      >
-        Post and Content
-        <h1 class="text-lg mt-8">
-          Below is for testing scrollbar (can delete)
-        </h1>
-        <div class="w-full h-80 bg-white p-4 shadow-md mt-8">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-base font-semibold">Notifications</h2>
-            <a href="#" class="text-base text-red-500">Mark all as read</a>
-          </div>
-        </div>
-        <div class="w-full h-80 bg-white p-4 shadow-md mt-8">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-base font-semibold">Notifications</h2>
-            <a href="#" class="text-base text-red-500">Mark all as read</a>
-          </div>
-        </div>
+      <div class="w-1/2 bg-white p-4 shadow-md flex-grow mt-4 overflow-y-auto h-[80vh]">
       </div>
 
       <!-- Sidebar 3 - Trend and Category -->
