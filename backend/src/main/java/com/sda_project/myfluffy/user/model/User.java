@@ -2,6 +2,7 @@
 package com.sda_project.myfluffy.user.model;
 
 import com.sda_project.myfluffy.pet.model.Pet;
+import com.sda_project.myfluffy.post.model.Post;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,10 +31,13 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "petOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> myPets;
 
     @OneToMany(mappedBy = "founder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> petsFound;
+
+    @OneToMany(mappedBy = "postOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> myPosts;
 
 }

@@ -37,7 +37,7 @@ public class Pet {
 
     @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name="owner_id")
-    private User owner;
+    private User petOwner;
 
     @OneToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="location_id")
