@@ -41,9 +41,16 @@ public class Pet implements Observable {
     @Column(name="status")
     private Status status;
 
+    @Column(name="reward_amount")
+    private float rewardAmount;
+
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
+
+    @ManyToOne
+    @JoinColumn(name = "founder_id", nullable = true)
+    private User founder;
 
     @ManyToOne
     @JoinColumn(name = "location_id", nullable = true)
