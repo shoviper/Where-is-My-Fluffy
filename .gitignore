@@ -69,4 +69,5 @@ Temporary Items
 ### Configuration ###
 application.yml
 
+/data
 *.db
