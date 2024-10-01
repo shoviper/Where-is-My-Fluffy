@@ -2,6 +2,7 @@ package com.sda_project.myfluffy.pet.service;
 
 import com.sda_project.myfluffy.pet.dto.PetCreateDto;
 import com.sda_project.myfluffy.pet.dto.PetDto;
+import com.sda_project.myfluffy.pet.dto.PetFounderUpdateDto;
 import com.sda_project.myfluffy.pet.dto.PetStatusUpdateDto;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -42,6 +43,15 @@ public interface IPetService {
      */
     boolean updatePetStatus(OAuth2User oAuth2User, PetStatusUpdateDto petStatusUpdateDto);
 
+    /**
+     * Updates the details of an existing pet.
+     *
+     * @param oAuth2User - OAuth2User Object.
+     * @param petFounderUpdateDto - PetFounderUpdateDto Object.
+     * @return boolean indicating if the update of Pet details is successful or not
+     */
+    boolean addFounder(OAuth2User oAuth2User, PetFounderUpdateDto petFounderUpdateDto);
+
     /*
      * Deletes a pet from the system based on the given pet ID.
      *
@@ -56,7 +66,5 @@ public interface IPetService {
      * @return A List of PetDto objects representing all pets.
      */
     List<PetDto> getAllPets();
-
-    boolean addFounder(int petId, OAuth2User oAuth2User, int founderId);
 
 }

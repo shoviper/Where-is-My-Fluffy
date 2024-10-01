@@ -11,10 +11,6 @@ import java.util.Optional;
 
 public interface PetRepository extends JpaRepository<Pet, Integer> {
 
-    Optional<Pet> findByOwnerId(int ownerId);
-
-    List<Pet> findAllByOwnerId(int ownerId);
-
     @Transactional
     @Modifying
     void deleteByOwnerId(int ownerId);

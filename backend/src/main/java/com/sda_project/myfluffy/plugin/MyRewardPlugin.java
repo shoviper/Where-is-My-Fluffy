@@ -1,9 +1,9 @@
 // plugin/MyRewardPlugin.java
 package com.sda_project.myfluffy.plugin;
 
+import com.sda_project.myfluffy.user.model.User;
 import org.springframework.stereotype.Component;
 
-import com.sda_project.myfluffy.user.User;
 
 @Component
 public class MyRewardPlugin implements RewardPlugin {

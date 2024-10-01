@@ -7,10 +7,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path="/animal-type", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -20,11 +19,11 @@ public class AnimalTypeController {
     private IAnimalTypeService iAnimalTypeService;
 
     @Operation(
-            summary = "Get Animal Type by Animal Type Id"
+            summary = "Get All Animal Type"
     )
-    @GetMapping("/{id}")
-    public ResponseEntity<AnimalTypeDto> fetchAnimalTypeByType(@PathVariable int id) {
-        AnimalTypeDto animalTypeDto = iAnimalTypeService.fetchAnimalType(id);
+    @GetMapping
+    public ResponseEntity<List<AnimalTypeDto>> fetchAnimalTypeByType() {
+        List<AnimalTypeDto> animalTypeDto = iAnimalTypeService.fetchAllAnimalType();
         return ResponseEntity.
                 status(HttpStatus.OK)
                 .body(animalTypeDto);

@@ -29,9 +29,7 @@ public class PetStatusChangeListener {
     }
 
     private void notifyOwner(Pet pet) {
-        User owner = userRepository.findById(pet.getOwnerId()).orElseThrow(
-                () -> new ResourceNotFoundException("Pet-Owner", "id", Integer.toString(pet.getOwnerId()))
-        );
+        User owner = pet.getOwner();
         System.out.println("Notifying " + owner.getName() + " that their pet " + pet.getName() + " is found.");
         sendNotification(owner, pet);
     }

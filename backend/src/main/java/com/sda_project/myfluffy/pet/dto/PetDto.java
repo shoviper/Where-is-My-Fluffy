@@ -20,8 +20,10 @@ public class PetDto {
 
     private Status status;
 
-    private UserDto userDto;
+    private UserDto user;
 
-    private LocationDto locationDto;
+    private UserDto founder;
+
+    private LocationDto location;
 
 }

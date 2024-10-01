@@ -11,6 +11,7 @@ import com.sda_project.myfluffy.geolocation.mapper.LocationMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -23,9 +24,14 @@ public class LocationServiceImpl implements ILocationService {
     private MapService mapService;
 
     @Override
+    @Transactional
     public Location createLocation(LocationCreateDto locationCreateDto) {
+        if (locationCreateDto == null) {
+            throw new IllegalArgumentException("LocationCreateDto cannot be null");
+        }
         Location location = new Location();
         LocationCreateMapper.mapToLocation(locationCreateDto, location);
+
         return locationRepository.save(location);
     }
 
@@ -36,7 +42,8 @@ public class LocationServiceImpl implements ILocationService {
         );
         LocationDto locationDto = LocationMapper.mapToLocationDto(location, new LocationDto());
 
-        locationDto.setAddressUrl(mapService.buildMapUrl(location.getAddress()));
+        String encodedAddress = URLEncoder.encode(location.getAddress(), StandardCharsets.UTF_8);
+        locationDto.setAddressUrl(mapService.buildMapUrl(encodedAddress));
 
         return locationDto;
     }

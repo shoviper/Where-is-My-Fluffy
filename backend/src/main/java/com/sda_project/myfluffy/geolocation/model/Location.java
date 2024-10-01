@@ -1,5 +1,6 @@
 package com.sda_project.myfluffy.geolocation.model;
 
+import com.sda_project.myfluffy.pet.model.Pet;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,5 +20,8 @@ public class Location {
 
     @Column(name = "address")
     private String address;
+
+    @OneToOne(mappedBy = "location", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Pet pet;
 
 }

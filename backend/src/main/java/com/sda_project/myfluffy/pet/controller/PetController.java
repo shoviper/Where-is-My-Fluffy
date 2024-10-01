@@ -3,6 +3,7 @@ package com.sda_project.myfluffy.pet.controller;
 
 import com.sda_project.myfluffy.pet.dto.PetCreateDto;
 import com.sda_project.myfluffy.pet.dto.PetDto;
+import com.sda_project.myfluffy.pet.dto.PetFounderUpdateDto;
 import com.sda_project.myfluffy.pet.dto.PetStatusUpdateDto;
 import com.sda_project.myfluffy.common.dto.response.ResponseDto;
 import com.sda_project.myfluffy.pet.service.IPetService;
@@ -118,8 +119,26 @@ public class PetController {
         }
     }
 
-    @PostMapping("/{id}/founder")
-    public boolean addFounder(@PathVariable int id, @RequestParam int founderId, @AuthenticationPrincipal OAuth2User oAuth2User) {
-        return iPetService.addFounder(id, oAuth2User, founderId);
+    @Operation(
+            summary = "Add founder who found the pet"
+    )
+    @PutMapping("/update-pet-founder")
+    public ResponseEntity<ResponseDto> addFounder(@AuthenticationPrincipal OAuth2User oAuth2User, @RequestBody PetFounderUpdateDto petFounderUpdateDto) {
+        boolean isDeleted = iPetService.addFounder(oAuth2User, petFounderUpdateDto);
+        if(isDeleted) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(ResponseDto.builder()
+                            .statusCode(AppConstants.STATUS_200)
+                            .statusMsg(AppConstants.MESSAGE_200)
+                            .build());
+        }else{
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ResponseDto.builder()
+                            .statusCode(AppConstants.STATUS_417)
+                            .statusMsg(AppConstants.MESSAGE_417_UPDATE)
+                            .build());
+        }
     }
 }

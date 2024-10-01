@@ -1,7 +1,10 @@
 // model/Pet.java
 package com.sda_project.myfluffy.pet.model;
 
+import com.sda_project.myfluffy.animal_type.model.AnimalType;
 import com.sda_project.myfluffy.common.utils.enums.Status;
+import com.sda_project.myfluffy.geolocation.model.Location;
+import com.sda_project.myfluffy.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,17 +35,21 @@ public class Pet {
     @Column(name="status")
     private Status status;
 
-    @Column(name="owner_id")
-    private int ownerId;
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="owner_id")
+    private User owner;
 
-    @Column(name="location_id")
-    private int locationId;
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="location_id")
+    private Location location;
 
-    @Column(name="animal_type_id")
-    private int animalTypeId;
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="animal_type")
+    private AnimalType animalType;
 
-    @Column(name="founder_id")
-    private int founderId;
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="founder_id")
+    private User founder;
 
     @Column(name="reward_amount")
     private double rewardAmount;

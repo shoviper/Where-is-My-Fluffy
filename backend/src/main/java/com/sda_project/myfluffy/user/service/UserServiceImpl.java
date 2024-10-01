@@ -12,6 +12,7 @@ import com.sda_project.myfluffy.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class UserServiceImpl implements IUserService {
      * @param oAuth2User - OAuth2User Object
      */
     @Override
+    @Transactional
     public void createUser(OAuth2User oAuth2User) {
         String email = oAuth2User.getAttribute("email");
         Optional<User> optionalUser = userRepository.findByEmail(email);
@@ -89,6 +91,7 @@ public class UserServiceImpl implements IUserService {
      * @param userPhoneUpdateDto - Input Phone Number
      */
     @Override
+    @Transactional
     public boolean updatePhoneNumber(OAuth2User oAuth2User, UserPhoneUpdateDto userPhoneUpdateDto) {
         boolean isUpdated = false;
 
@@ -137,6 +140,7 @@ public class UserServiceImpl implements IUserService {
      * @return boolean indicating if the delete of User details is successful or not
      */
     @Override
+    @Transactional
     public boolean deleteUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User", "email", email));

@@ -1,7 +1,10 @@
 package com.sda_project.myfluffy.animal_type.model;
 
+import com.sda_project.myfluffy.pet.model.Pet;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -13,10 +16,9 @@ import lombok.*;
 public class AnimalType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
-
     @Column(name="type")
     private String type;
+
+    @OneToMany(mappedBy="animalType", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pet> pets;
 }
