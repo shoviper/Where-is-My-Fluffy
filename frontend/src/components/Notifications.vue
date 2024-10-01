@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-80 bg-white p-4 shadow-md mt-8 rounded-md">
+  <div class="  bg-white p-4 shadow-md mt-4 rounded-md">
     <!-- Header -->
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-base font-semibold">Notifications</h2>
