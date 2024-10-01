@@ -198,12 +198,9 @@ public class PetServiceImpl implements IPetService {
             throw new UnauthorizedException("Unauthorized, You do not own this pet.");
         }
 
-        pet.setStatus(petStatusUpdateDto.getStatus());
-        petRepository.save(pet);
-
         Status newPetStatus = petStatusUpdateDto.getStatus();
 
-        if (newPetStatus != null) {
+        if (newPetStatus == Status.FOUND) {
             pet.setStatus(newPetStatus);
             petRepository.save(pet);
             eventPublisher.publishEvent(new PetStatusChangeEvent(this, pet));
@@ -213,6 +210,37 @@ public class PetServiceImpl implements IPetService {
         }
 
         return isUpdated;
+    }
+
+    @Override
+    public boolean addFounder(int petId, OAuth2User oAuth2User, int founderId) {
+        boolean isUpdated = false;
+
+        if (oAuth2User == null) {
+            throw new UnauthorizedException("Unauthorized, Please login to get access.");
+        }
+
+        String userEmail = oAuth2User.getAttribute("email");
+        User user = userRepository.findByEmail(userEmail).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", userEmail)
+        );
+
+        Pet pet = petRepository.findById(petId).orElseThrow(
+                () -> new ResourceNotFoundException("Pet", "id", Integer.toString(petId))
+        );
+
+        if (pet.getOwnerId() != user.getId()) {
+            throw new UnauthorizedException("cannot update other users pets");
+        }
+
+        User founder = userRepository.findById(founderId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "founderId", "found")
+        );
+
+        pet.setFounderId(founderId);
+        petRepository.save(pet);
+
+        return true;
     }
 
     /**
@@ -268,4 +296,5 @@ public class PetServiceImpl implements IPetService {
 
         return petDtos;
     }
+
 }

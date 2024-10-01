@@ -41,4 +41,10 @@ public class Pet {
     @Column(name="animal_type_id")
     private int animalTypeId;
 
+    @Column(name="founder_id")
+    private int founderId;
+
+    @Column(name="reward_amount")
+    private double rewardAmount;
+
 }

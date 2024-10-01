@@ -57,4 +57,6 @@ public interface IPetService {
      */
     List<PetDto> getAllPets();
 
+    boolean addFounder(int petId, OAuth2User oAuth2User, int founderId);
+
 }

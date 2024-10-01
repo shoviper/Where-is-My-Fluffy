@@ -117,4 +117,9 @@ public class PetController {
                             .build());
         }
     }
+
+    @PostMapping("/{id}/founder")
+    public boolean addFounder(@PathVariable int id, @RequestParam int founderId, @AuthenticationPrincipal OAuth2User oAuth2User) {
+        return iPetService.addFounder(id, oAuth2User, founderId);
+    }
 }
