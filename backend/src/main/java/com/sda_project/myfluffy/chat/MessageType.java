@@ -1,4 +1,8 @@
 package com.sda_project.myfluffy.chat;
 
-public class MessageType {
+public enum MessageType {
+
+    CHAT,
+    JOIN,
+    LEAVE
 }

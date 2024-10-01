@@ -1,5 +1,6 @@
 package com.sda_project.myfluffy.common.config;
 
+import com.sda_project.myfluffy.auth.handler.CustomLoginFailureHandler;
 import com.sda_project.myfluffy.auth.handler.CustomLogoutSuccessHandler;
 import com.sda_project.myfluffy.auth.handler.CustomLoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,12 +25,15 @@ public class SecurityConfig {
     private final String frontendUrl;
     private final CustomLoginSuccessHandler oAuth2LoginSuccessHandler;
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+    private final CustomLoginFailureHandler oAuth2LoginFailureHandler;
 
     public SecurityConfig(CustomLoginSuccessHandler oAuth2LoginSuccessHandler,
-            CustomLogoutSuccessHandler customLogoutSuccessHandler,
-            @Value("${frontend.url}") String frontendUrl) {
+                          CustomLogoutSuccessHandler customLogoutSuccessHandler,
+                          CustomLoginFailureHandler oAuth2LoginFailureHandler,
+                          @Value("${frontend.url}") String frontendUrl) {
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.customLogoutSuccessHandler = customLogoutSuccessHandler;
+        this.oAuth2LoginFailureHandler = oAuth2LoginFailureHandler;
         this.frontendUrl = frontendUrl;
     }
 
@@ -41,7 +45,8 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions().disable())
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(oAuth2LoginSuccessHandler))
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .failureHandler(oAuth2LoginFailureHandler))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler(customLogoutSuccessHandler)

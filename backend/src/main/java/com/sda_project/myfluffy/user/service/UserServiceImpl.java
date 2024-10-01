@@ -10,7 +10,6 @@ import com.sda_project.myfluffy.pet.repository.PetRepository;
 import com.sda_project.myfluffy.user.model.User;
 import com.sda_project.myfluffy.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -49,14 +48,13 @@ public class UserServiceImpl implements IUserService {
 
     /**
      * @param oAuth2User - OAuth2User Object
-     * @return User Object
      */
-    private User createUserFromOAuth2(OAuth2User oAuth2User) {
+    private void createUserFromOAuth2(OAuth2User oAuth2User) {
         User user = new User();
         user.setName(oAuth2User.getAttribute("name"));
         user.setEmail(oAuth2User.getAttribute("email"));
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     /**
