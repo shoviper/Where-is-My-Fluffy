@@ -11,6 +11,7 @@ try
     delete data folder in resources
     go to localhost:8080/h2-console
     copy the schema.sql to run the script
+    then can login and use the application
 
     then login with Oauth (Never do this step before the previous steps)
 
