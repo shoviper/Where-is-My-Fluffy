@@ -2,7 +2,7 @@
   <div
     v-for="(post, index) in posts"
     :key="index"
-    class="block p-6 bg-white border border-gray-200 rounded-lg shadow mt-4"
+    class="block p-6 bg-white border-gray-200 rounded-lg shadow my-4"
   >
     <div class="flex justify-between h-10">
       <div class="flex flex-row items-center">
@@ -16,7 +16,7 @@
         </div>
       </div>
       <button
-        class="inline-flex items-center justify-center rounded-md bg-PINK hover:bg-PU px-2 py-1 my-2 text-base font-medium text-white ring-1 ring-inset ring-pink-700/10"
+        class="inline-flex items-center justify-center rounded-md bg-PINK hover:bg-PURPLE px-2 py-1 my-2 text-sm font-medium text-white ring-1 ring-inset ring-pink-700/10"
       >
         Found Fluffy !
       </button>

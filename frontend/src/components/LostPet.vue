@@ -1,5 +1,5 @@
 <template>
-  <div class="w-11/12 h-auto bg-white p-4 rounded-md">
+  <div class="w-10/12 h-auto bg-white p-4 rounded-md">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-base font-semibold">Lost Pets</h2>
       <a href="/seealllostpet" class="text-base text-blue-500">See all</a>
