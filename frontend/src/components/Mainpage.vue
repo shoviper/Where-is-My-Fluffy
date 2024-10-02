@@ -9,7 +9,7 @@
         <button
           class="w-10 h-10 bg-white rounded-full text-white flex items-center justify-center"
         >
-          <Icon icon="tabler:home" class="text-slate-700 w-10 h-7"/>
+          <Icon icon="tabler:home" class="text-slate-700 w-10 h-7" />
         </button>
 
         <div class="flex-grow mx-4">
@@ -23,7 +23,11 @@
         <button
           class="w-10 h-10 bg-white rounded-full text-white flex items-center justify-center"
         >
-          <Icon icon="iconamoon:profile" class="text-slate-700 w-10 h-7" @click="goto({ path: '/' })"/>
+          <Icon
+            icon="iconamoon:profile"
+            class="text-slate-700 w-10 h-7"
+            @click="goto({ path: '/' })"
+          />
         </button>
       </div>
     </header>
@@ -32,7 +36,7 @@
     <div class="flex-grow flex mt-20 overflow-hidden">
       <!-- Sidebar Section (Left) -->
       <div class="w-1/4 py-4 pr-4 flex flex-col fixed h-full overflow-y-auto">
-        <LostPets class="w-full mb-4 ml-8" />
+        <LostPets class="w-5/6 mb-4 ml-8" />
         <Tag />
       </div>
 
@@ -41,8 +45,17 @@
         class="grid grid-cols-8 justify-center flex-grow mt-4 ml-1/4 pr-4 overflow-y-auto h-full"
       >
         <div class="w-full col-start-3 col-span-4">
-          <div class="bg-white">
-            
+          <div
+            class="bg-white rounded-md h-20 flex flex-col items-center justify-center cursor-pointer"
+            @click="goto({ path: '/createpost' })"
+          >
+            <span>
+              <Icon
+                icon="streamline:add-circle-solid"
+                class="h-8 w-auto text-red-200"
+              />
+            </span>
+            <p class="font-semibold">create post</p>
           </div>
           <div>
             <PostElement />
@@ -57,7 +70,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 import LostPets from "./LostPet.vue";
