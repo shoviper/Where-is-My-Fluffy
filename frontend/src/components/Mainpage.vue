@@ -28,16 +28,14 @@
     </header>
 
     <div class="flex-grow flex p-4 gap-4 h-full mt-12">
-      <div class="w-1/4 py-4 pr-4 flex-grow flex flex-col items-center fixed">
-        <!-- Sidebar 1 - Lost Pets -->
-        <LostPets class="w-1/4" />
+      <div class="w-1/4 py-4 pr-4 flex flex-col items-center fixed">
+        <LostPets class="w-full mb-4" />
+        <Trends class="w-full" />
       </div>
 
-      <!-- Main Content Area (Scrollable) -->
       <div
         class="grid grid-cols-8 justify-center inset-0 shadow-md flex-grow mt-4 overflow-y-auto h-[120vh]"
       >
-        <!-- <div class="bg-black w-full"> 1</div> -->
         <div class="w-full col-start-3 col-span-4 pr-4">
           <div class="bg-white">
             <QuillEditor
@@ -51,18 +49,13 @@
             <PostElement />
           </div>
         </div>
-        <!-- <div class="bg-black w-full"> 3</div> -->
       </div>
 
-      <!-- Sidebar 3 - Trend and Category -->
-      <!-- <Trends class="fixed right-0 mr-4"/> -->
-      <!-- <div class="w-1/4 py-4 pr-4 flex-grow flex flex-col items-center "> -->
-      <!-- Sidebar 1 - Lost Pets -->
       <Notifications class="right-0 mr-4 fixed w-1/4" />
-      <!-- </div> -->
     </div>
   </div>
 </template>
+
 
 <script>
 import LostPets from "./LostPet.vue";

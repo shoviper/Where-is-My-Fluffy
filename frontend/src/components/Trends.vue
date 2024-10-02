@@ -1,5 +1,5 @@
 <template>
-  <div class="w-1/4 h-2/4 bg-white p-4 shadow-md flex-grow mt-4 rounded-md">
+  <div class="w-11/12 h-2/4 bg-white p-4 shadow-md flex-grow mt-4 rounded-md">
     <div class="flex justify-start items-center mb-4">
       <h2 class="text-base font-semibold">Trends for you</h2>
     </div>
