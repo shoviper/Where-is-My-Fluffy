@@ -1,7 +1,7 @@
 package com.sda_project.myfluffy.post.controller;
 
-import com.sda_project.myfluffy.common.dto.response.PostCreationDto;
-import com.sda_project.myfluffy.common.dto.response.PostUpdateDto;
+import com.sda_project.myfluffy.post.model.PostCreationDto;
+import com.sda_project.myfluffy.post.model.PostUpdateDto;
 import com.sda_project.myfluffy.common.dto.response.ResponseDto;
 import com.sda_project.myfluffy.common.utils.constants.AppConstants;
 import com.sda_project.myfluffy.post.dto.PostDto;
@@ -24,11 +24,15 @@ public class PostController {
     private IPostService iPostService;
 
     @PostMapping
-    public ResponseEntity<String> createPost(@RequestBody PostCreationDto postCreationDto,
+    public ResponseEntity<ResponseDto> createPost(@RequestBody PostCreationDto postCreationDto,
                                                 @AuthenticationPrincipal OAuth2User principal) {
             iPostService.createPost(postCreationDto, principal);
-            return new ResponseEntity<>("Post created successfully!", HttpStatus.CREATED);
-
+            return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ResponseDto.builder()
+                        .statusCode(AppConstants.STATUS_201)
+                        .statusMsg(AppConstants.MESSAGE_201)
+                        .build());
     }
 
     @GetMapping

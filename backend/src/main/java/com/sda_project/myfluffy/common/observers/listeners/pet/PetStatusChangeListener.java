@@ -1,12 +1,10 @@
-package com.sda_project.myfluffy.common.listeners;
+package com.sda_project.myfluffy.common.observers.listeners.pet;
 
-import com.sda_project.myfluffy.common.events.PetStatusChangeEvent;
-import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
+import com.sda_project.myfluffy.common.observers.events.pet.PetStatusChangeEvent;
 import com.sda_project.myfluffy.common.utils.enums.Status;
 import com.sda_project.myfluffy.notification.Notification;
 import com.sda_project.myfluffy.pet.model.Pet;
 import com.sda_project.myfluffy.user.model.User;
-import com.sda_project.myfluffy.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class PetStatusChangeListener {
 
-    private UserRepository userRepository;
     private Notification notification;
 
     @EventListener

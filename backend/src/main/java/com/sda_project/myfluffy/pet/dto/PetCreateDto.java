@@ -8,7 +8,7 @@ public class PetCreateDto {
 
     private String name;
 
-    private float age;
+    private double age;
 
     private String animalType;
 

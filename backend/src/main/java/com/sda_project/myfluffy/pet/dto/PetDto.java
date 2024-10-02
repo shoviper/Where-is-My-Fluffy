@@ -12,7 +12,7 @@ public class PetDto {
 
     private String name;
 
-    private float age;
+    private double age;
 
     private String animalType;
 

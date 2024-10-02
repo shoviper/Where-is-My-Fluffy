@@ -60,6 +60,19 @@ CREATE TABLE IF NOT EXISTS images (
     FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`) ON DELETE CASCADE
 );
 
+-- Create Notification Table
+CREATE TABLE IF NOT EXISTS notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    type enum('Missing', 'Found', 'Alert'),
+    pet_id INT,
+    owner_id INT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`pet_id`) REFERENCES `pets`(id) ON DELETE CASCADE,
+    FOREIGN KEY (`owner_id`) REFERENCES `users`(id) ON DELETE CASCADE
+);
+
 -- Insert locations into the locations table
 INSERT INTO locations (address) VALUES ('San Francisco');
 INSERT INTO locations (address) VALUES ('Kmitl');
@@ -81,5 +94,5 @@ INSERT INTO pets (name, age, description, status, location_id, owner_id, founder
 INSERT INTO pets (name, age, description, status, location_id, owner_id, founder_id, reward_amount, animal_type) VALUES ('Fido', 3, 'A cute dog', 'MISSING', 1, 2, NULL, 30.0, 'dog');
 
 -- Insert posts into the post table
-INSERT INTO posts (title, content, type, pet_id, owner_id) VALUES ('Lost Dog', 'Please help me find my dog', 'Missing', 1, 1);
-INSERT INTO posts (title, content, type, pet_id, owner_id) VALUES ('Found Cat', 'I found a cat', 'Found', 2, 2);
+INSERT INTO posts (title, content, type, pet_id, owner_id) VALUES ('Lost Dog', 'Please help me find my dog', 'Found', 1, 1);
+INSERT INTO posts (title, content, type, pet_id, owner_id) VALUES ('Found Cat', 'I found a cat', 'Missing', 2, 2);

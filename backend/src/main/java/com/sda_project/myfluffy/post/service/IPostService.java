@@ -1,10 +1,10 @@
 package com.sda_project.myfluffy.post.service;
 
-import com.sda_project.myfluffy.common.dto.response.PostCreationDto;
+import com.sda_project.myfluffy.post.model.PostCreationDto;
 
 import java.util.List;
 
-import com.sda_project.myfluffy.common.dto.response.PostUpdateDto;
+import com.sda_project.myfluffy.post.model.PostUpdateDto;
 import com.sda_project.myfluffy.post.dto.PostDto;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

@@ -1,4 +1,4 @@
-package com.sda_project.myfluffy.common.dto.response;
+package com.sda_project.myfluffy.post.model;
 
 import lombok.Data;
 

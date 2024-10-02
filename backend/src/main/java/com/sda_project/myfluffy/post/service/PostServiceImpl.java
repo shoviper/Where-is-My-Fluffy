@@ -1,7 +1,8 @@
 package com.sda_project.myfluffy.post.service;
 
-import com.sda_project.myfluffy.common.dto.response.PostCreationDto;
-import com.sda_project.myfluffy.common.dto.response.PostUpdateDto;
+import com.sda_project.myfluffy.common.observers.events.post.PostCreatedEvent;
+import com.sda_project.myfluffy.post.model.PostCreationDto;
+import com.sda_project.myfluffy.post.model.PostUpdateDto;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.common.exception.UnauthorizedException;
 import com.sda_project.myfluffy.common.utils.enums.PostType;
@@ -21,6 +22,7 @@ import com.sda_project.myfluffy.user.model.User;
 import com.sda_project.myfluffy.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +39,7 @@ public class PostServiceImpl implements IPostService {
     private UserRepository userRepository;
     private PetRepository petRepository;
     private ILocationService iLocationService;
+    private ApplicationEventPublisher eventPublisher;
 
     /**
      * @param postCreationDto - Post data transfer object
@@ -58,6 +61,9 @@ public class PostServiceImpl implements IPostService {
         post.setPostOwner(owner);
 
         postRepository.save(post);
+
+        eventPublisher.publishEvent(new PostCreatedEvent(this, post));
+
     }
 
     private User getAuthenticatedUser(OAuth2User oAuth2User) {

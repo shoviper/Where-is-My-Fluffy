@@ -26,7 +26,7 @@ public class Pet {
     private String name;
 
     @Column(name="age")
-    private float age;
+    private double age;
 
     @Column(name="description")
     private String description;

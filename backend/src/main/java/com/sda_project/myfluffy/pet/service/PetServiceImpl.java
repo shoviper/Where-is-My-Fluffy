@@ -3,6 +3,7 @@ package com.sda_project.myfluffy.pet.service;
 
 import com.sda_project.myfluffy.animal_type.model.AnimalType;
 import com.sda_project.myfluffy.animal_type.repository.AnimalTypeRepository;
+import com.sda_project.myfluffy.common.observers.events.pet.PetFounderChangeEvent;
 import com.sda_project.myfluffy.geolocation.dto.LocationCreateDto;
 import com.sda_project.myfluffy.geolocation.dto.LocationDto;
 import com.sda_project.myfluffy.pet.dto.PetCreateDto;
@@ -11,7 +12,7 @@ import com.sda_project.myfluffy.pet.dto.PetFounderUpdateDto;
 import com.sda_project.myfluffy.pet.dto.PetStatusUpdateDto;
 import com.sda_project.myfluffy.user.dto.UserDto;
 import com.sda_project.myfluffy.common.utils.enums.Status;
-import com.sda_project.myfluffy.common.events.PetStatusChangeEvent;
+import com.sda_project.myfluffy.common.observers.events.pet.PetStatusChangeEvent;
 import com.sda_project.myfluffy.common.exception.InvalidStatusException;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.common.exception.UnauthorizedException;
@@ -118,6 +119,7 @@ public class PetServiceImpl implements IPetService {
      * @return boolean indicating if the update of Pet details is successful or not
      */
     @Override
+    @Transactional
     public boolean updatePetStatus(OAuth2User oAuth2User, PetStatusUpdateDto petStatusUpdateDto) {
         User user = getAuthenticatedUser(oAuth2User);
         Pet pet = findOwnedPet(petStatusUpdateDto.getId(), user);
@@ -132,6 +134,7 @@ public class PetServiceImpl implements IPetService {
         pet.setStatus(newStatus);
         pet.setFounder(null);
         petRepository.save(pet);
+
         eventPublisher.publishEvent(new PetStatusChangeEvent(this, pet));
     }
 
@@ -157,6 +160,8 @@ public class PetServiceImpl implements IPetService {
 
         pet.setFounder(founder);
         petRepository.save(pet);
+
+        eventPublisher.publishEvent(new PetFounderChangeEvent(this, pet));
 
         return true;
     }
