@@ -144,7 +144,7 @@ public class UserServiceImpl implements IUserService {
     public boolean deleteUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User", "email", email));
-        petRepository.deleteByOwnerId(user.getId());
+        petRepository.deleteByPetOwner(user);
         userRepository.deleteById(user.getId());
         return true;
     }

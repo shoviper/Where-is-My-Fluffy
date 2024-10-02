@@ -42,8 +42,4 @@ public class Post {
     @JoinColumn(name = "owner_id")
     private User postOwner;
 
-    // Abstract methods and constructors go here...
-
 }
-
-// Define subclasses for MissingPetPost, FoundPetPost, and AlertPost similarly

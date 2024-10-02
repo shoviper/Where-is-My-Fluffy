@@ -59,7 +59,7 @@ public class PetServiceImpl implements IPetService {
         Location location = createLocationForPet(petCreateDto.getLocation());
 
         Pet pet = PetCreateMapper.mapToPet(petCreateDto, new Pet());
-        pet.setOwner(user);
+        pet.setPetOwner(user);
         pet.setLocation(location);
         pet.setAnimalType(animalType);
         pet.setStatus(Status.MISSING);
@@ -164,7 +164,7 @@ public class PetServiceImpl implements IPetService {
     private Pet findOwnedPet(int petId, User owner) {
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pet", "id", Integer.toString(petId)));
-        if (!pet.getOwner().equals(owner)) {
+        if (!pet.getPetOwner().equals(owner)) {
             throw new UnauthorizedException("You do not own this pet.");
         }
         return pet;
@@ -197,7 +197,7 @@ public class PetServiceImpl implements IPetService {
     }
 
     private PetDto mapPetToDto(Pet pet) {
-        UserDto ownerDto = UserMapper.mapToUserDto(pet.getOwner(), new UserDto());
+        UserDto ownerDto = UserMapper.mapToUserDto(pet.getPetOwner(), new UserDto());
         LocationDto locationDto = iLocationService.fetchLocationById(pet.getLocation().getId());
         String animalType = pet.getAnimalType().getType();
         UserDto founderDto = Optional.ofNullable(pet.getFounder())

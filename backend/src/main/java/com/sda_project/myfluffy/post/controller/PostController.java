@@ -1,11 +1,11 @@
 package com.sda_project.myfluffy.post.controller;
 
-import com.sda_project.myfluffy.dto.PostCreationDto;
-import com.sda_project.myfluffy.dto.PostDto;
-import com.sda_project.myfluffy.dto.ResponseDto;
-import com.sda_project.myfluffy.dto.PostUpdateDto;
+import com.sda_project.myfluffy.common.dto.response.PostCreationDto;
+import com.sda_project.myfluffy.common.dto.response.PostUpdateDto;
+import com.sda_project.myfluffy.common.dto.response.ResponseDto;
+import com.sda_project.myfluffy.common.utils.constants.AppConstants;
+import com.sda_project.myfluffy.post.dto.PostDto;
 import com.sda_project.myfluffy.post.service.IPostService;
-import com.sda_project.myfluffy.utils.Constants;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,11 +61,11 @@ public class PostController {
         if (isDeleted) {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new ResponseDto(Constants.STATUS_200, Constants.MESSAGE_200));
+                    .body(new ResponseDto(AppConstants.STATUS_200, AppConstants.MESSAGE_200));
         } else {
             return ResponseEntity
                     .status(HttpStatus.EXPECTATION_FAILED)
-                    .body(new ResponseDto(Constants.STATUS_417, Constants.MESSAGE_417_DELETE));
+                    .body(new ResponseDto(AppConstants.STATUS_417, AppConstants.MESSAGE_417_DELETE));
         }
     }
 

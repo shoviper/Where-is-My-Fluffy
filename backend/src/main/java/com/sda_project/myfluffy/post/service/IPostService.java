@@ -12,9 +12,10 @@ public interface IPostService {
 
     /**
      * @param postCreationDto - Post data transfer object
-     * @param principal       - Current authenticated user
+     * @param oAuth2User       - Current authenticated user
      */
-    void createPost(PostCreationDto postCreationDto, OAuth2User principal);
+    void createPost(PostCreationDto postCreationDto, OAuth2User oAuth2User);
+
     /**
      * @return List of all posts
      */
@@ -27,6 +28,12 @@ public interface IPostService {
     PostDto fetchPostById(int id);
 
     /**
+     * @param oAuth2User - OAuth2User Object.
+     * @return List of posts related to a logged-in User.
+     */
+    List<PostDto> fetchMyPost(OAuth2User oAuth2User);
+
+    /**
      * @param ownerId - Owner (User) ID
      * @return List of posts related to a specific owner
      */
@@ -34,14 +41,15 @@ public interface IPostService {
 
     /**
      * @param id - Post ID
+     * @param postUpdateDto - Post data transfer object
+     * @return boolean indicating if the post was successfully updated
+     */
+    boolean updatePost(int id, PostUpdateDto postUpdateDto);
+
+    /**
+     * @param id - Post ID
      * @return boolean indicating if the post was successfully deleted
      */
     boolean deletePostById(int id);
 
-    /**
-     * @param id - Post ID
-     * @param postCreationDto - Post data transfer object
-     * @return boolean indicating if the post was successfully updated
-     */
-    public boolean updatePost(int id, PostUpdateDto postCreationDto);
 }

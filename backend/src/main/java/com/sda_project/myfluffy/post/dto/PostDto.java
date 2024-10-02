@@ -24,7 +24,7 @@ public class PostDto {
 
     private PostType type;
 
-    private UserDto userDto;
+    private UserDto user;
 
-    private PetDto petDto;
+    private PetDto pet;
 }

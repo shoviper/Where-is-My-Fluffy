@@ -29,7 +29,7 @@ public class PetStatusChangeListener {
     }
 
     private void notifyOwner(Pet pet) {
-        User owner = pet.getOwner();
+        User owner = pet.getPetOwner();
         System.out.println("Notifying " + owner.getName() + " that their pet " + pet.getName() + " is found.");
         sendNotification(owner, pet);
     }

@@ -16,21 +16,15 @@ public class PostMapper {
         postDto.setContent(post.getContent());
         postDto.setTimestamp(post.getTimestamp());
         postDto.setType(post.getType());
-
-        if (post.getOwner() != null) {
-            postDto.setUserDto(UserMapper.mapToUserDto(post.getOwner(), new UserDto()));
-        }
-
-        if (post.getPet() != null) {
-            postDto.setPetDto(PetMapper.mapToPetDto(post.getPet(), new PetDto()));
-        }
-
         return postDto;
     }
 
     public static Post mapToPost(PostDto postDto, Post post) {
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());
+        post.setContent(postDto.getContent());
+        post.setTimestamp(postDto.getTimestamp());
+        post.setType(postDto.getType());
         return post;
     }
 
