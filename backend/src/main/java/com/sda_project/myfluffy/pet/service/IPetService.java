@@ -1,9 +1,7 @@
 package com.sda_project.myfluffy.pet.service;
 
-import com.sda_project.myfluffy.pet.dto.PetCreateDto;
-import com.sda_project.myfluffy.pet.dto.PetDto;
-import com.sda_project.myfluffy.pet.dto.PetFounderUpdateDto;
-import com.sda_project.myfluffy.pet.dto.PetStatusUpdateDto;
+import com.sda_project.myfluffy.pet.dto.*;
+import com.sda_project.myfluffy.pet.model.Pet;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;
@@ -15,8 +13,9 @@ public interface IPetService {
      *
      * @param oAuth2User - The authenticated OAuth2User object representing the currently logged-in user.
      * @param petCreateDto - The PetCreateDto object containing pet creating details.
+     * @return petDto - PetDto object
      */
-    void createPet(OAuth2User oAuth2User, PetCreateDto petCreateDto);
+    PetDto createPet(OAuth2User oAuth2User, PetCreateDto petCreateDto);
 
     /**
      * Retrieves the details of a pet based on the provided pet ID.
@@ -67,4 +66,5 @@ public interface IPetService {
      */
     List<PetDto> getAllPets();
 
+    PetDto updatePetImagePath(Pet pet);
 }

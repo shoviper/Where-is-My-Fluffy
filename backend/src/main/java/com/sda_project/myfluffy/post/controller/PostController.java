@@ -89,12 +89,18 @@ public class PostController {
         if (isDeleted) {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new ResponseDto(AppConstants.STATUS_200, AppConstants.MESSAGE_200));
+                    .body(ResponseDto.builder()
+                        .statusCode(AppConstants.STATUS_200)
+                        .statusMsg(AppConstants.MESSAGE_200)
+                        .build());
         } else {
             return ResponseEntity
                     .status(HttpStatus.EXPECTATION_FAILED)
-                    .body(new ResponseDto(AppConstants.STATUS_417, AppConstants.MESSAGE_417_DELETE));
-        }
+                    .body(ResponseDto.builder()
+                            .statusCode(AppConstants.STATUS_417)
+                            .statusMsg(AppConstants.MESSAGE_417_DELETE)
+                            .build());
+    }
     }
 
     @PutMapping("/{id}")

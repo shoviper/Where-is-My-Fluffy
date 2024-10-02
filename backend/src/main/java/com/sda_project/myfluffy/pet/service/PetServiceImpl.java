@@ -6,10 +6,7 @@ import com.sda_project.myfluffy.animal_type.repository.AnimalTypeRepository;
 import com.sda_project.myfluffy.common.observers.events.pet.PetFounderChangeEvent;
 import com.sda_project.myfluffy.geolocation.dto.LocationCreateDto;
 import com.sda_project.myfluffy.geolocation.dto.LocationDto;
-import com.sda_project.myfluffy.pet.dto.PetCreateDto;
-import com.sda_project.myfluffy.pet.dto.PetDto;
-import com.sda_project.myfluffy.pet.dto.PetFounderUpdateDto;
-import com.sda_project.myfluffy.pet.dto.PetStatusUpdateDto;
+import com.sda_project.myfluffy.pet.dto.*;
 import com.sda_project.myfluffy.user.dto.UserDto;
 import com.sda_project.myfluffy.common.utils.enums.Status;
 import com.sda_project.myfluffy.common.observers.events.pet.PetStatusChangeEvent;
@@ -50,10 +47,11 @@ public class PetServiceImpl implements IPetService {
      *
      * @param oAuth2User - The authenticated OAuth2User object representing the currently logged-in user.
      * @param petCreateDto - The PetCreateDto object containing pet creating details.
+     * @return petDto - PetDto object
      */
     @Override
     @Transactional
-    public void createPet(OAuth2User oAuth2User, PetCreateDto petCreateDto) {
+    public PetDto createPet(OAuth2User oAuth2User, PetCreateDto petCreateDto) {
         User user = getAuthenticatedUser(oAuth2User);
         AnimalType animalType = animalTypeRepository.findById(petCreateDto.getAnimalType())
                 .orElseThrow(() -> new ResourceNotFoundException("Pet-AnimalType", "type", petCreateDto.getAnimalType()));
@@ -66,6 +64,8 @@ public class PetServiceImpl implements IPetService {
         pet.setStatus(Status.MISSING);
 
         petRepository.save(pet);
+
+        return PetMapper.mapToPetDto(pet, new PetDto());
     }
 
     private User getAuthenticatedUser(OAuth2User oAuth2User) {
@@ -201,6 +201,12 @@ public class PetServiceImpl implements IPetService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public PetDto updatePetImagePath(Pet pet) {
+        petRepository.save(pet);
+        return PetMapper.mapToPetDto(pet, new PetDto());
+    }
+
     private PetDto mapPetToDto(Pet pet) {
         UserDto ownerDto = UserMapper.mapToUserDto(pet.getPetOwner(), new UserDto());
         LocationDto locationDto = iLocationService.fetchLocationById(pet.getLocation().getId());
@@ -216,5 +222,6 @@ public class PetServiceImpl implements IPetService {
         petDto.setFounder(founderDto);
         return petDto;
     }
+
 
 }

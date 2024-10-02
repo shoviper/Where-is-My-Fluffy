@@ -14,6 +14,8 @@ public class PetDto {
 
     private double age;
 
+    private String imagePath;
+
     private String animalType;
 
     private String description;

@@ -188,6 +188,7 @@ public class PostServiceImpl implements IPostService {
         Post post = postRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("Post", "id", String.valueOf(id))
         );
+        post.setPet(null);
         postRepository.delete(post);
         return true;
     }

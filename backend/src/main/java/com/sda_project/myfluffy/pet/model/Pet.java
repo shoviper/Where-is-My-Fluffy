@@ -34,6 +34,9 @@ public class Pet {
     @Column(name="description")
     private String description;
 
+    @Column(name="pet_image_path")
+    private String imagePath;
+
     @Enumerated(EnumType.STRING)
     @Column(name="status")
     private Status status;
