@@ -1,5 +1,11 @@
 package com.sda_project.myfluffy.user.service;
 
+import com.sda_project.myfluffy.geolocation.dto.LocationDto;
+import com.sda_project.myfluffy.pet.dto.PetDto;
+import com.sda_project.myfluffy.pet.mapper.PetMapper;
+import com.sda_project.myfluffy.pet.model.Pet;
+import com.sda_project.myfluffy.post.dto.PostDto;
+import com.sda_project.myfluffy.post.model.Post;
 import com.sda_project.myfluffy.user.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.user.dto.UserDto;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
@@ -10,11 +16,17 @@ import com.sda_project.myfluffy.pet.repository.PetRepository;
 import com.sda_project.myfluffy.user.model.User;
 import com.sda_project.myfluffy.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -147,5 +159,24 @@ public class UserServiceImpl implements IUserService {
         petRepository.deleteByPetOwner(user);
         userRepository.deleteById(user.getId());
         return true;
+    }
+
+
+    /**
+     * @return List of all users
+     */
+    @Override
+    public List<UserDto> fetchAllUsers(int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<User> usersPage = userRepository.findAll(pageable);
+
+        return usersPage.getContent().stream()
+                .map(this::mapToUser)
+                .collect(Collectors.toList());
+    }
+
+    private UserDto mapToUser(User user) {
+        return UserMapper.mapToUserDto(user, new UserDto());
     }
 }

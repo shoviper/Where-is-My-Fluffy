@@ -66,5 +66,5 @@ public interface IPetService {
      */
     List<PetDto> getAllPets();
 
-    PetDto updatePetImagePath(Pet pet);
+    PetDto updatePetImagePath(int petId, String filePath);
 }

@@ -57,7 +57,7 @@ public class Pet {
     @JoinColumn(name="founder_id")
     private User founder;
 
-    @OneToMany(mappedBy="pet", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="pet", cascade = CascadeType.ALL)
     private List<Post> posts;
 
     @Column(name="reward_amount")

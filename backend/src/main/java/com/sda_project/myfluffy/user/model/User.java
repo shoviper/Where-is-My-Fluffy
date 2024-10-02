@@ -3,7 +3,9 @@ package com.sda_project.myfluffy.user.model;
 
 import com.sda_project.myfluffy.notification.model.Notification;
 import com.sda_project.myfluffy.pet.model.Pet;
+import com.sda_project.myfluffy.post.dto.PostDto;
 import com.sda_project.myfluffy.post.model.Post;
+import com.sda_project.myfluffy.user.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.*;
 

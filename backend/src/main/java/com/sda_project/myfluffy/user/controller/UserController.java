@@ -1,5 +1,6 @@
 package com.sda_project.myfluffy.user.controller;
 
+import com.sda_project.myfluffy.post.dto.PostDto;
 import com.sda_project.myfluffy.user.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.common.dto.response.ResponseDto;
 import com.sda_project.myfluffy.user.dto.UserDto;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path="/users", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -55,6 +58,22 @@ public class UserController {
         return ResponseEntity.
                 status(HttpStatus.OK)
                 .body(userDto);
+    }
+
+    @Operation(
+            summary = "Get All Users"
+    )
+    @GetMapping
+    public ResponseEntity<List<UserDto>> fetchAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        List<UserDto> userDtos = iUserService.fetchAllUsers(page, size, sortBy, sortDir);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userDtos);
     }
 
     @Operation(

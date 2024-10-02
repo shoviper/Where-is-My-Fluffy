@@ -202,8 +202,13 @@ public class PetServiceImpl implements IPetService {
     }
 
     @Override
-    public PetDto updatePetImagePath(Pet pet) {
+    public PetDto updatePetImagePath(int petId, String filePath) {
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(() -> new ResourceNotFoundException("Pet", "id", Integer.toString(petId)));
+
+        pet.setImagePath(filePath);
         petRepository.save(pet);
+
         return PetMapper.mapToPetDto(pet, new PetDto());
     }
 

@@ -166,10 +166,7 @@ public class PetController {
             Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
 
             // Get the pet entity by id and update the image path
-            PetDto petDto = iPetService.fetchPetById(petId);
-            Pet pet = PetMapper.mapToPet(petDto, new Pet());
-            pet.setImagePath(filePath);  // Assuming the Pet entity has a field for imagePath
-            iPetService.updatePetImagePath(pet);
+            iPetService.updatePetImagePath(petId, filePath);
 
             return ResponseEntity
                     .status(HttpStatus.OK)
