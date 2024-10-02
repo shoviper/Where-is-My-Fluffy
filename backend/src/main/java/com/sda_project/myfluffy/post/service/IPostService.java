@@ -1,10 +1,10 @@
 package com.sda_project.myfluffy.post.service;
 
-import com.sda_project.myfluffy.post.model.PostCreationDto;
+import com.sda_project.myfluffy.post.dto.PostCreationDto;
 
 import java.util.List;
 
-import com.sda_project.myfluffy.post.model.PostUpdateDto;
+import com.sda_project.myfluffy.post.dto.PostUpdateDto;
 import com.sda_project.myfluffy.post.dto.PostDto;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -17,9 +17,13 @@ public interface IPostService {
     void createPost(PostCreationDto postCreationDto, OAuth2User oAuth2User);
 
     /**
+     * @param page the page number to retrieve (zero-based index).
+     * @param size the number of posts per page.
+     * @param sortBy the field by which to sort the results (e.g., "title", "timestamp").
+     * @param sortDir the direction of sorting ("asc" for ascending, "desc" for descending).
      * @return List of all posts
      */
-    List<PostDto> fetchAllPosts();
+    List<PostDto> fetchAllPosts(int page, int size, String sortBy, String sortDir);
 
     /**
      * @param id - Post ID
@@ -35,9 +39,13 @@ public interface IPostService {
 
     /**
      * @param ownerId - Owner (User) ID
+     * @param page the page number to retrieve (zero-based index).
+     * @param size the number of posts per page.
+     * @param sortBy the field by which to sort the results (e.g., "title", "timestamp").
+     * @param sortDir the direction of sorting ("asc" for ascending, "desc" for descending).
      * @return List of posts related to a specific owner
      */
-    List<PostDto> fetchPostsByOwnerId(int ownerId);
+    List<PostDto> fetchPostsByOwnerId(int ownerId, int page, int size, String sortBy, String sortDir);
 
     /**
      * @param id - Post ID

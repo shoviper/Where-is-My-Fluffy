@@ -120,7 +120,7 @@ public class PetController {
     }
 
     @Operation(
-            summary = "Add founder who found the pet"
+            summary = "Add founder who found the pet: OAuth2User"
     )
     @PutMapping("/update-pet-founder")
     public ResponseEntity<ResponseDto> addFounder(@AuthenticationPrincipal OAuth2User oAuth2User, @RequestBody PetFounderUpdateDto petFounderUpdateDto) {

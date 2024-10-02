@@ -2,7 +2,6 @@ package com.sda_project.myfluffy.common.observers.events.pet;
 
 import com.sda_project.myfluffy.common.observers.events.BaseEvent;
 import com.sda_project.myfluffy.pet.model.Pet;
-import com.sda_project.myfluffy.user.model.User;
 import lombok.Getter;
 
 @Getter

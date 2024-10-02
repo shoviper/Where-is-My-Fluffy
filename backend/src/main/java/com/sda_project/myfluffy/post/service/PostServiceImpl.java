@@ -1,8 +1,9 @@
 package com.sda_project.myfluffy.post.service;
 
 import com.sda_project.myfluffy.common.observers.events.post.PostCreatedEvent;
-import com.sda_project.myfluffy.post.model.PostCreationDto;
-import com.sda_project.myfluffy.post.model.PostUpdateDto;
+import com.sda_project.myfluffy.pet.mapper.PetCreateMapper;
+import com.sda_project.myfluffy.post.dto.PostCreationDto;
+import com.sda_project.myfluffy.post.dto.PostUpdateDto;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.common.exception.UnauthorizedException;
 import com.sda_project.myfluffy.common.utils.enums.PostType;
@@ -23,6 +24,10 @@ import com.sda_project.myfluffy.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,10 +58,14 @@ public class PostServiceImpl implements IPostService {
         Pet pet = petRepository.findById(postCreationDto.getPetId())
                 .orElseThrow(() -> new ResourceNotFoundException("Pet", "id", String.valueOf(postCreationDto.getPetId())));
 
+        if (!pet.getPetOwner().equals(owner)) {
+            throw new UnauthorizedException("UNAUTHORIZED. You do not own this pet!");
+        }
+
         Post post = new Post();
         post.setTitle(postCreationDto.getTitle());
         post.setContent(postCreationDto.getContent());
-        post.setType(PostType.valueOf(postCreationDto.getType()));
+        post.setType(postCreationDto.getType());
         post.setPet(pet);
         post.setPostOwner(owner);
 
@@ -88,6 +97,20 @@ public class PostServiceImpl implements IPostService {
     }
 
     /**
+     * @return List of all posts
+     */
+    @Override
+    public List<PostDto> fetchAllPosts(int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Post> postsPage = postRepository.findAll(pageable);
+
+        return postsPage.getContent().stream()
+                .map(this::mapPostToDto)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * @param oAuth2User - OAuth2User Object.
      * @return List of posts related to a logged-in User.
      */
@@ -105,12 +128,16 @@ public class PostServiceImpl implements IPostService {
      * @return List of posts related to a specific owner
      */
     @Override
-    public List<PostDto> fetchPostsByOwnerId(int ownerId) {
+    public List<PostDto> fetchPostsByOwnerId(int ownerId, int page, int size, String sortBy, String sortDir) {
         User owner = userRepository.findById(ownerId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", String.valueOf(ownerId))
         );
 
-        return postRepository.findByPostOwner(owner).stream()
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Post> postsPage = postRepository.findByPostOwner(owner, pageable);
+
+        return postsPage.getContent().stream()
                 .map(this::mapPostToDto)
                 .collect(Collectors.toList());
     }
@@ -136,7 +163,7 @@ public class PostServiceImpl implements IPostService {
         }
 
         if (postUpdateDto.getType() != null) {
-            post.setType(PostType.valueOf(postUpdateDto.getType()));
+            post.setType(postUpdateDto.getType());
         }
 
         if (postUpdateDto.getPetId() > 0) {
@@ -163,16 +190,6 @@ public class PostServiceImpl implements IPostService {
         );
         postRepository.delete(post);
         return true;
-    }
-
-    /**
-     * @return List of all posts
-     */
-    @Override
-    public List<PostDto> fetchAllPosts() {
-        return postRepository.findAll().stream()
-                .map(this::mapPostToDto)
-                .collect(Collectors.toList());
     }
 
     private PostDto mapPostToDto(Post post) {

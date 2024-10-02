@@ -1,6 +1,7 @@
 // model/User.java
 package com.sda_project.myfluffy.user.model;
 
+import com.sda_project.myfluffy.notification.model.Notification;
 import com.sda_project.myfluffy.pet.model.Pet;
 import com.sda_project.myfluffy.post.model.Post;
 import jakarta.persistence.*;
@@ -39,5 +40,8 @@ public class User {
 
     @OneToMany(mappedBy = "postOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> myPosts;
+
+    @OneToMany(mappedBy = "notificationOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> myNotifications;
 
 }

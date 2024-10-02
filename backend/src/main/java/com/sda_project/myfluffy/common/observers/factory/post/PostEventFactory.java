@@ -1,4 +1,4 @@
-package com.sda_project.myfluffy.common.observers.factory.pet;
+package com.sda_project.myfluffy.common.observers.factory.post;
 
 import com.sda_project.myfluffy.common.observers.events.BaseEvent;
 import com.sda_project.myfluffy.common.observers.events.post.PostCreatedEvent;
