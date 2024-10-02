@@ -5,9 +5,9 @@
     </div>
     <div>
       <div
-        v-for="(trend, index) in pets"
+        v-for="(trend, index) in trends"
         :key="index"
-        class="flex justify-between border-t  border-gray-300 py-2"
+        class="flex justify-between border-t border-gray-300 py-2"
       >
         <div class="flex flex-col items-start px-2">
           <p class="text-sm">Trending in {{ trend.category }}</p>
@@ -17,7 +17,9 @@
         <div><Icon icon="ri:more-line" class="hover:text-PURPLE" /></div>
       </div>
     </div>
-    <h2 class="text-base text-start text-PINK hover:text-PURPLE font-bold ite">Show more</h2>
+    <h2 class="text-base text-start text-PINK hover:text-PURPLE font-bold">
+      Show more
+    </h2>
   </div>
 </template>
 <script>
@@ -29,7 +31,7 @@ export default {
   },
   data() {
     return {
-      pets: [
+      trends: [
         { tag: "#GoldenRetiever", category: "Dog", numpost: "2,066" },
         { tag: "#OrangeCat", category: "Cat", numpost: "1,978" },
         { tag: "#Bangkok", category: "Rabbit", numpost: "567" },
