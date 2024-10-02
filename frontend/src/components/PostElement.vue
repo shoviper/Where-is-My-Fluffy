@@ -26,7 +26,7 @@
     </p>
     <Icon icon="bx:bx-image" class="w-full h-64 mt-4" />
     <div class="flex justify-between border-t ">
-      <div class="flex flex-row items-center mt-2">
+      <!-- <div class="flex flex-row items-center mt-2">
         <Icon
           icon="mdi:heart-outline"
           class="text-red-500 hover:text-red-950"
@@ -36,7 +36,7 @@
       <div class="flex flex-row mt-2">
         <p class="hover:text-PINK">{{ post.comments }} comments</p>
         <p class="mx-2 hover:text-PINK">{{ post.shares }} shares</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

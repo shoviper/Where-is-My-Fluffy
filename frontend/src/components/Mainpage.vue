@@ -42,12 +42,7 @@
       >
         <div class="w-full col-start-3 col-span-4">
           <div class="bg-white">
-            <QuillEditor
-              theme="snow"
-              v-model="content"
-              ref="myQuillEditor"
-              :options="editorOption"
-            />
+            
           </div>
           <div>
             <PostElement />

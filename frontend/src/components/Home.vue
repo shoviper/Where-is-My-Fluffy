@@ -4,7 +4,7 @@
   >
     <h1 class="text-PINK font-semibold text-2xl">Home</h1>
     <div v-if="user">
-      <!-- <img :src="user.picture" alt="User Picture" /> -->
+      <img :src="user.picture" alt="User Picture"  class="items-center"/>
       <h2 class="text-lg font-semibold">Welcome, {{ user.name }}!</h2>
       <p>Email: {{ user.email }}</p>
       <!-- <p>All data: {{ user }}</p> -->
