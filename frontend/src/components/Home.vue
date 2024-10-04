@@ -27,7 +27,6 @@
           v-if="isModalVisible"
           :pettypes="pettypes"
           @close="toggleModal"
-          @click="addPet"
         />
 
         <button
@@ -62,14 +61,11 @@ export default {
   data() {
     return {
       user: null,
-      pettypes: [],
       isModalVisible: false,
     };
   },
   mounted() {
     this.fetchUserProfile();
-    this.getPetType();
-    this.addPet();
   },
   methods: {
     async fetchUserProfile() {
@@ -99,26 +95,7 @@ export default {
     toggleModal() {
       this.isModalVisible = !this.isModalVisible;
     },
-    async getPetType() {
-      try {
-        const response = await axios.get("http://localhost:8080/animal-type", {
-          withCredentials: true,
-        });
-        this.pettypes = response.data;
-      } catch (error) {
-        console.error("Error fetching animal types:", error);
-      }
-    },
-    addPet(newPet) {
-      axios
-        .post("http://localhost:8080/pet", newPet, { withCredentials: true })
-        .then((response) => {
-          console.log("Pet added successfully:", response.data);
-        })
-        .catch((error) => {
-          console.error("Error adding pet:", error);
-        });
-    },
+
   },
 };
 </script>
