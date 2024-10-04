@@ -33,26 +33,28 @@
 import axios from "axios";
 
 export default {
-  data() {
-    return {
-      user: null,  // Initially, the user is not logged in
-    };
-  },
-  mounted() {
-    this.fetchUserProfile();  // Fetch user profile when component is mounted
-  },
-  methods: {
-    async fetchUserProfile() {
-      try {
-        const response = await axios.get("http://localhost:8080/profile", {
-          withCredentials: true,
-        });
-        this.user = response.data;  // Set user data if logged in
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-        this.user = null;  // Ensure user is null if there's an error
-      }
-    },
+	data() {
+		return {
+			user: null,
+		};
+	},
+	mounted() {
+		this.fetchUserProfile();
+	},
+	methods: {
+		async fetchUserProfile() {
+			try {
+				const response = await axios.get(
+					'http://localhost:8080/users/me',
+					{
+						withCredentials: true,
+					}
+				);
+				this.user = response.data;
+			} catch (error) {
+				console.error('Error fetching user profile:', error);
+			}
+		},
 
     goToLogin() {
       this.$router.push("/login");  // Redirect to the login page
