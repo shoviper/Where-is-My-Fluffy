@@ -16,9 +16,12 @@ import com.sda_project.myfluffy.common.exception.UnauthorizedException;
 import com.sda_project.myfluffy.geolocation.service.ILocationService;
 import com.sda_project.myfluffy.geolocation.model.Location;
 import com.sda_project.myfluffy.pet.mapper.PetCreateMapper;
+import com.sda_project.myfluffy.pet.mapper.PetCreateResponseMapper;
 import com.sda_project.myfluffy.pet.mapper.PetMapper;
+import com.sda_project.myfluffy.pet.repository.PetImageRepository;
 import com.sda_project.myfluffy.pet.repository.PetRepository;
 import com.sda_project.myfluffy.pet.model.Pet;
+import com.sda_project.myfluffy.pet.model.PetImage;
 import com.sda_project.myfluffy.user.mapper.UserMapper;
 import com.sda_project.myfluffy.user.model.User;
 import com.sda_project.myfluffy.user.repository.UserRepository;
@@ -41,20 +44,24 @@ public class PetServiceImpl implements IPetService {
     private ILocationService iLocationService;
     private AnimalTypeRepository animalTypeRepository;
     private ApplicationEventPublisher eventPublisher;
+    private PetImageRepository petImageRepository;
 
     /**
      * Creates a new pet with the given PetDto details.
      *
-     * @param oAuth2User - The authenticated OAuth2User object representing the currently logged-in user.
-     * @param petCreateDto - The PetCreateDto object containing pet creating details.
+     * @param oAuth2User   - The authenticated OAuth2User object representing the
+     *                     currently logged-in user.
+     * @param petCreateDto - The PetCreateDto object containing pet creating
+     *                     details.
      * @return petDto - PetDto object
      */
     @Override
     @Transactional
-    public PetDto createPet(OAuth2User oAuth2User, PetCreateDto petCreateDto) {
+    public PetCreateResponseDto createPet(OAuth2User oAuth2User, PetCreateDto petCreateDto) {
         User user = getAuthenticatedUser(oAuth2User);
         AnimalType animalType = animalTypeRepository.findById(petCreateDto.getAnimalType())
-                .orElseThrow(() -> new ResourceNotFoundException("Pet-AnimalType", "type", petCreateDto.getAnimalType()));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Pet-AnimalType", "type", petCreateDto.getAnimalType()));
         Location location = createLocationForPet(petCreateDto.getLocation());
 
         Pet pet = PetCreateMapper.mapToPet(petCreateDto, new Pet());
@@ -65,7 +72,7 @@ public class PetServiceImpl implements IPetService {
 
         petRepository.save(pet);
 
-        return PetMapper.mapToPetDto(pet, new PetDto());
+        return PetCreateResponseMapper.mapToPetCreateResponseDto(pet, new PetCreateResponseDto());
     }
 
     private User getAuthenticatedUser(OAuth2User oAuth2User) {
@@ -97,10 +104,13 @@ public class PetServiceImpl implements IPetService {
     }
 
     /**
-     * Retrieves the pet details associated with a specific user identified by their OAuth2 credentials.
+     * Retrieves the pet details associated with a specific user identified by their
+     * OAuth2 credentials.
      *
-     * @param oAuth2User - The authenticated OAuth2User object representing the currently logged-in user.
-     * @return A List of PetDto details associated with the user if found, or an empty list if no pets are found.
+     * @param oAuth2User - The authenticated OAuth2User object representing the
+     *                   currently logged-in user.
+     * @return A List of PetDto details associated with the user if found, or an
+     *         empty list if no pets are found.
      */
     @Override
     public List<PetDto> fetchMyPet(OAuth2User oAuth2User) {
@@ -114,8 +124,9 @@ public class PetServiceImpl implements IPetService {
     /**
      * Updates the details of an existing pet.
      *
-     * @param oAuth2User - OAuth2User Object.
-     * @param petStatusUpdateDto - The PetStatusUpdateDto object containing the updated details of the pet.
+     * @param oAuth2User         - OAuth2User Object.
+     * @param petStatusUpdateDto - The PetStatusUpdateDto object containing the
+     *                           updated details of the pet.
      * @return boolean indicating if the update of Pet details is successful or not
      */
     @Override
@@ -141,7 +152,7 @@ public class PetServiceImpl implements IPetService {
     /**
      * Updates the details of an existing pet.
      *
-     * @param oAuth2User - OAuth2User Object.
+     * @param oAuth2User          - OAuth2User Object.
      * @param petFounderUpdateDto - PetFounderUpdateDto Object.
      * @return boolean indicating if the update of Pet details is successful or not
      */
@@ -156,7 +167,8 @@ public class PetServiceImpl implements IPetService {
         }
 
         User founder = userRepository.findById(petFounderUpdateDto.getFounderId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", Integer.toString(petFounderUpdateDto.getFounderId())));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id",
+                        Integer.toString(petFounderUpdateDto.getFounderId())));
 
         pet.setFounder(founder);
         petRepository.save(pet);
@@ -202,11 +214,15 @@ public class PetServiceImpl implements IPetService {
     }
 
     @Override
-    public PetDto updatePetImagePath(int petId, String filePath) {
+    public PetDto updatePetImageBase64(int petId, String base64Image) {
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pet", "id", Integer.toString(petId)));
 
-        pet.setImagePath(filePath);
+        PetImage petImage = new PetImage();
+        petImage.setImageBase64(base64Image);
+        PetImage createdPetImage = petImageRepository.save(petImage);
+
+        pet.setPetImage(createdPetImage);
         petRepository.save(pet);
 
         return PetMapper.mapToPetDto(pet, new PetDto());
@@ -219,14 +235,15 @@ public class PetServiceImpl implements IPetService {
         UserDto founderDto = Optional.ofNullable(pet.getFounder())
                 .map(founder -> UserMapper.mapToUserDto(founder, new UserDto()))
                 .orElse(null);
+        Optional<PetImage> petImage = petImageRepository.findById(pet.getPetImage().getId());
 
         PetDto petDto = PetMapper.mapToPetDto(pet, new PetDto());
         petDto.setUser(ownerDto);
         petDto.setLocation(locationDto);
         petDto.setAnimalType(animalType);
         petDto.setFounder(founderDto);
+        petImage.ifPresent(image -> petDto.setImage(image.getImageBase64()));
         return petDto;
     }
-
 
 }
