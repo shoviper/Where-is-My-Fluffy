@@ -29,19 +29,32 @@
 
 <script>
 // import LostPetComponent from "./LostPetComponent.vue";
+
 export default {
   name: "d",
-  components: {
+  data: () => ({
+    name: "",
+    age: null,
+    selected: "",
+    description: "",
+    location: "",
+    pettypes: [],
+  }),
+  mounted() {
+    this.seeallLostPets();
   },
-  data() {
-    return {
-      pets: [
-        { name: "Lola", date: "21/07/23", img: "../assets/pets/petpic1.png" },
-        { name: "Lucy", date: "02/12/18", img: "../assets/pets/petpic2.png" },
-        { name: "Sweed", date: "29/09/23", img: "../assets/pets/petpic3.png" },
-        { name: "Khun Somsri", date: "11/01/24", img: "../assets/pets/petpic4.png" },
-      ],
-    };
+  methods: {
+    async seeallLostPets() {
+      try {
+        const response = await axios.get("http://localhost:8080/pets", {
+          withCredentials: true,
+        });
+        this.pettypes = response.data;
+      } catch (error) {
+        console.error("Error fetching pets:", error);
+      }
+      console.log();
+    },
   },
 };
 </script>
