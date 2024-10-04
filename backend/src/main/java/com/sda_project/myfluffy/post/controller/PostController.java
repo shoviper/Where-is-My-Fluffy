@@ -1,11 +1,13 @@
 package com.sda_project.myfluffy.post.controller;
 
-import com.sda_project.myfluffy.post.model.PostCreationDto;
-import com.sda_project.myfluffy.post.model.PostUpdateDto;
+import com.sda_project.myfluffy.pet.dto.PetDto;
+import com.sda_project.myfluffy.post.dto.PostCreationDto;
+import com.sda_project.myfluffy.post.dto.PostUpdateDto;
 import com.sda_project.myfluffy.common.dto.response.ResponseDto;
 import com.sda_project.myfluffy.common.utils.constants.AppConstants;
 import com.sda_project.myfluffy.post.dto.PostDto;
 import com.sda_project.myfluffy.post.service.IPostService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,8 +38,13 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostDto>> fetchAllPosts() {
-        List<PostDto> postDtos = iPostService.fetchAllPosts();
+    public ResponseEntity<List<PostDto>> fetchAllPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        List<PostDto> postDtos = iPostService.fetchAllPosts(page, size, sortBy, sortDir);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(postDtos);
@@ -52,10 +59,27 @@ public class PostController {
     }
 
     @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<PostDto>> fetchPostsByOwnerId(@PathVariable int ownerId) {
-        List<PostDto> postDtos = iPostService.fetchPostsByOwnerId(ownerId);
+    public ResponseEntity<List<PostDto>> fetchPostsByOwnerId(
+            @PathVariable int ownerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+
+        List<PostDto> postDtos = iPostService.fetchPostsByOwnerId(ownerId, page, size, sortBy, sortDir);
         return ResponseEntity
                 .status(HttpStatus.OK)
+                .body(postDtos);
+    }
+
+    @Operation(
+            summary = "Get My Post: OAuth2User"
+    )
+    @GetMapping("/me")
+    public ResponseEntity<List<PostDto>> fetchMyPostDetails(@AuthenticationPrincipal OAuth2User principal) {
+        List<PostDto> postDtos = iPostService.fetchMyPost(principal);
+        return ResponseEntity.
+                status(HttpStatus.OK)
                 .body(postDtos);
     }
 
@@ -65,12 +89,18 @@ public class PostController {
         if (isDeleted) {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new ResponseDto(AppConstants.STATUS_200, AppConstants.MESSAGE_200));
+                    .body(ResponseDto.builder()
+                        .statusCode(AppConstants.STATUS_200)
+                        .statusMsg(AppConstants.MESSAGE_200)
+                        .build());
         } else {
             return ResponseEntity
                     .status(HttpStatus.EXPECTATION_FAILED)
-                    .body(new ResponseDto(AppConstants.STATUS_417, AppConstants.MESSAGE_417_DELETE));
-        }
+                    .body(ResponseDto.builder()
+                            .statusCode(AppConstants.STATUS_417)
+                            .statusMsg(AppConstants.MESSAGE_417_DELETE)
+                            .build());
+    }
     }
 
     @PutMapping("/{id}")

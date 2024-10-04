@@ -1,5 +1,5 @@
 // plugin/MyRewardPlugin.java
-package com.sda_project.myfluffy.plugin;
+package com.sda_project.myfluffy.payment;
 
 import com.sda_project.myfluffy.user.model.User;
 import org.springframework.stereotype.Component;

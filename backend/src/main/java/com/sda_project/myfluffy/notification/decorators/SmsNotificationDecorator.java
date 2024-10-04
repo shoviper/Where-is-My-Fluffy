@@ -1,20 +1,20 @@
 package com.sda_project.myfluffy.notification.decorators;
 
-import com.sda_project.myfluffy.notification.Notification;
+import com.sda_project.myfluffy.notification.types.Notification;
 
 public class SmsNotificationDecorator extends NotificationDecorator {
 
-    public SmsNotificationDecorator(Notification decoratedNotification) {
-        super(decoratedNotification);
+    public SmsNotificationDecorator(Notification notification) {
+        super(notification);
     }
 
     @Override
-    public void send(String message) {
-        super.send(message);
-        sendSms(message);
+    public void send() {
+        super.send();
+        sendSMS();
     }
 
-    private void sendSms(String message) {
-        System.out.println("Sending SMS: " + message);
+    private void sendSMS() {
+        System.out.println("Sending SMS Notification: " + super.getMessage());
     }
 }

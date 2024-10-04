@@ -4,6 +4,8 @@ import com.sda_project.myfluffy.user.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.user.dto.UserDto;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.util.List;
+
 public interface IUserService {
 
     /**
@@ -40,5 +42,7 @@ public interface IUserService {
      * @return boolean indicating if the delete of User details is successful or not
      */
     boolean deleteUser(String email);
+
+    List<UserDto> fetchAllUsers(int page, int size, String sortBy, String sortDir);
 
 }

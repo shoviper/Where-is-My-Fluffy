@@ -1,11 +1,10 @@
-package com.sda_project.myfluffy.common.observers.factory.post;
+package com.sda_project.myfluffy.common.observers.factory.pet;
 
 import com.sda_project.myfluffy.common.observers.events.BaseEvent;
 import com.sda_project.myfluffy.common.observers.events.pet.PetFounderChangeEvent;
 import com.sda_project.myfluffy.common.observers.events.pet.PetStatusChangeEvent;
 import com.sda_project.myfluffy.common.observers.factory.EventFactory;
 import com.sda_project.myfluffy.pet.model.Pet;
-import com.sda_project.myfluffy.user.model.User;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS pets (
     animal_type VARCHAR(255),
     founder_id INT,
     reward_amount DOUBLE DEFAULT 0.0,
+    pet_image_path VARCHAR(255),
     FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`animal_type`) REFERENCES `animal_type`(`type`) ON DELETE CASCADE,
     FOREIGN KEY (`location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE,
@@ -45,7 +46,7 @@ CREATE TABLE IF NOT EXISTS posts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    type enum('Missing', 'Found', 'Alert'),
+    type enum('MISSING', 'FOUND', 'ALERT'),
     pet_id INT,
     owner_id INT,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -63,13 +64,10 @@ CREATE TABLE IF NOT EXISTS images (
 -- Create Notification Table
 CREATE TABLE IF NOT EXISTS notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    type enum('Missing', 'Found', 'Alert'),
-    pet_id INT,
+    message VARCHAR(255) NOT NULL,
+    type enum('NOTIFICATION_CREATED', 'NOTIFICATION_MODIFIED', 'NOTIFICATION_REMOVED'),
     owner_id INT,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`pet_id`) REFERENCES `pets`(id) ON DELETE CASCADE,
     FOREIGN KEY (`owner_id`) REFERENCES `users`(id) ON DELETE CASCADE
 );
 
@@ -90,9 +88,9 @@ INSERT INTO animal_type (type) VALUES ('bird');
 INSERT INTO animal_type (type) VALUES ('crocodile');
 
 -- Insert pets into the pet table (without specifying the id, let AUTO_INCREMENT handle it)
-INSERT INTO pets (name, age, description, status, location_id, owner_id, founder_id, reward_amount, animal_type) VALUES ('Kitty', 1, 'A cute cat', 'FOUND', 2, 1, 2, 10.0, 'cat');
-INSERT INTO pets (name, age, description, status, location_id, owner_id, founder_id, reward_amount, animal_type) VALUES ('Fido', 3, 'A cute dog', 'MISSING', 1, 2, NULL, 30.0, 'dog');
+INSERT INTO pets (name, age, description, status, location_id, owner_id, founder_id, reward_amount, animal_type, pet_image_path) VALUES ('Kitty', 1, 'A cute cat', 'FOUND', 2, 1, 2, 10.0, 'cat', null);
+INSERT INTO pets (name, age, description, status, location_id, owner_id, founder_id, reward_amount, animal_type, pet_image_path) VALUES ('Fido', 3, 'A cute dog', 'MISSING', 1, 2, NULL, 30.0, 'dog', null);
 
 -- Insert posts into the post table
-INSERT INTO posts (title, content, type, pet_id, owner_id) VALUES ('Lost Dog', 'Please help me find my dog', 'Found', 1, 1);
-INSERT INTO posts (title, content, type, pet_id, owner_id) VALUES ('Found Cat', 'I found a cat', 'Missing', 2, 2);
+INSERT INTO posts (title, content, type, pet_id, owner_id) VALUES ('Lost Dog', 'Please help me find my dog', 'FOUND', 1, 1);
+INSERT INTO posts (title, content, type, pet_id, owner_id) VALUES ('Found Cat', 'I found a cat', 'MISSING', 2, 2);

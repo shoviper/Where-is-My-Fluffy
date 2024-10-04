@@ -1,5 +1,6 @@
-package com.sda_project.myfluffy.post.model;
+package com.sda_project.myfluffy.post.dto;
 
+import com.sda_project.myfluffy.common.utils.enums.PostType;
 import lombok.Data;
 
 @Data
@@ -9,7 +10,7 @@ public class PostCreationDto {
 
     private String content;
 
-    private String type;  // You can also use PostType enum if preferred
+    private PostType type;  // You can also use PostType enum if preferred
 
     private int petId;
 
