@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../components/Login.vue';
 import Home from '../components/Home.vue';
-
+import Mainpage from '../components/Mainpage.vue';
+import Seealllostpet from '../components/Seealllostpet.vue';
+import Profile from '../components/Profile.vue';
+import CreatePost from '../components/CreatePost.vue';
 const routes = [
 	{
 		path: '/',
@@ -13,6 +16,26 @@ const routes = [
 		name: 'Login',
 		component: Login,
 	},
+	{
+		path: '/mainpage',
+		name: 'Mainpage',
+		component: Mainpage,
+	},
+	{
+		path: '/seealllostpet',
+		name: 'Seealllostpet',
+		component: Seealllostpet,
+	},
+	{
+		path: '/profile',
+		name: 'Profile',
+		component: Profile,
+	},
+	{
+		path: '/createpost',
+		name: 'CreatePost',
+		component: CreatePost,
+	}
 ];
 
 const router = createRouter({
