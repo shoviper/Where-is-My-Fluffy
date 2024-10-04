@@ -2,7 +2,7 @@
   <div
     v-for="(post, index) in posts"
     :key="index"
-    class="block p-6 bg-white border border-gray-200 rounded-lg shadow mt-4"
+    class="block p-6 bg-white border-gray-200 rounded-lg shadow my-4"
   >
     <div class="flex justify-between h-10">
       <div class="flex flex-row items-center">
@@ -16,7 +16,7 @@
         </div>
       </div>
       <button
-        class="inline-flex items-center justify-center rounded-md bg-PINK hover:bg-PU px-2 py-1 my-2 text-base font-medium text-white ring-1 ring-inset ring-pink-700/10"
+        class="inline-flex items-center justify-center rounded-md bg-PINK hover:bg-PURPLE px-2 py-1 my-2 text-sm font-medium text-white ring-1 ring-inset ring-pink-700/10"
       >
         Found Fluffy !
       </button>
@@ -26,7 +26,7 @@
     </p>
     <Icon icon="bx:bx-image" class="w-full h-64 mt-4" />
     <div class="flex justify-between border-t ">
-      <div class="flex flex-row items-center mt-2">
+      <!-- <div class="flex flex-row items-center mt-2">
         <Icon
           icon="mdi:heart-outline"
           class="text-red-500 hover:text-red-950"
@@ -36,7 +36,7 @@
       <div class="flex flex-row mt-2">
         <p class="hover:text-PINK">{{ post.comments }} comments</p>
         <p class="mx-2 hover:text-PINK">{{ post.shares }} shares</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
