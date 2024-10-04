@@ -5,41 +5,43 @@
       <a href="/seealllostpet" class="text-base text-blue-500">See all</a>
     </div>
     <div>
-      <!-- <LostPetComponent /> -->
-      <!-- Loop through pets data -->
       <div
-        v-for="(pet, index) in pets"
+        v-for="(pet, index) in limitedPets"
         :key="index"
         class="flex items-center border-t border-gray-300 py-2"
       >
-        <!-- <img :src="pet.img" :alt="`Image of ${pet.name}`" class="w-11 h-11 object-cover rounded-md" /> -->
         <img
           src="../assets/pets/petpic1.png"
           alt="Pet 1"
           class="w-11 h-11 object-cover rounded-md"
         />
         <div class="flex flex-col items-start pl-2">
-          <p class="text-base font-semibold l-0">{{ pet.name }}</p>
-          <p class="text-sm text-gray-500">missing on {{ pet.date }}</p>
+          <p class="text-base font-semibold">{{ pet.name }}</p>
+          <p class="text-sm text-gray-500">{{ pet.age }} years old</p>
         </div>
+      </div>
+      <div v-if="limitedPets.length === 0" class="text-gray-500">
+        No missing pets to display.
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import LostPetComponent from "./LostPetComponent.vue";
+import axios from "axios";
 
 export default {
-  name: "d",
-  data: () => ({
-    name: "",
-    age: null,
-    selected: "",
-    description: "",
-    location: "",
-    pettypes: [],
-  }),
+  name: "LostPet",
+  data() {
+    return {
+      pets: [],
+    };
+  },
+  computed: {
+    limitedPets() {
+      return this.pets.slice(0, 7);
+    },
+  },
   mounted() {
     this.seeallLostPets();
   },
@@ -49,11 +51,13 @@ export default {
         const response = await axios.get("http://localhost:8080/pets", {
           withCredentials: true,
         });
-        this.pettypes = response.data;
+        // console.log("API Response:", response.data);
+        const data = await response.data.filter((pet) => pet.status === "MISSING");;
+        this.pets = data; 
+        // console.log("Missing Pets:", data); 
       } catch (error) {
         console.error("Error fetching pets:", error);
       }
-      console.log();
     },
   },
 };
