@@ -32,9 +32,7 @@
       <h1 class="text-2xl text-PURPLE font-semibold">Create post</h1>
       <div class="flex flex-col items-start">
         <div class="flex flex-row">
-          <p class="text-TEXTCOLOR text-lg  mt-1.5">
-            choose your pet:
-          </p>
+          <p class="text-TEXTCOLOR text-lg mt-1.5">choose your pet:</p>
           <select v-model="selected" class="border-2 rounded-md ml-2">
             <option disabled value="">Please select one</option>
             <option>A</option>
@@ -42,15 +40,23 @@
             <option>C</option>
           </select>
         </div>
-        <p class="text-TEXTCOLOR text-lg  my-2">
-          Title {{ message }}
-        </p>
+        <div class="flex flex-row mt-1.5">
+          <p class="text-gray-400 text-sm ">Don't create yet?</p>
+          <p class="text-sm text-PINK underline ml-2 cursor-pointer" @click="toggleModal">Add here</p>
+          <AddPetModal
+          v-if="isModalVisible"
+          :pettypes="pettypes"
+          @close="toggleModal"
+        />
+        </div>
+
+        <p class="text-TEXTCOLOR text-lg my-2">Title {{ message }}</p>
         <input
           v-model="message"
           placeholder=" your title"
           class="border-2 rounded-md"
         />
-        <p class="text-TEXTCOLOR text-lg  my-2">Content</p>
+        <p class="text-TEXTCOLOR text-lg my-2">Content</p>
         <div class="h-20 w-full">
           <input
             v-model="message2"
@@ -59,9 +65,7 @@
           />
         </div>
 
-        <label
-          class="block my-2 text-md  text-TEXTCOLOR"
-          for="file_input"
+        <label class="block my-2 text-md text-TEXTCOLOR" for="file_input"
           >Upload file</label
         >
         <input
@@ -84,16 +88,25 @@
       </div>
     </div>
   </div>
-  
 </template>
 <script>
+import axios from 'axios';
+import AddPetModal from './AddPetModal.vue';
 export default {
   name: "d",
-  components: {},
+  components: {
+    AddPetModal,
+  },
   data() {
     return {
       message: "",
+      isModalVisible: false,
     };
   },
+  methods: {
+    toggleModal() {
+      this.isModalVisible = !this.isModalVisible;
+    },
+  }
 };
 </script>
