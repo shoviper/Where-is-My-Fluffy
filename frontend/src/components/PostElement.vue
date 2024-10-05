@@ -11,8 +11,12 @@
           class="text-4xl text-gray-700 dark:text-gray-400 p-1 bg-black rounded-full"
         />
         <div class="ml-2">
-          <h5 class="text-base font-bold text-TEXTCOLOR">{{ post.name }}</h5>
-          <p class="text-sm text-gray-400 text-left">{{ post.time }}</p>
+          <h5 class="text-base font-bold text-TEXTCOLOR">
+            {{ post.user.name }}
+          </h5>
+          <p class="text-sm text-gray-400 text-left">
+            {{ formatTimestamp(post.timestamp) }}
+          </p>
         </div>
       </div>
       <button
@@ -24,8 +28,16 @@
     <p class="font-normal text-left mt-4 text-TEXTCOLOR">
       {{ post.content }}
     </p>
-    <Icon icon="bx:bx-image" class="w-full h-64 mt-4" />
-    <div class="flex justify-between border-t ">
+    <div class="w-full h-64 mt-4">
+      <img
+        v-if="post.petImage"
+        :src="post.petImage"
+        alt="Pet image"
+        class="w-full h-full object-contain rounded-lg"
+      />
+      <Icon v-else icon="bx:bx-image" class="w-full h-64" />
+    </div>
+    <div class="flex justify-between border-t">
       <!-- <div class="flex flex-row items-center mt-2">
         <Icon
           icon="mdi:heart-outline"
@@ -42,6 +54,7 @@
 </template>
 <script>
 import { Icon } from "@iconify/vue";
+import axios from "axios";
 
 export default {
   name: "PostElement",
@@ -50,39 +63,68 @@ export default {
   },
   data() {
     return {
-      posts: [
-        {
-          name: "Arayan Tiwari",
-          time: "2 hours ago",
-          content:
-            "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
-          image: "bx:bx-image",
-          likes: 62,
-          comments: 12,
-          shares: 4,
-        },
-        {
-          name: "Thachapol Chatthanas",
-          time: "23 hours ago",
-          content:
-            "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
-          image: "bx:bx-image",
-          likes: 123,
-          comments: 2,
-          shares: 42,
-        },
-        {
-          name: "Inthat Sappiphat",
-          time: "2 days ago",
-          content:
-            "Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.",
-          image: "bx:bx-image",
-          likes: 233,
-          comments: 30,
-          shares: 27,
-        },
-      ],
+      posts: [],
     };
+  },
+  mounted() {
+    this.fetchPosts();
+  },
+  methods: {
+    async fetchPosts() {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/posts?page=0&size=10&sortBy=id&sortDir=asc",
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
+
+        const posts = response.data;
+
+        // Fetch pet images for each post individually
+        for (let post of posts) {
+          if (post.pet && post.pet.id) {
+            const petResponse = await this.fetchPetImage(post.pet.id);
+            if (petResponse && petResponse.image) {
+              post.petImage = `data:image/jpeg;base64,${petResponse.image}`; // Add the pet image to the post
+            }
+          }
+        }
+
+        this.posts = posts; // Update posts with images
+        console.log("Posts with pet images:", this.posts);
+      } catch (error) {
+        console.error(
+          "Error fetching posts:",
+          error.response?.data || error.message
+        );
+      }
+    },
+    async fetchPetImage(petId) {
+      try {
+        const response = await axios.get(`http://localhost:8080/pets/${petId}`);
+        const data = response.data;
+        console.log(data.image);
+        return data; // Return pet data including the image
+      } catch (error) {
+        console.error(`Error fetching pet image for pet ID ${petId}:`, error);
+        return null;
+      }
+    },
+    formatTimestamp(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true, // Use 12-hour format
+      });
+    },
   },
 };
 </script>
