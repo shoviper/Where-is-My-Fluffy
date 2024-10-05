@@ -1,13 +1,13 @@
 <template>
-  <div class="bg-white p-4 mt-4 rounded-md">
+  <div class="bg-white px-4 pb-4 mt-4 rounded-md  h-80 overflow-y-auto scroll-smooth ">
     <!-- Header -->
-    <div class="flex justify-between items-center mb-4">
+    <div class="flex justify-between bg-white py-6 items-center m sticky top-0">
       <h2 class="text-base font-semibold">Notifications</h2>
       <a href="#" class="text-base text-red-500">Mark all as read</a>
     </div>
 
     <!-- Notifications List -->
-    <div class="space-y-4">
+    <div class="space-y-4 ">
       
 
       <div class="border-t border-gray-300 py-2" v-for="(mesg, index) in notification" :key="index">
