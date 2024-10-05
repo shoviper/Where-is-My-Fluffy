@@ -77,6 +77,7 @@
       <div class="flex justify-end">
         <button
           class="inline-flex items-center rounded-md bg-gray-50 px-4 py-2 mt-4 mx-4 text-xs font-semibold text-gray-500 ring-1 ring-inset ring-pink-700/10"
+          @click="goto({ path: '/mainpage' })"
         >
           cancel
         </button>
@@ -109,6 +110,16 @@ export default {
     this.fetchPets();
   },
   methods: {
+    goto(page) {
+      if (page.name && page.name !== this.$route.name) {
+        this.$router.push({ name: page.name });
+        return;
+      }
+      if (page.path && page.path !== this.$route.path) {
+        this.$router.push({ path: page.path });
+        return;
+      }
+    },
     async fetchPets() {
       try {
         const response = await axios.get('http://localhost:8080/pets/me',
