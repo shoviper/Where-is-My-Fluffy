@@ -1,5 +1,19 @@
 <template>
   <div>
+    <!-- Modal for Success Message -->
+    <div v-if="showSuccessModal" class="fixed z-10 inset-0 overflow-y-auto">
+      <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+          <h2 class="text-lg font-semibold text-gray-800">Success!</h2>
+          <p class="text-sm text-gray-600 mt-2">Post created successfully!</p>
+          <div class="mt-4 flex justify-end">
+            <button @click="goToMainPage" class="px-4 py-2 bg-purple-600 text-white rounded-lg">
+              Go to Main Page
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       class="absolute inset-x-0 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
       aria-hidden="true"
@@ -65,14 +79,7 @@
           />
         </div>
 
-        <label class="block my-2 text-md text-TEXTCOLOR" for="file_input"
-          >Upload file</label
-        >
-        <input
-          class="block w-full p-4 text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none"
-          id="file_input"
-          type="file"
-        />
+        <!-- Upload file section removed -->
       </div>
       <div class="flex justify-end">
         <button
@@ -91,6 +98,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import axios from 'axios';
 
@@ -103,10 +111,10 @@ export default {
         petId: null, // Stores the selected petId
       },
       pets: [],
+      showSuccessModal: false, // Used to show/hide success modal
     };
   },
   mounted() {
-    
     this.fetchPets();
   },
   methods: {
@@ -122,38 +130,50 @@ export default {
     },
     async fetchPets() {
       try {
-        const response = await axios.get('http://localhost:8080/pets/me',
-          {
-            withCredentials: true,
-          }
-        );
-        this.pets = response.data; 
+        const response = await axios.get('http://localhost:8080/pets/me', {
+          withCredentials: true,
+        });
+        this.pets = response.data;
       } catch (error) {
         console.error('Error fetching pets:', error);
       }
     },
     async submitForm() {
-  try {
-    this.formData.type = "MISSING";
-    console.log('Submitting formData:', this.formData);
+      try {
+        this.formData.type = "MISSING";
+        console.log('Submitting formData:', this.formData);
 
-    // Make the POST request
-    const response = await axios.post('http://localhost:8080/posts', this.formData, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      withCredentials: true,
-    });
+        // Make the POST request
+        const response = await axios.post('http://localhost:8080/posts', this.formData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+        });
 
-    console.log('Form submitted successfully:', response.data);
-  } catch (error) {
-    if (error.response) {
-      console.error('Error response data:', error.response.data);
-    } else {
-      console.error('Error submitting form:', error.message);
-    }
-  }
-},
+        console.log('Form submitted successfully:', response.data);
+
+        // Clear the form
+        this.formData = {
+          title: '',
+          content: '',
+          petId: null,
+        };
+
+        // Show success modal
+        this.showSuccessModal = true;
+      } catch (error) {
+        if (error.response) {
+          console.error('Error response data:', error.response.data);
+        } else {
+          console.error('Error submitting form:', error.message);
+        }
+      }
+    },
+    goToMainPage() {
+      this.showSuccessModal = false;
+      this.$router.push({ path: '/mainpage' });
+    },
   },
 };
 </script>
