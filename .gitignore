@@ -68,6 +68,7 @@ Temporary Items
 application.yml
 
 data/
+node_modules
 **/node_modules/
 # Logs
 logs

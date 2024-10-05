@@ -1,5 +1,7 @@
 package com.sda_project.myfluffy.user.dto;
 
+import com.sda_project.myfluffy.geolocation.dto.LocationDto;
+
 import lombok.Data;
 
 @Data
@@ -14,5 +16,7 @@ public class UserDto {
     private String phone;
 
     private String userImage;
+
+    private LocationDto userLocation;
 
 }

@@ -1,6 +1,7 @@
 package com.sda_project.myfluffy.post.service;
 
 import com.sda_project.myfluffy.common.observers.events.post.PostCreatedEvent;
+import com.sda_project.myfluffy.common.utils.enums.Status;
 import com.sda_project.myfluffy.post.dto.PostCreationDto;
 import com.sda_project.myfluffy.post.dto.PostUpdateDto;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
@@ -56,6 +57,8 @@ public class PostServiceImpl implements IPostService {
         Pet pet = petRepository.findById(postCreationDto.getPetId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Pet", "id", String.valueOf(postCreationDto.getPetId())));
+        pet.setStatus(Status.MISSING);
+        pet.setFounder(null);
 
         if (!pet.getPetOwner().equals(owner)) {
             throw new UnauthorizedException("UNAUTHORIZED. You do not own this pet!");

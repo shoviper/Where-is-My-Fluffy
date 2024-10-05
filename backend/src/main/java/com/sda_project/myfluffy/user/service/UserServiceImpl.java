@@ -2,9 +2,14 @@ package com.sda_project.myfluffy.user.service;
 
 import com.sda_project.myfluffy.user.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.user.dto.UserDto;
+import com.sda_project.myfluffy.user.dto.UserLocationUpdateDto;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.common.exception.UnauthorizedException;
 import com.sda_project.myfluffy.common.exception.UserAlreadyExistsException;
+import com.sda_project.myfluffy.geolocation.dto.LocationCreateDto;
+import com.sda_project.myfluffy.geolocation.dto.LocationDto;
+import com.sda_project.myfluffy.geolocation.model.Location;
+import com.sda_project.myfluffy.geolocation.service.ILocationService;
 import com.sda_project.myfluffy.user.mapper.UserMapper;
 import com.sda_project.myfluffy.pet.repository.PetRepository;
 import com.sda_project.myfluffy.user.model.User;
@@ -28,6 +33,7 @@ public class UserServiceImpl implements IUserService {
 
     private UserRepository userRepository;
     private PetRepository petRepository;
+    private ILocationService iLocationService;
 
     /**
      * @param email - String email
@@ -79,7 +85,12 @@ public class UserServiceImpl implements IUserService {
         String email = oAuth2User.getAttribute("email");
         User user = getUserByEmail(email);
 
-        return UserMapper.mapToUserDto(user, new UserDto());
+        LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
+
+        UserDto userDto = UserMapper.mapToUserDto(user, new UserDto());
+        userDto.setUserLocation(locationDto);
+
+        return userDto;
     }
 
     /**
@@ -90,7 +101,13 @@ public class UserServiceImpl implements IUserService {
     public UserDto fetchUserByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User", "email", email));
-        return UserMapper.mapToUserDto(user, new UserDto());
+
+        LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
+
+        UserDto userDto = UserMapper.mapToUserDto(user, new UserDto());
+        userDto.setUserLocation(locationDto);
+
+        return userDto;
     }
 
     /**
@@ -121,25 +138,38 @@ public class UserServiceImpl implements IUserService {
     }
 
     /**
-     * @param userDto - UserDto Object;
-     * @return boolean indicating if the update of User details is successful or not
+     * @param oAuth2User            - OAuth2User Object
+     * @param userLocationUpdateDto - UserLocationUpdateDto Object;
+     * @return boolean indicating if the update of User Location details is
+     *         successful or not
      */
     @Override
-    public boolean updateUser(UserDto userDto) {
-        // boolean isUpdated = false;
-        //
-        // Integer userId = accounts.getCustomerId();
-        // Customer customer = customerRepository.findById(customerId).orElseThrow(
-        // () -> new ResourceNotFoundException("Customer", "CustomerID",
-        // customerId.toString())
-        // );
-        // CustomerMapper.mapToCustomer(customerDto,customer);
-        // customerRepository.save(customer);
-        // isUpdated = true;
-        //
-        // return isUpdated;
+    public boolean updateUserLocation(OAuth2User oAuth2User, UserLocationUpdateDto userLocationUpdateDto) {
+        boolean isUpdated = false;
 
-        return false;
+        if (oAuth2User == null) {
+            throw new UnauthorizedException("Unauthorized, Please login to get access.");
+        }
+
+        String email = oAuth2User.getAttribute("email");
+        User user = getUserByEmail(email);
+
+        String updatedLocation = userLocationUpdateDto.getLocation();
+
+        if (updatedLocation != null && !updatedLocation.isEmpty()) {
+            Location location = createLocationForUser(updatedLocation);
+            user.setUserLocation(location);
+            userRepository.save(user);
+            isUpdated = true;
+        }
+
+        return isUpdated;
+    }
+
+    private Location createLocationForUser(String address) {
+        LocationCreateDto locationCreateDto = new LocationCreateDto();
+        locationCreateDto.setAddress(address);
+        return iLocationService.createLocation(locationCreateDto);
     }
 
     /**
@@ -172,6 +202,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     private UserDto mapToUser(User user) {
-        return UserMapper.mapToUserDto(user, new UserDto());
+        LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
+
+        UserDto userDto = UserMapper.mapToUserDto(user, new UserDto());
+        userDto.setUserLocation(locationDto);
+
+        return userDto;
     }
 }

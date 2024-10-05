@@ -131,12 +131,9 @@ public class PetController {
     public ResponseEntity<ResponseDto> uploadPetImage(@RequestParam("file") MultipartFile file,
             @PathVariable int petId) {
         try {
-            // Convert the file to base64
             byte[] fileBytes = file.getBytes();
             String base64Image = Base64.getEncoder().encodeToString(fileBytes);
 
-            // Get the pet entity by id and update the base64 image in the database (if
-            // needed)
             iPetService.updatePetImageBase64(petId, base64Image);
 
             return ResponseEntity

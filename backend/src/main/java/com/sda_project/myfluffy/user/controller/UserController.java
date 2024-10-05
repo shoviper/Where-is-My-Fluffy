@@ -5,6 +5,7 @@ import com.sda_project.myfluffy.user.model.User;
 import com.sda_project.myfluffy.user.repository.UserRepository;
 import com.sda_project.myfluffy.common.dto.response.ResponseDto;
 import com.sda_project.myfluffy.user.dto.UserDto;
+import com.sda_project.myfluffy.user.dto.UserLocationUpdateDto;
 import com.sda_project.myfluffy.user.service.IUserService;
 import com.sda_project.myfluffy.common.utils.constants.AppConstants;
 import io.swagger.v3.oas.annotations.Operation;
@@ -79,6 +80,28 @@ public class UserController {
     public ResponseEntity<ResponseDto> updatePhoneNumber(@AuthenticationPrincipal OAuth2User principal,
             @RequestBody UserPhoneUpdateDto userPhoneUpdateDto) {
         boolean isUpdated = iUserService.updatePhoneNumber(principal, userPhoneUpdateDto);
+        if (isUpdated) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(ResponseDto.builder()
+                            .statusCode(AppConstants.STATUS_200)
+                            .statusMsg(AppConstants.MESSAGE_200)
+                            .build());
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ResponseDto.builder()
+                            .statusCode(AppConstants.STATUS_417)
+                            .statusMsg(AppConstants.MESSAGE_417_UPDATE)
+                            .build());
+        }
+    }
+
+    @Operation(summary = "Update User Location: OAuth2User")
+    @PutMapping("/update-location")
+    public ResponseEntity<ResponseDto> updateUserLocation(@AuthenticationPrincipal OAuth2User principal,
+            @RequestBody UserLocationUpdateDto userLocationUpdateDto) {
+        boolean isUpdated = iUserService.updateUserLocation(principal, userLocationUpdateDto);
         if (isUpdated) {
             return ResponseEntity
                     .status(HttpStatus.OK)

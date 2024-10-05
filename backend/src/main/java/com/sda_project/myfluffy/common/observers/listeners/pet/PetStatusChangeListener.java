@@ -22,27 +22,21 @@ public class PetStatusChangeListener {
     @EventListener
     public void handlePetStatusChange(PetStatusChangeEvent event) {
         Pet pet = event.getPet();
-        System.out.println("Pet status changed: " + pet.getName() + " is now " + pet.getStatus());
-
-        if (pet.getStatus().equals(Status.FOUND)) {
-            notifyOwner(pet);
-        }
-    }
-
-    private void notifyOwner(Pet pet) {
         User owner = pet.getPetOwner();
-        System.out.println("Notifying " + owner.getName() + " that their pet " + pet.getName() + " is found.");
+
         sendNotification(owner, pet);
     }
 
     private void sendNotification(User owner, Pet pet) {
-        String message = "Dear " + owner.getName() + ", your pet '" + pet.getName() + "' has been marked as found.";
+        Status status = pet.getStatus();
+        String message = "Dear " + owner.getName() + ", your pet '" + pet.getName() + "' has been marked as " + status
+                + ".";
         System.out.println("Sending notification: " + message);
 
         NotificationCreateDto notificationCreateDto = new NotificationCreateDto();
         notificationCreateDto.setMessage(message);
         notificationCreateDto.setNotificationType(NotificationType.NOTIFICATION_MODIFIED);
-        iNotificationService.createNotification(notificationCreateDto);
+        iNotificationService.createNotification(owner, notificationCreateDto);
 
         NotificationFactory PetNotificationFactory = new PetNotificationFactory(message);
         PetNotificationFactory.sendNotification(NotificationType.NOTIFICATION_MODIFIED);

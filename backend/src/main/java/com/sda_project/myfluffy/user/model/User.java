@@ -1,6 +1,7 @@
 // model/User.java
 package com.sda_project.myfluffy.user.model;
 
+import com.sda_project.myfluffy.geolocation.model.Location;
 import com.sda_project.myfluffy.notification.model.Notification;
 import com.sda_project.myfluffy.pet.model.Pet;
 import com.sda_project.myfluffy.post.dto.PostDto;
@@ -36,6 +37,10 @@ public class User {
 
     @Column(name = "user_image")
     private String userImage;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_location")
+    private Location userLocation;
 
     @OneToMany(mappedBy = "petOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> myPets;

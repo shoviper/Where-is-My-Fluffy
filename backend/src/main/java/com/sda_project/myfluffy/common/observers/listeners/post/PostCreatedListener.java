@@ -4,7 +4,7 @@ import com.sda_project.myfluffy.common.observers.events.post.PostCreatedEvent;
 import com.sda_project.myfluffy.common.utils.enums.NotificationType;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateDto;
 import com.sda_project.myfluffy.notification.factory.NotificationFactory;
-import com.sda_project.myfluffy.notification.factory.pet.PetNotificationFactory;
+import com.sda_project.myfluffy.notification.factory.post.PostNotificationFactory;
 import com.sda_project.myfluffy.notification.service.INotificationService;
 import com.sda_project.myfluffy.post.model.Post;
 import com.sda_project.myfluffy.user.model.User;
@@ -22,20 +22,20 @@ public class PostCreatedListener {
     public void handlePostCreated(PostCreatedEvent event) {
         Post post = event.getPost();
         User author = post.getPostOwner();
-        System.out.println("New post created by " + author.getName() + ": " + post.getTitle());
-        notifyAuthor(author, post);
+
+        sendNotification(author, post);
     }
 
-    private void notifyAuthor(User author, Post post) {
+    private void sendNotification(User author, Post post) {
         String message = "Dear " + author.getName() + ", your post '" + post.getTitle() + "' has been published.";
         System.out.println("Sending notification: " + message);
 
         NotificationCreateDto notificationCreateDto = new NotificationCreateDto();
         notificationCreateDto.setMessage(message);
         notificationCreateDto.setNotificationType(NotificationType.NOTIFICATION_CREATED);
-        iNotificationService.createNotification(notificationCreateDto);
+        iNotificationService.createNotification(author, notificationCreateDto);
 
-        NotificationFactory PetNotificationFactory = new PetNotificationFactory(message);
-        PetNotificationFactory.sendNotification(NotificationType.NOTIFICATION_CREATED);
+        NotificationFactory PostNotificationFactory = new PostNotificationFactory(message);
+        PostNotificationFactory.sendNotification(NotificationType.NOTIFICATION_CREATED);
     }
 }

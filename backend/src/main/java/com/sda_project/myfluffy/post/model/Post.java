@@ -18,28 +18,31 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
 
-    @Column(name="content")
+    @Column(name = "content")
     private String content;
 
-    @Column(name="timestamp", insertable = false, updatable = false)
+    @Column(name = "timestamp", insertable = false, updatable = false)
     private String timestamp;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="type")
+    @Column(name = "type")
     private PostType type;
 
-    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
-    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinColumn(name = "owner_id")
     private User postOwner;
+
+    @Column(name = "reward_amount")
+    private double rewardAmount;
 
 }

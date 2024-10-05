@@ -72,6 +72,8 @@ public class PetServiceImpl implements IPetService {
 
         petRepository.save(pet);
 
+        eventPublisher.publishEvent(new PetStatusChangeEvent(this, pet));
+
         return PetCreateResponseMapper.mapToPetCreateResponseDto(pet, new PetCreateResponseDto());
     }
 
@@ -140,15 +142,15 @@ public class PetServiceImpl implements IPetService {
     }
 
     private void updateStatusIfValid(Pet pet, Status newStatus) {
-        if (pet.getStatus() != Status.FOUND || pet.getStatus() != Status.MISSING) {
+        if (newStatus != Status.FOUND && newStatus != Status.MISSING) {
             throw new InvalidStatusException("Update Pet Status must be in FOUND or MISSING status.");
         }
 
-        if (pet.getStatus() == Status.FOUND) {
+        if (newStatus == Status.FOUND) {
             pet.setStatus(newStatus);
         }
 
-        if (pet.getStatus() == Status.MISSING) {
+        if (newStatus == Status.MISSING) {
             pet.setStatus(newStatus);
             pet.setFounder(null);
         }
@@ -171,10 +173,6 @@ public class PetServiceImpl implements IPetService {
                 .orElseThrow(() -> new ResourceNotFoundException("Pet", "id",
                         Integer.toString(petFounderUpdateDto.getPetId())));
 
-        if (pet.getStatus() != Status.FOUND || pet.getStatus() != Status.MISSING) {
-            throw new InvalidStatusException("Update Pet Status must be in FOUND or MISSING status.");
-        }
-
         User founder = userRepository.findById(petFounderUpdateDto.getFounderId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id",
                         Integer.toString(petFounderUpdateDto.getFounderId())));
@@ -185,6 +183,7 @@ public class PetServiceImpl implements IPetService {
 
         if (pet.getStatus() == Status.MISSING) {
             pet.setFounder(null);
+            throw new InvalidStatusException("Can't update founder on MISSING pet.");
         }
 
         petRepository.save(pet);

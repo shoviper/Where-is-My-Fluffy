@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Service
 @AllArgsConstructor
 public class NotificationServiceImpl implements INotificationService {
@@ -30,10 +29,7 @@ public class NotificationServiceImpl implements INotificationService {
 
     @Override
     @Transactional
-    public void createNotification(NotificationCreateDto notificationCreateDto) {
-        OAuth2User oAuth2User = (OAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = getAuthenticatedUser(oAuth2User);
-
+    public void createNotification(User user, NotificationCreateDto notificationCreateDto) {
         Notification notification = new Notification();
         notification.setMessage(notificationCreateDto.getMessage());
         notification.setNotificationType(notificationCreateDto.getNotificationType());

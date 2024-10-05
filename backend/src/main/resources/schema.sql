@@ -15,7 +15,9 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(20),
-    user_image VARCHAR(255)
+    user_image VARCHAR(255),
+    user_location_id INT
+    FOREIGN KEY (`user_location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE,
 );
 
 -- Create Animal type Table
@@ -40,7 +42,6 @@ CREATE TABLE IF NOT EXISTS pets (
     owner_id INT,
     animal_type VARCHAR(255),
     founder_id INT,
-    reward_amount DOUBLE DEFAULT 0.0,
     pet_image_id INT,
     FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`animal_type`) REFERENCES `animal_type`(`type`) ON DELETE CASCADE,
@@ -57,26 +58,29 @@ CREATE TABLE IF NOT EXISTS posts (
     type enum('MISSING', 'FOUND', 'ALERT'),
     pet_id INT,
     owner_id INT,
+    reward_amount DOUBLE DEFAULT 0.0,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`pet_id`) REFERENCES `pets`(id) ON DELETE CASCADE,
     FOREIGN KEY (`owner_id`) REFERENCES `users`(id) ON DELETE CASCADE
 );
 
--- Create Images Table
-CREATE TABLE IF NOT EXISTS images (
-    url VARCHAR(255) PRIMARY KEY,
-    post_id INT,
-    FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`) ON DELETE CASCADE
+-- Create Notification image Table
+CREATE TABLE IF NOT EXISTS notification_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    image_base64 TEXT
 );
 
 -- Create Notification Table
 CREATE TABLE IF NOT EXISTS notifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
     message VARCHAR(255) NOT NULL,
-    type enum('NOTIFICATION_CREATED', 'NOTIFICATION_MODIFIED', 'NOTIFICATION_REMOVED'),
+    type enum('NOTIFICATION_CREATED', 'NOTIFICATION_MODIFIED', 'NOTIFICATION_REMOVED', 'NOTIFICATION_PENDING', 'NOTIFICATION_APPROVED', 'NOTIFICATION_REJECTED' ),
     owner_id INT,
+    notification_image_id INT,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`owner_id`) REFERENCES `users`(id) ON DELETE CASCADE
+    FOREIGN KEY (`notification_image_id`) REFERENCES `notification_images`(`id`) ON DELETE CASCADE
 );
 
 -- Insert animal type into the animal_type table
@@ -85,3 +89,10 @@ INSERT INTO animal_type (type) VALUES ('cat');
 INSERT INTO animal_type (type) VALUES ('rabbit');
 INSERT INTO animal_type (type) VALUES ('bird');
 INSERT INTO animal_type (type) VALUES ('crocodile');
+INSERT INTO animal_type (type) VALUES ('fish');
+INSERT INTO animal_type (type) VALUES ('lion');
+INSERT INTO animal_type (type) VALUES ('ant');
+INSERT INTO animal_type (type) VALUES ('turtle');
+INSERT INTO animal_type (type) VALUES ('monkey');
+INSERT INTO animal_type (type) VALUES ('frog');
+INSERT INTO animal_type (type) VALUES ('pig');
