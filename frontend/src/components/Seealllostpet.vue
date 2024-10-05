@@ -1,9 +1,13 @@
 <template>
   <div class="min-h-screen bg-[#FFF3EB] flex flex-col">
-    <header class="bg-[#FFF3EB] relative w-full">
-      <div class="mx-auto px-8 flex items-center justify-between fixed md:h-20 md:w-full bg-[#fff3eb]">
+    <header class="bg-[#FFF3EB] w-full z-10 fixed top-0 left-0">
+      <div
+        class="mx-auto px-8 flex items-center justify-between md:h-20 w-full bg-[#fff3eb]"
+      >
         <img src="../assets/fluffy.png" alt="home pic" class="w-32 h-16" />
-        <button class="w-10 h-10 bg-white rounded-full text-white flex items-center justify-center">
+        <button
+          class="w-10 h-10 bg-white rounded-full text-white flex items-center justify-center"
+        >
           <Icon icon="tabler:home" class="text-slate-700 w-10 h-7" />
         </button>
 
@@ -15,11 +19,18 @@
           />
         </div>
 
-        <button class="w-10 h-10 bg-white rounded-full text-white flex items-center justify-center">
-          <Icon icon="iconamoon:profile" class="text-slate-700 w-10 h-7" />
+        <button
+          class="w-10 h-10 bg-white rounded-full text-white flex items-center justify-center"
+        >
+          <Icon
+            icon="iconamoon:profile"
+            class="text-slate-700 w-10 h-7"
+            @click="goto({ path: '/' })"
+          />
         </button>
       </div>
     </header>
+    
     <div class="flex-grow flex p-4 gap-4 h-full mt-12">
       <div class="w-1/2 py-4 pr-4 flex-grow flex flex-col items-center">
         <div class="w-11/12 h-auto bg-white p-4 rounded-md">
@@ -67,9 +78,13 @@
 
 <script>
   import axios from "axios";
-  
+  import { Icon } from "@iconify/vue";
+
   export default {
     name: "seeallpet",
+    components: {
+      Icon,
+    },
     data() {
       return {
         pets: [], 
@@ -92,6 +107,16 @@
           this.pets = data;
         } catch (error) {
           console.error("Error fetching pets:", error.response ? error.response.data : error.message);
+        }
+      },
+      goto(page) {
+        if (page.name && page.name !== this.$route.name) {
+          this.$router.push({ name: page.name });
+          return;
+        }
+        if (page.path && page.path !== this.$route.path) {
+          this.$router.push({ path: page.path });
+          return;
         }
       },
     },
