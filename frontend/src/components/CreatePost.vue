@@ -33,11 +33,11 @@
       <div class="flex flex-col items-start">
         <div class="flex flex-row">
           <p class="text-TEXTCOLOR text-lg mt-1.5">choose your pet:</p>
-          <select v-model="selected" class="border-2 rounded-md ml-2">
+          <select v-model="formData.petId" class="border-2 rounded-md ml-2">
             <option disabled value="">Please select one</option>
-            <option>A</option>
-            <option>B</option>
-            <option>C</option>
+            <option v-for="pet in pets" :key="pet.id" :value="pet.id">
+              {{ pet.name }}
+            </option>
           </select>
         </div>
         <div class="flex flex-row mt-1.5">
@@ -52,14 +52,14 @@
 
         <p class="text-TEXTCOLOR text-lg my-2">Title {{ message }}</p>
         <input
-          v-model="message"
+          v-model="formData.title"
           placeholder=" your title"
           class="border-2 rounded-md"
         />
         <p class="text-TEXTCOLOR text-lg my-2">Content</p>
         <div class="h-20 w-full">
           <input
-            v-model="message2"
+            v-model="formData.content"
             placeholder=" write your content"
             class="border-2 rounded-md h-full w-full"
           />
@@ -82,6 +82,7 @@
         </button>
         <button
           class="inline-flex items-center rounded-md bg-purple-50 px-4 py-2 mt-4 text-xs font-semibold text-PURPLE ring-1 ring-inset ring-pink-700/10"
+          @click="submitForm"
         >
           post!
         </button>
@@ -91,22 +92,57 @@
 </template>
 <script>
 import axios from 'axios';
-import AddPetModal from './AddPetModal.vue';
+
 export default {
-  name: "d",
-  components: {
-    AddPetModal,
-  },
   data() {
     return {
-      message: "",
-      isModalVisible: false,
+      formData: {
+        title: '',
+        content: '',
+        petId: null, // Stores the selected petId
+      },
+      pets: [],
     };
   },
+  mounted() {
+    
+    this.fetchPets();
+  },
   methods: {
-    toggleModal() {
-      this.isModalVisible = !this.isModalVisible;
+    async fetchPets() {
+      try {
+        const response = await axios.get('http://localhost:8080/pets/me',
+          {
+            withCredentials: true,
+          }
+        );
+        this.pets = response.data; 
+      } catch (error) {
+        console.error('Error fetching pets:', error);
+      }
     },
+    async submitForm() {
+  try {
+    this.formData.type = "MISSING";
+    console.log('Submitting formData:', this.formData);
+
+    // Make the POST request
+    const response = await axios.post('http://localhost:8080/posts', this.formData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    });
+
+    console.log('Form submitted successfully:', response.data);
+  } catch (error) {
+    if (error.response) {
+      console.error('Error response data:', error.response.data);
+    } else {
+      console.error('Error submitting form:', error.message);
+    }
   }
+},
+  },
 };
 </script>
