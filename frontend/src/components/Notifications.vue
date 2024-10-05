@@ -8,31 +8,47 @@
 
     <!-- Notifications List -->
     <div class="space-y-4">
-      <div class="border-t border-gray-300 py-2">
+      
+
+      <div class="border-t border-gray-300 py-2" v-for="(mesg, index) in notification" :key="index">
         <div>
-          <p class="text-sm text-left">
-            <span class="font-semibold">Mable</span> replied to <span class="font-semibold">Christ</span>
+          <p class="text-sm text-TEXTCOLOR text-left">
+            {{ mesg.message }}
           </p>
-          <p class="text-sm text-gray-700 italic text-left">“Oh, I finished de-bugging the phones, but the system's compiling for eighteen minutes, or twenty. So, some minor systems may go on and off for a while.”</p>
-          <p class="text-xs text-gray-500 text-left">Yesterday at 4:30 p.m.</p>
+          <!-- <p class="text-xs text-gray-500 text-left">Last Wednesday at 11:00 p.m.</p> -->
         </div>
       </div>
 
-      <div class="border-t border-gray-300 py-2">
-        <div>
-          <p class="text-sm text-left">
-            <span class="font-semibold">John</span> shared your post.
-          </p>
-          <p class="text-xs text-gray-500 text-left">Last Wednesday at 11:00 p.m.</p>
-        </div>
-      </div>
-
-      <div class="border-t border-gray-300 py-2">
-        <div>
-          <p class="text-sm text-left">A new post has been created</p>
-          <p class="text-xs text-gray-500 text-left">Today at 10:15 a.m.</p>
-        </div>
-      </div>
+      
     </div>
   </div>
 </template>
+
+<script>
+import axios from 'axios';
+export default {
+  name: "d",
+  components: {},
+  data() {
+    return {
+      notification: [],
+    };
+  },
+  mounted() {
+    this.getPetType();
+    // this.addPet();
+  },
+  methods: {
+    async getPetType() {
+      try {
+        const response = await axios.get("http://localhost:8080/notifications/me", {
+          withCredentials: true,
+        });
+        this.notification = response.data;
+      } catch (error) {
+        console.error("Error fetching animal types:", error);
+      }
+    },
+  },
+};
+</script>

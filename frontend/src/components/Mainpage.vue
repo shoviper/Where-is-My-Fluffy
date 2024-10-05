@@ -66,6 +66,7 @@
       <!-- Notifications Section (Right) -->
       <div class="fixed top-20 right-0 w-1/5 h-full overflow-y-auto mr-10">
         <Notifications />
+        <Ads/>
       </div>
     </div>
   </div>
@@ -80,7 +81,7 @@ import { Icon } from "@iconify/vue";
 import PostElement from "./PostElement.vue";
 import Notifications from "./Notifications.vue";
 import Tag from "./Tag.vue";
-
+import Ads from "./Ads.vue";
 export default {
   name: "d",
   components: {
@@ -91,6 +92,7 @@ export default {
     PostElement,
     QuillEditor,
     Tag,
+    Ads,
   },
   data: () => ({
     content: "",

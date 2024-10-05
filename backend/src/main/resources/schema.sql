@@ -22,6 +22,12 @@ CREATE TABLE IF NOT EXISTS animal_type (
     type VARCHAR(255) PRIMARY KEY
 );
 
+-- Create Pet image Table
+CREATE TABLE IF NOT EXISTS pet_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    image_base64 TEXT
+);
+
 -- Create Pets Table
 CREATE TABLE IF NOT EXISTS pets (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,11 +40,12 @@ CREATE TABLE IF NOT EXISTS pets (
     animal_type VARCHAR(255),
     founder_id INT,
     reward_amount DOUBLE DEFAULT 0.0,
-    pet_image_path VARCHAR(255),
+    pet_image_id INT,
     FOREIGN KEY (`owner_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`animal_type`) REFERENCES `animal_type`(`type`) ON DELETE CASCADE,
     FOREIGN KEY (`location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`founder_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+    FOREIGN KEY (`founder_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`pet_image_id`) REFERENCES `pet_images`(`id`) ON DELETE CASCADE
 );
 
 -- Create Posts Table
@@ -88,8 +95,8 @@ INSERT INTO animal_type (type) VALUES ('bird');
 INSERT INTO animal_type (type) VALUES ('crocodile');
 
 -- Insert pets into the pet table (without specifying the id, let AUTO_INCREMENT handle it)
-INSERT INTO pets (name, age, description, status, location_id, owner_id, founder_id, reward_amount, animal_type, pet_image_path) VALUES ('Kitty', 1, 'A cute cat', 'FOUND', 2, 1, 2, 10.0, 'cat', null);
-INSERT INTO pets (name, age, description, status, location_id, owner_id, founder_id, reward_amount, animal_type, pet_image_path) VALUES ('Fido', 3, 'A cute dog', 'MISSING', 1, 2, NULL, 30.0, 'dog', null);
+INSERT INTO pets (name, age, description, status, location_id, owner_id, founder_id, reward_amount, animal_type, pet_image_id) VALUES ('Kitty', 1, 'A cute cat', 'FOUND', 2, 1, 2, 10.0, 'cat', null);
+INSERT INTO pets (name, age, description, status, location_id, owner_id, founder_id, reward_amount, animal_type, pet_image_id) VALUES ('Fido', 3, 'A cute dog', 'MISSING', 1, 2, NULL, 30.0, 'dog', null);
 
 -- Insert posts into the post table
 INSERT INTO posts (title, content, type, pet_id, owner_id) VALUES ('Lost Dog', 'Please help me find my dog', 'FOUND', 1, 1);

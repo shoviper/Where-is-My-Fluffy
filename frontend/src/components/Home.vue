@@ -13,7 +13,16 @@
       />
       <h2 class="text-lg font-semibold">Welcome, {{ user.name }}!</h2>
       <p>Email: {{ user.email }}</p>
-      <div>
+      <div class="flex">
+        <button
+		class="mt-4 mr-4 items-center rounded-md  bg-pink-50  py-2 text-xs font-medium text-pink-600 ring-1 ring-inset ring-pink-700/10"
+        >
+          <Icon
+            icon="tabler:home"
+            class=" w-10 h-4"
+            @click="goto({ path: '/mainpage' })"
+          />
+        </button>
         <!-- Modal toggle -->
         <button
           @click="toggleModal"
@@ -48,24 +57,52 @@
       </button>
     </div>
   </div>
+
+  <div
+    class="mx-auto my-32 border-solid border-2 border-slate-100 p-6 rounded-lg max-w-96 place-content-center bg-white flex flex-col items-center justify-center"
+  >
+    <!-- Show pet image here -->
+    <h2 class="text-lg font-semibold mb-4">Pet Image</h2>
+    <div v-if="petData">
+      <p>id: {{ petData.id }}</p>
+      <p>name: {{ petData.name }}</p>
+      <p>age: {{ petData.age }}</p>
+      <p>animal-type: {{ petData.animalType }}</p>
+      <p>description: {{ petData.description }}</p>
+      <p>status: {{ petData.status }}</p>
+      <img
+        v-if="petImage"
+        :src="petImage"
+        alt="Pet Image"
+        class="w-64 h-64 object-contain"
+      />
+      <p v-else>No image available</p>
+    </div>
+    <p v-else>No data available</p>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import AddPetModal from "./AddPetModal.vue"; // Import the new component
+import { Icon } from "@iconify/vue";
 
 export default {
   components: {
     AddPetModal,
+	Icon
   },
   data() {
     return {
       user: null,
       isModalVisible: false,
+      petData: null,
+      petImage: null,
     };
   },
   mounted() {
     this.fetchUserProfile();
+    this.fetchPetImage(71);
   },
   methods: {
     async fetchUserProfile() {
@@ -76,6 +113,27 @@ export default {
         this.user = response.data;
       } catch (error) {
         console.error("Error fetching user profile:", error);
+      }
+    },
+    async fetchPetImage(petId) {
+      try {
+        const response = await axios.get(`http://localhost:8080/pets/${petId}`);
+        const data = await response.data;
+
+        console.log(data.image);
+
+        const petImageData = data.image;
+
+        // Assuming petData.imageBase64 contains the base64-encoded image string
+        if (petImageData) {
+          this.petData = data;
+          this.petImage = `data:image/jpeg;base64,${petImageData}`;
+        } else {
+          this.petData = null;
+          this.petImage = null;
+        }
+      } catch (error) {
+        console.error(`Error fetching pet image for pet ID ${petId}:`, error);
       }
     },
     goToLogin() {
@@ -95,7 +153,16 @@ export default {
     toggleModal() {
       this.isModalVisible = !this.isModalVisible;
     },
-
+	goto(page) {
+      if (page.name && page.name !== this.$route.name) {
+        this.$router.push({ name: page.name });
+        return;
+      }
+      if (page.path && page.path !== this.$route.path) {
+        this.$router.push({ path: page.path });
+        return;
+      }
+    },
   },
 };
 </script>
