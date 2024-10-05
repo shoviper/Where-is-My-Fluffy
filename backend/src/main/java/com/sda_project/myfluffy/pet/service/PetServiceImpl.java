@@ -124,26 +124,35 @@ public class PetServiceImpl implements IPetService {
     /**
      * Updates the details of an existing pet.
      *
-     * @param oAuth2User         - OAuth2User Object.
      * @param petStatusUpdateDto - The PetStatusUpdateDto object containing the
      *                           updated details of the pet.
      * @return boolean indicating if the update of Pet details is successful or not
      */
     @Override
     @Transactional
-    public boolean updatePetStatus(OAuth2User oAuth2User, PetStatusUpdateDto petStatusUpdateDto) {
-        User user = getAuthenticatedUser(oAuth2User);
-        Pet pet = findOwnedPet(petStatusUpdateDto.getId(), user);
+    public boolean updatePetStatus(PetStatusUpdateDto petStatusUpdateDto) {
+        Pet pet = petRepository.findById(petStatusUpdateDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Pet", "id",
+                        Integer.toString(petStatusUpdateDto.getId())));
+
         updateStatusIfValid(pet, petStatusUpdateDto.getStatus());
         return true;
     }
 
     private void updateStatusIfValid(Pet pet, Status newStatus) {
-        if (newStatus != Status.FOUND) {
-            throw new InvalidStatusException("Invalid status update");
+        if (pet.getStatus() != Status.FOUND || pet.getStatus() != Status.MISSING) {
+            throw new InvalidStatusException("Update Pet Status must be in FOUND or MISSING status.");
         }
-        pet.setStatus(newStatus);
-        pet.setFounder(null);
+
+        if (pet.getStatus() == Status.FOUND) {
+            pet.setStatus(newStatus);
+        }
+
+        if (pet.getStatus() == Status.MISSING) {
+            pet.setStatus(newStatus);
+            pet.setFounder(null);
+        }
+
         petRepository.save(pet);
 
         eventPublisher.publishEvent(new PetStatusChangeEvent(this, pet));
@@ -152,39 +161,37 @@ public class PetServiceImpl implements IPetService {
     /**
      * Updates the details of an existing pet.
      *
-     * @param oAuth2User          - OAuth2User Object.
      * @param petFounderUpdateDto - PetFounderUpdateDto Object.
      * @return boolean indicating if the update of Pet details is successful or not
      */
     @Override
     @Transactional
-    public boolean addFounder(OAuth2User oAuth2User, PetFounderUpdateDto petFounderUpdateDto) {
-        User user = getAuthenticatedUser(oAuth2User);
-        Pet pet = findOwnedPet(petFounderUpdateDto.getPetId(), user);
+    public boolean updateFounder(PetFounderUpdateDto petFounderUpdateDto) {
+        Pet pet = petRepository.findById(petFounderUpdateDto.getPetId())
+                .orElseThrow(() -> new ResourceNotFoundException("Pet", "id",
+                        Integer.toString(petFounderUpdateDto.getPetId())));
 
-        if (pet.getStatus() != Status.FOUND) {
-            throw new InvalidStatusException("Pet must be in FOUND status to assign a founder.");
+        if (pet.getStatus() != Status.FOUND || pet.getStatus() != Status.MISSING) {
+            throw new InvalidStatusException("Update Pet Status must be in FOUND or MISSING status.");
         }
 
         User founder = userRepository.findById(petFounderUpdateDto.getFounderId())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id",
                         Integer.toString(petFounderUpdateDto.getFounderId())));
 
-        pet.setFounder(founder);
+        if (pet.getStatus() == Status.FOUND) {
+            pet.setFounder(founder);
+        }
+
+        if (pet.getStatus() == Status.MISSING) {
+            pet.setFounder(null);
+        }
+
         petRepository.save(pet);
 
         eventPublisher.publishEvent(new PetFounderChangeEvent(this, pet));
 
         return true;
-    }
-
-    private Pet findOwnedPet(int petId, User owner) {
-        Pet pet = petRepository.findById(petId)
-                .orElseThrow(() -> new ResourceNotFoundException("Pet", "id", Integer.toString(petId)));
-        if (!pet.getPetOwner().equals(owner)) {
-            throw new UnauthorizedException("You do not own this pet.");
-        }
-        return pet;
     }
 
     /**

@@ -7,7 +7,7 @@
 		<!-- Show user profile and logout button if user is logged in -->
 		<div v-if="user" class="flex flex-col items-center justify-center">
 			<img
-				:src="user.picture"
+				:src="`http://localhost:8080/users/${user.email}/image`"
 				alt="User Picture"
 				class="w-18 h-18 rounded-full mb-4"
 			/>
@@ -91,27 +91,23 @@ export default {
 	},
 	mounted() {
 		this.fetchUserProfile();
-		this.fetchPetImage(4);
+		this.fetchPetImage(1);
 	},
 	methods: {
 		async fetchUserProfile() {
 			try {
-				const response = await axios.get(
-					'http://localhost:8080/users/me',
-					{
-						withCredentials: true,
-					}
-				);
-				this.user = response.data;
+				const response = await axios.get('http://localhost:8080/users/me', {
+					withCredentials: true,
+				});
+				const data = await response.data;
+				this.user = data;
 			} catch (error) {
 				console.error('Error fetching user profile:', error);
 			}
 		},
 		async fetchPetImage(petId) {
 			try {
-				const response = await axios.get(
-					`http://localhost:8080/pets/${petId}`
-				);
+				const response = await axios.get(`http://localhost:8080/pets/${petId}`);
 				const data = await response.data;
 
 				console.log(data.image);
@@ -127,10 +123,7 @@ export default {
 					this.petImage = null;
 				}
 			} catch (error) {
-				console.error(
-					`Error fetching pet image for pet ID ${petId}:`,
-					error
-				);
+				console.error(`Error fetching pet image for pet ID ${petId}:`, error);
 			}
 		},
 		goToLogin() {

@@ -1,11 +1,5 @@
 package com.sda_project.myfluffy.user.service;
 
-import com.sda_project.myfluffy.geolocation.dto.LocationDto;
-import com.sda_project.myfluffy.pet.dto.PetDto;
-import com.sda_project.myfluffy.pet.mapper.PetMapper;
-import com.sda_project.myfluffy.pet.model.Pet;
-import com.sda_project.myfluffy.post.dto.PostDto;
-import com.sda_project.myfluffy.post.model.Post;
 import com.sda_project.myfluffy.user.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.user.dto.UserDto;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
@@ -67,6 +61,7 @@ public class UserServiceImpl implements IUserService {
         User user = new User();
         user.setName(oAuth2User.getAttribute("name"));
         user.setEmail(oAuth2User.getAttribute("email"));
+        user.setUserImage(oAuth2User.getAttribute("picture"));
 
         userRepository.save(user);
     }
@@ -161,13 +156,13 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
-
     /**
      * @return List of all users
      */
     @Override
     public List<UserDto> fetchAllUsers(int page, int size, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<User> usersPage = userRepository.findAll(pageable);
 

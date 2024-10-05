@@ -13,4 +13,6 @@ public class UserDto {
 
     private String phone;
 
+    private String userImage;
+
 }

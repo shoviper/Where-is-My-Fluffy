@@ -34,6 +34,9 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "user_image")
+    private String userImage;
+
     @OneToMany(mappedBy = "petOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pet> myPets;
 

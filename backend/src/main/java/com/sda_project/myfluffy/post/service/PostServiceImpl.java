@@ -1,12 +1,10 @@
 package com.sda_project.myfluffy.post.service;
 
 import com.sda_project.myfluffy.common.observers.events.post.PostCreatedEvent;
-import com.sda_project.myfluffy.pet.mapper.PetCreateMapper;
 import com.sda_project.myfluffy.post.dto.PostCreationDto;
 import com.sda_project.myfluffy.post.dto.PostUpdateDto;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.common.exception.UnauthorizedException;
-import com.sda_project.myfluffy.common.utils.enums.PostType;
 import com.sda_project.myfluffy.geolocation.dto.LocationDto;
 import com.sda_project.myfluffy.geolocation.service.ILocationService;
 import com.sda_project.myfluffy.pet.dto.PetDto;
@@ -48,7 +46,7 @@ public class PostServiceImpl implements IPostService {
 
     /**
      * @param postCreationDto - Post data transfer object
-     * @param oAuth2User       - Current authenticated user
+     * @param oAuth2User      - Current authenticated user
      */
     @Override
     @Transactional
@@ -56,7 +54,8 @@ public class PostServiceImpl implements IPostService {
         User owner = getAuthenticatedUser(oAuth2User);
 
         Pet pet = petRepository.findById(postCreationDto.getPetId())
-                .orElseThrow(() -> new ResourceNotFoundException("Pet", "id", String.valueOf(postCreationDto.getPetId())));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Pet", "id", String.valueOf(postCreationDto.getPetId())));
 
         if (!pet.getPetOwner().equals(owner)) {
             throw new UnauthorizedException("UNAUTHORIZED. You do not own this pet!");
@@ -91,8 +90,7 @@ public class PostServiceImpl implements IPostService {
     @Override
     public PostDto fetchPostById(int id) {
         Post post = postRepository.findById(id).orElseThrow(
-            () -> new ResourceNotFoundException("Post", "id", String.valueOf(id))
-        );
+                () -> new ResourceNotFoundException("Post", "id", String.valueOf(id)));
         return mapPostToDto(post);
     }
 
@@ -101,7 +99,8 @@ public class PostServiceImpl implements IPostService {
      */
     @Override
     public List<PostDto> fetchAllPosts(int page, int size, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Post> postsPage = postRepository.findAll(pageable);
 
@@ -130,10 +129,10 @@ public class PostServiceImpl implements IPostService {
     @Override
     public List<PostDto> fetchPostsByOwnerId(int ownerId, int page, int size, String sortBy, String sortDir) {
         User owner = userRepository.findById(ownerId).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", String.valueOf(ownerId))
-        );
+                () -> new ResourceNotFoundException("User", "id", String.valueOf(ownerId)));
 
-        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Post> postsPage = postRepository.findByPostOwner(owner, pageable);
 
@@ -143,7 +142,7 @@ public class PostServiceImpl implements IPostService {
     }
 
     /**
-     * @param id - Post ID
+     * @param id            - Post ID
      * @param postUpdateDto - Post data transfer object
      * @return boolean indicating if the post was successfully updated
      */
@@ -151,8 +150,7 @@ public class PostServiceImpl implements IPostService {
     @Transactional
     public boolean updatePost(int id, PostUpdateDto postUpdateDto) {
         Post post = postRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Post", "id", String.valueOf(id))
-        );
+                () -> new ResourceNotFoundException("Post", "id", String.valueOf(id)));
 
         if (postUpdateDto.getTitle() != null) {
             post.setTitle(postUpdateDto.getTitle());
@@ -168,8 +166,7 @@ public class PostServiceImpl implements IPostService {
 
         if (postUpdateDto.getPetId() > 0) {
             Pet pet = petRepository.findById(postUpdateDto.getPetId()).orElseThrow(
-                    () -> new ResourceNotFoundException("Pet", "id", String.valueOf(postUpdateDto.getPetId()))
-            );
+                    () -> new ResourceNotFoundException("Pet", "id", String.valueOf(postUpdateDto.getPetId())));
             post.setPet(pet);
         }
 
@@ -186,8 +183,7 @@ public class PostServiceImpl implements IPostService {
     @Transactional
     public boolean deletePostById(int id) {
         Post post = postRepository.findById(id).orElseThrow(
-            () -> new ResourceNotFoundException("Post", "id", String.valueOf(id))
-        );
+                () -> new ResourceNotFoundException("Post", "id", String.valueOf(id)));
         post.setPet(null);
         postRepository.delete(post);
         return true;
