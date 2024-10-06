@@ -83,7 +83,7 @@
         <div class="flex flex-row mt-1.5">
           <p class="text-TEXTCOLOR text-lg mt-1.5">Reward:</p>
           <input
-            v-model="formData.reward"
+            v-model="formData.rewardAmount"
             placeholder=" reward"
             class="border-2 rounded-md ml-2"
           /></div>
@@ -120,7 +120,7 @@ export default {
         title: '',
         content: '',
         petId: null, // Stores the selected petId
-        reward: 500,
+        rewardAmount: null,
       },
       pets: [],
       showSuccessModal: false,
@@ -154,7 +154,7 @@ export default {
     },
     async submitForm() {
   // Ensure all fields are filled before submitting
-  if (!this.formData.title || !this.formData.content || !this.formData.petId || !this.formData.reward) {
+  if (!this.formData.title || !this.formData.content || !this.formData.petId || !this.formData.rewardAmount) {
     alert('Please fill out all fields before submitting the form.');
     return;
   }
@@ -178,7 +178,7 @@ export default {
       title: '',
       content: '',
       petId: null,
-      reward: 500,  // Reset the reward to default value
+      rewardAmount: 500,  // Reset the reward to default value
     };
 
     // Show success modal

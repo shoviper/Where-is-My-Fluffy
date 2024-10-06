@@ -81,16 +81,16 @@
       <Icon v-else icon="bx:bx-image" class="w-full h-64" />
     </div>
     <!-- NOT MOCK -->
-    <!-- <p v-if="post.reward" class="text-lg text-green-600 mt-4">
-      Reward: ฿{{ post.reward }}
-    </p> -->
-    <!-- MOCK -->
-    <p class="text-lg text-red-500 mt-4">
-      <!-- Reward: ฿{{ post.reward }} -->
-      Reward: ฿500
+    <p v-if="post.rewardAmount" class="text-lg text-PINK mt-4">
+      Reward: ฿{{ post.rewardAmount }}
     </p>
+    <!-- MOCK -->
+    <!-- <p class="text-lg text-red-500 mt-4">
+      Reward: ฿{{ post.reward }} -->
+      <!-- Reward: ฿500 -->
+    <!-- </p> -->
     <div class="flex justify-between border-t">
-      <!-- <div class="flex flex-row items-center mt-2">
+      <div class="flex flex-row items-center mt-2">
         <Icon
           icon="mdi:heart-outline"
           class="text-red-500 hover:text-red-950"
@@ -100,7 +100,7 @@
       <div class="flex flex-row mt-2">
         <p class="hover:text-PINK">{{ post.comments }} comments</p>
         <p class="mx-2 hover:text-PINK">{{ post.shares }} shares</p>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>

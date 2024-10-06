@@ -7,6 +7,7 @@ import Profile from '../components/Profile.vue';
 import CreatePost from '../components/CreatePost.vue';
 import Seeallnotification from '../components/Seeallnotification.vue';
 import Seeeachnotification from '../components/Seeeachnotification.vue';
+import Payment from '../components/Payment.vue';
 
 const routes = [
 	{
@@ -48,6 +49,11 @@ const routes = [
 		path: '/seeeachnotification/:id',
 		name: 'Seeeachnotification',
 		component: Seeeachnotification,
+	},
+	{
+		path: '/payment',
+		name: 'Payment',
+		component: Payment,
 	}
 	
 ];

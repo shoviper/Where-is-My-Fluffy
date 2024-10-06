@@ -26,7 +26,9 @@
             </p>
             <div class="mt-4">
                 <a href="#"
-                    class="py-3 px-6 ml-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
+                    class="py-3 px-6 ml-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
+                    @click="goto({ path: '/payment' })"
+                    >
                     Accept
                 </a>
                 <a href="#"
