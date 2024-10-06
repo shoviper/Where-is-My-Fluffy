@@ -1,4 +1,6 @@
-package com.sda_project.myfluffy.pet.model;
+package com.sda_project.myfluffy.notification.model;
+
+import com.sda_project.myfluffy.pet.model.Pet;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,16 +15,16 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "pet_images")
-public class PetImage {
+@Table(name = "notification_images")
+public class NotificationImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne(mappedBy = "petImage", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
+    @OneToOne(mappedBy = "notificationImage", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
             CascadeType.REFRESH })
-    private Pet pet;
+    private Notification notification;
 
     @Lob
     private String imageBase64;

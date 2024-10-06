@@ -5,13 +5,17 @@ import com.sda_project.myfluffy.notification.model.Notification;
 
 public class NotificationCreateMapper {
 
-    public static NotificationCreateDto mapToNotificationCreateDto(Notification notification, NotificationCreateDto notificationCreateDto) {
+    public static NotificationCreateDto mapToNotificationCreateDto(Notification notification,
+            NotificationCreateDto notificationCreateDto) {
+        notificationCreateDto.setTitle(notification.getTitle());
         notificationCreateDto.setMessage(notification.getMessage());
         notificationCreateDto.setNotificationType(notification.getNotificationType());
         return notificationCreateDto;
     }
 
-    public static Notification mapToNotification(NotificationCreateDto notificationCreateDto, Notification notification) {
+    public static Notification mapToNotification(NotificationCreateDto notificationCreateDto,
+            Notification notification) {
+        notification.setTitle(notificationCreateDto.getTitle());
         notification.setMessage(notificationCreateDto.getMessage());
         notification.setNotificationType(notificationCreateDto.getNotificationType());
         return notification;

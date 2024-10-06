@@ -40,21 +40,19 @@ public interface IPetService {
     /**
      * Updates the details of an existing pet.
      *
-     * @param oAuth2User         - OAuth2User Object.
      * @param petStatusUpdateDto - The PetStatusUpdateDto object containing the
      *                           updated details of the pet.
      * @return boolean indicating if the update of Pet details is successful or not
      */
-    boolean updatePetStatus(OAuth2User oAuth2User, PetStatusUpdateDto petStatusUpdateDto);
+    boolean updatePetStatus(PetStatusUpdateDto petStatusUpdateDto);
 
     /**
      * Updates the details of an existing pet.
      *
-     * @param oAuth2User          - OAuth2User Object.
      * @param petFounderUpdateDto - PetFounderUpdateDto Object.
      * @return boolean indicating if the update of Pet details is successful or not
      */
-    boolean addFounder(OAuth2User oAuth2User, PetFounderUpdateDto petFounderUpdateDto);
+    boolean updateFounder(PetFounderUpdateDto petFounderUpdateDto);
 
     /*
      * Deletes a pet from the system based on the given pet ID.
@@ -72,5 +70,5 @@ public interface IPetService {
      */
     List<PetDto> getAllPets();
 
-    PetDto updatePetImageBase64(int petId, String filePath);
+    PetDto updatePetImageBase64(int petId, String base64Image);
 }

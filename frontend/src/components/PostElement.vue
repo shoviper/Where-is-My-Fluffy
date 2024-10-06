@@ -1,4 +1,46 @@
 <template>
+  <div>
+    <div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto">
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+      <!-- TITLE -->
+      <label class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+      <input 
+        v-model="modalData.title" 
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+        type="text" 
+        placeholder="Enter title" 
+      />
+
+      <!-- MEAASAGE -->
+      <label class="block text-gray-700 text-sm font-bold mt-4 mb-2">Message</label>
+      <textarea 
+        v-model="modalData.message" 
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+        placeholder="Enter message"
+      ></textarea>
+
+      <!-- IMAGE -->
+      <label class="block text-gray-700 text-sm font-bold mt-4 mb-2">Upload Image</label>
+      <input 
+        @change="onFileChange" 
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+        type="file" 
+        accept="image/*"
+      />
+
+      <div class="mt-4 flex justify-end">
+        <button @click="sendMessage" class="px-4 py-2 bg-PINK text-white rounded-lg">
+          Send
+        </button>
+        <button @click="closeModal" class="px-4 py-2 bg-gray-600 text-white rounded-lg ml-2">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+  </div>
   <div
     v-for="(post, index) in posts"
     :key="index"
@@ -21,6 +63,7 @@
       </div>
       <button
         class="inline-flex items-center justify-center rounded-md bg-PINK hover:bg-PURPLE px-2 py-1 my-2 text-sm font-medium text-white ring-1 ring-inset ring-pink-700/10"
+        @click="openModal(post)"
       >
         Found Fluffy !
       </button>
@@ -37,6 +80,15 @@
       />
       <Icon v-else icon="bx:bx-image" class="w-full h-64" />
     </div>
+    <!-- NOT MOCK -->
+    <!-- <p v-if="post.reward" class="text-lg text-green-600 mt-4">
+      Reward: ฿{{ post.reward }}
+    </p> -->
+    <!-- MOCK -->
+    <p class="text-lg text-red-500 mt-4">
+      <!-- Reward: ฿{{ post.reward }} -->
+      Reward: ฿500
+    </p>
     <div class="flex justify-between border-t">
       <!-- <div class="flex flex-row items-center mt-2">
         <Icon
@@ -62,10 +114,16 @@ export default {
     Icon,
   },
   data() {
-    return {
-      posts: [],
-    };
-  },
+  return {
+    posts: [],
+    showModal: false,
+    modalData: {
+      title: '',   
+      message: '',
+      image: null 
+    }
+  };
+},
   mounted() {
     this.fetchPosts();
   },
@@ -125,6 +183,23 @@ export default {
         hour12: true, // Use 12-hour format
       });
     },
+    openModal() {
+      this.modalData = {
+      title: '',       
+      message: '',     
+      imageFile: null
+    };
+    this.showModal = true; 
   },
+
+  closeModal() {
+    this.showModal = false;
+  },
+
+  sendMessage() {
+    alert('Message sent with title: ' + this.modalData.title);
+    this.closeModal(); 
+  }
+},
 };
 </script>
