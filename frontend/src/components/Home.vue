@@ -148,8 +148,8 @@ export default {
 	},
 	mounted() {
 		this.fetchUserProfile();
-		this.fetchPetImage(2);
-		this.fetchNotification(12);
+		//this.fetchPetImage(2);
+		this.fetchNotification(1);
 	},
 	methods: {
 		async fetchUserProfile() {
@@ -212,10 +212,10 @@ export default {
 				const fileInput = this.$refs.file_input.files[0];
 				const formData = new FormData();
 				formData.append('file', fileInput);
-				formData.append('notificationId', 12);
+				formData.append('notificationId', 1);
 
 				await axios.put(
-					`http://localhost:8080/notifications/12/uploadImage`,
+					`http://localhost:8080/notifications/1/uploadImage`,
 					formData,
 					{
 						headers: {
