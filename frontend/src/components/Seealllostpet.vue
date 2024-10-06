@@ -55,7 +55,7 @@
                     :alt="`Image of ${pet.name}`"
                     class="w-20 h-20 object-cover rounded-md"
                   />
-                  <h5 class="mb-1 text-xl font-medium text-black dark:text-black">
+                  <h5 class="mt-4 mb-1 text-xl font-medium text-black dark:text-black">
                     {{ pet.name }}
                   </h5>
                   <span class="text-md text-gray-500 dark:text-gray-400">{{ pet.age }} years old</span>
