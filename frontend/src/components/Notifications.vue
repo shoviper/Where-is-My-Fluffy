@@ -10,7 +10,7 @@
     <div class="space-y-4 ">
       
 
-      <div class="border-t border-gray-300 py-2" v-for="(mesg, index) in notification" :key="index">
+      <div class="border-t border-gray-300 py-2 cursor-pointer" v-for="(mesg, index) in notification" :key="index">
         <div @click="goto({ path: `/seeeachnotification/${mesg.id}` })">
           <p class="text-sm text-TEXTCOLOR text-left">
             {{ mesg.message }}

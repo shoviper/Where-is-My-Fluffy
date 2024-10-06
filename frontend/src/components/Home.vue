@@ -113,6 +113,8 @@ export default {
 	},
 	mounted() {
 		this.fetchUserProfile();
+		this.fetchPetImage(2);
+		this.fetchNotification(12);
 	},
 	methods: {
 		async fetchUserProfile() {
@@ -130,35 +132,75 @@ export default {
 				console.error('Error fetching user profile:', error);
 			}
 		},
-		saveDetails() {
-			// Ensure both fields are filled before saving
-			if (!this.location || !this.phone) {
-				alert('Both location and phone number are required.');
-				return;
-			}
+		async fetchPetImage(petId) {
+			try {
+				const response = await axios.get(`http://localhost:8080/pets/${petId}`);
+				const data = await response.data;
 
-			// Update location and phone number in the backend
-			Promise.all([
-				axios.put('http://localhost:8080/users/update-location', { location: this.location }, { withCredentials: true }),
-				axios.put('http://localhost:8080/users/update-phone-number', { phone: this.phone }, { withCredentials: true })
-			])
-				.then(() => {
-					alert('Details saved successfully!');
-				})
-				.catch((error) => {
-					alert('Error saving details. Please try again.');
-					console.error('Error saving details:', error);
-				});
+				const petImageData = data.image;
+
+				// Assuming petData.imageBase64 contains the base64-encoded image string
+				if (data) {
+					this.petData = data;
+					this.petImage = `data:image/jpeg;base64,${petImageData}`;
+				} else {
+					this.petData = null;
+					this.petImage = null;
+				}
+			} catch (error) {
+				console.error(`Error fetching pet image for pet ID ${petId}:`, error);
+			}
 		},
-		gotoMainPage() {
-			// Check if location is filled
-			if (!this.location) {
-				alert('Please save your location before proceeding.');
-				return;
-			}
+		async fetchNotification(notificationId) {
+			try {
+				const response = await axios.get(
+					`http://localhost:8080/notifications/${notificationId}`
+				);
+				const data = await response.data;
+				console.log(data);
 
-			// Proceed to main page if location is set
-			this.$router.push('/mainpage');
+				const notificationImageData = data.image;
+
+				if (data) {
+					this.notificationData = data;
+					this.notificationImage = `data:image/jpeg;base64,${notificationImageData}`;
+				} else {
+					this.notificationData = null;
+					this.notificationImage = null;
+				}
+			} catch (error) {
+				console.error(
+					`Error fetching notification for noti ID ${notificationId}:`,
+					error
+				);
+			}
+		},
+		async submitNotificationImage() {
+			try {
+				// Step 2: Upload the pet image
+				const fileInput = this.$refs.file_input.files[0];
+				const formData = new FormData();
+				formData.append('file', fileInput);
+				formData.append('notificationId', 12);
+
+				await axios.put(
+					`http://localhost:8080/notifications/12/uploadImage`,
+					formData,
+					{
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+						withCredentials: true,
+					}
+				);
+
+				alert('Notification image uploaded successfully!');
+			} catch (error) {
+				alert('Error occurred during notification image upload.');
+			}
+		},
+		goToLogin() {
+			this.$router.push('/login');
 		},
 		logout() {
 			axios
