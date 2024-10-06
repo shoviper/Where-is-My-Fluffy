@@ -36,6 +36,9 @@ public class User {
     @Column(name = "user_image")
     private String userImage;
 
+    @Column(name = "balance")
+    private double balance;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_location_id")
     private Location userLocation;

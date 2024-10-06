@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(20),
     user_image VARCHAR(255),
+    balance DOUBLE DEFAULT 0.0,
     user_location_id INT,
     FOREIGN KEY (`user_location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE
 );

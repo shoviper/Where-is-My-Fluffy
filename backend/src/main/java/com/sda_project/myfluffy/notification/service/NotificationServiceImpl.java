@@ -1,12 +1,9 @@
 package com.sda_project.myfluffy.notification.service;
 
-import com.sda_project.myfluffy.common.dto.response.ResponseDto;
 import com.sda_project.myfluffy.common.exception.InvalidStatusException;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.common.exception.UnauthorizedException;
-import com.sda_project.myfluffy.common.utils.constants.AppConstants;
 import com.sda_project.myfluffy.common.utils.enums.NotificationType;
-import com.sda_project.myfluffy.common.utils.enums.Status;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateDto;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateResponseDto;
 import com.sda_project.myfluffy.notification.dto.NotificationDto;
@@ -18,19 +15,13 @@ import com.sda_project.myfluffy.notification.model.NotificationImage;
 import com.sda_project.myfluffy.notification.repository.NotificationImageRepository;
 import com.sda_project.myfluffy.notification.repository.NotificationRepository;
 import com.sda_project.myfluffy.user.dto.UserDto;
-import com.sda_project.myfluffy.user.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.user.mapper.UserMapper;
 import com.sda_project.myfluffy.user.model.User;
 import com.sda_project.myfluffy.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;

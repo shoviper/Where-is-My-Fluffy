@@ -15,6 +15,8 @@ public class UserDto {
 
     private String phone;
 
+    private double balance;
+
     private String userImage;
 
     private LocationDto userLocation;
