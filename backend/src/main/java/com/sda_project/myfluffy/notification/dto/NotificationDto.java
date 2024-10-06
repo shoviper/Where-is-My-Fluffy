@@ -9,9 +9,13 @@ public class NotificationDto {
 
     private int id;
 
+    private String title;
+
     private String message;
 
     private NotificationType notificationType;
 
     private UserDto notificationOwner;
+
+    private String image;
 }

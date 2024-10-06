@@ -61,7 +61,4 @@ public class Pet {
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
     private List<Post> posts;
 
-    @Column(name = "reward_amount")
-    private double rewardAmount;
-
 }

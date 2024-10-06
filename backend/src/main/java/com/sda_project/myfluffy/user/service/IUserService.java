@@ -2,6 +2,8 @@ package com.sda_project.myfluffy.user.service;
 
 import com.sda_project.myfluffy.user.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.user.dto.UserDto;
+import com.sda_project.myfluffy.user.dto.UserLocationUpdateDto;
+
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;
@@ -26,13 +28,15 @@ public interface IUserService {
     UserDto fetchUserByEmail(String email);
 
     /**
-     * @param userDto - UserDto Object;
-     * @return boolean indicating if the update of User details is successful or not
+     * @param oAuth2User            - OAuth2User Object
+     * @param userLocationUpdateDto - UserLocationUpdateDto Object;
+     * @return boolean indicating if the update of User Location details is
+     *         successful or not
      */
-    boolean updateUser(UserDto userDto);
+    boolean updateUserLocation(OAuth2User oAuth2User, UserLocationUpdateDto userLocationUpdateDto);
 
     /**
-     * @param oAuth2User  - OAuth2User Object
+     * @param oAuth2User         - OAuth2User Object
      * @param userPhoneUpdateDto - Input Phone Number
      */
     boolean updatePhoneNumber(OAuth2User oAuth2User, UserPhoneUpdateDto userPhoneUpdateDto);

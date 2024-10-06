@@ -10,9 +10,11 @@ public abstract class NotificationFactory {
 
     public Notification sendNotification(NotificationType type) {
         Notification notification = createNotification(type);
-        System.out.println("--- Sending a " + notification.getName() + " ---");
+        System.out.println("--- Sending a " + notification.getTitle() + " ---");
+        System.out.println("--- Message: " + notification.getMessage() + " ---");
 
-        Notification decoratedNotification = new EmailNotificationDecorator(new SmsNotificationDecorator(new ClientNotificationDecorator(notification)));
+        Notification decoratedNotification = new EmailNotificationDecorator(
+                new SmsNotificationDecorator(new ClientNotificationDecorator(notification)));
         decoratedNotification.send();
 
         return notification;
