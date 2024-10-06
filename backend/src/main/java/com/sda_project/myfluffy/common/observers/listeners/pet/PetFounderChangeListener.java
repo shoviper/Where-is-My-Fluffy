@@ -8,6 +8,7 @@ import com.sda_project.myfluffy.notification.factory.pet.PetNotificationFactory;
 import com.sda_project.myfluffy.notification.service.INotificationService;
 import com.sda_project.myfluffy.pet.model.Pet;
 import com.sda_project.myfluffy.user.model.User;
+
 import lombok.AllArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -22,27 +23,39 @@ public class PetFounderChangeListener {
     public void handlePetFounderChange(PetFounderChangeEvent event) {
         Pet pet = event.getPet();
         User founder = pet.getFounder();
-        System.out.println("Pet founder changed: " + pet.getName() + " is now found by " + founder.getName());
+        User petOwner = pet.getPetOwner();
 
-        notifyFounder(founder, pet);
+        sendFounderNotification(founder, pet);
+        sendOwnerNotification(founder, petOwner, pet);
     }
 
-    private void notifyFounder(User founder, Pet pet) {
-        String message = "Dear " + founder.getName() + ", thank you for finding the pet '" + pet.getName() + "'.";
-        System.out.println("Sending notification: " + message);
-        sendNotification(founder, pet);
-    }
-
-    private void sendNotification(User founder, Pet pet) {
-        String message = "Dear " + founder.getName() + ", thank you for finding the pet '" + pet.getName() + "'.";
-        System.out.println("Sending notification: " + message);
+    private void sendFounderNotification(User founder, Pet pet) {
+        String title = "You found " + pet.getPetOwner().getName() + "'s '" + pet.getName() + "''.";
+        String message = "Dear " + founder.getName() + ", thank you for finding the pet '" + pet.getName() + "''.";
+        System.out.println("Sending notification: " + title);
 
         NotificationCreateDto notificationCreateDto = new NotificationCreateDto();
+        notificationCreateDto.setTitle(title);
         notificationCreateDto.setMessage(message);
         notificationCreateDto.setNotificationType(NotificationType.NOTIFICATION_MODIFIED);
-        iNotificationService.createNotification(notificationCreateDto);
+        iNotificationService.createNotification(founder, notificationCreateDto);
 
-        NotificationFactory PetNotificationFactory = new PetNotificationFactory(message);
+        NotificationFactory PetNotificationFactory = new PetNotificationFactory(title, message);
+        PetNotificationFactory.sendNotification(NotificationType.NOTIFICATION_MODIFIED);
+    }
+
+    private void sendOwnerNotification(User founder, User owner, Pet pet) {
+        String title = founder.getName() + " find your " + pet.getName() + ".";
+        String message = "Dear " + owner.getName() + ", your '" + pet.getName() + "' is found by '" + founder.getName() + "'.";
+        System.out.println("Sending notification: " + title);
+
+        NotificationCreateDto notificationCreateDto = new NotificationCreateDto();
+        notificationCreateDto.setTitle(title);
+        notificationCreateDto.setMessage(message);
+        notificationCreateDto.setNotificationType(NotificationType.NOTIFICATION_MODIFIED);
+        iNotificationService.createNotification(owner, notificationCreateDto);
+
+        NotificationFactory PetNotificationFactory = new PetNotificationFactory(title, message);
         PetNotificationFactory.sendNotification(NotificationType.NOTIFICATION_MODIFIED);
     }
 }

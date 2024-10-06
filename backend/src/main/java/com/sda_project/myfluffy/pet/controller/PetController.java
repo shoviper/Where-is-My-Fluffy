@@ -64,11 +64,10 @@ public class PetController {
                 .body(petDtos);
     }
 
-    @Operation(summary = "Update Pet Status: OAuth2User")
+    @Operation(summary = "Update Pet Status")
     @PutMapping("/update-pet-status")
-    public ResponseEntity<ResponseDto> updatePetStatus(@AuthenticationPrincipal OAuth2User principal,
-            @RequestBody PetStatusUpdateDto petStatusUpdateDto) {
-        boolean isUpdated = iPetService.updatePetStatus(principal, petStatusUpdateDto);
+    public ResponseEntity<ResponseDto> updatePetStatus(@RequestBody PetStatusUpdateDto petStatusUpdateDto) {
+        boolean isUpdated = iPetService.updatePetStatus(petStatusUpdateDto);
         if (isUpdated) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -107,11 +106,10 @@ public class PetController {
         }
     }
 
-    @Operation(summary = "Add founder who found the pet: OAuth2User")
+    @Operation(summary = "Add founder who found the pet")
     @PutMapping("/update-pet-founder")
-    public ResponseEntity<ResponseDto> addFounder(@AuthenticationPrincipal OAuth2User oAuth2User,
-            @RequestBody PetFounderUpdateDto petFounderUpdateDto) {
-        boolean isDeleted = iPetService.addFounder(oAuth2User, petFounderUpdateDto);
+    public ResponseEntity<ResponseDto> updateFounder(@RequestBody PetFounderUpdateDto petFounderUpdateDto) {
+        boolean isDeleted = iPetService.updateFounder(petFounderUpdateDto);
         if (isDeleted) {
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -133,12 +131,9 @@ public class PetController {
     public ResponseEntity<ResponseDto> uploadPetImage(@RequestParam("file") MultipartFile file,
             @PathVariable int petId) {
         try {
-            // Convert the file to base64
             byte[] fileBytes = file.getBytes();
             String base64Image = Base64.getEncoder().encodeToString(fileBytes);
 
-            // Get the pet entity by id and update the base64 image in the database (if
-            // needed)
             iPetService.updatePetImageBase64(petId, base64Image);
 
             return ResponseEntity

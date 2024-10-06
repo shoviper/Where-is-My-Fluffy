@@ -10,6 +10,7 @@ import lombok.ToString;
 @ToString
 public abstract class Notification {
     protected String name;
+    protected String title;
     protected String message;
     protected NotificationType type;
 
