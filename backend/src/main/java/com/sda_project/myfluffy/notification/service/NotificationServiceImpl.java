@@ -1,15 +1,13 @@
 package com.sda_project.myfluffy.notification.service;
 
-import com.sda_project.myfluffy.common.dto.response.ResponseDto;
 import com.sda_project.myfluffy.common.exception.InvalidStatusException;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.common.exception.UnauthorizedException;
-import com.sda_project.myfluffy.common.utils.constants.AppConstants;
 import com.sda_project.myfluffy.common.utils.enums.NotificationType;
-import com.sda_project.myfluffy.common.utils.enums.Status;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateDto;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateResponseDto;
 import com.sda_project.myfluffy.notification.dto.NotificationDto;
+import com.sda_project.myfluffy.notification.dto.NotificationRewardCreateDto;
 import com.sda_project.myfluffy.notification.mapper.NotificationCreateResponseMapper;
 import com.sda_project.myfluffy.notification.mapper.NotificationMapper;
 import com.sda_project.myfluffy.notification.model.Notification;
@@ -17,19 +15,13 @@ import com.sda_project.myfluffy.notification.model.NotificationImage;
 import com.sda_project.myfluffy.notification.repository.NotificationImageRepository;
 import com.sda_project.myfluffy.notification.repository.NotificationRepository;
 import com.sda_project.myfluffy.user.dto.UserDto;
-import com.sda_project.myfluffy.user.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.user.mapper.UserMapper;
 import com.sda_project.myfluffy.user.model.User;
 import com.sda_project.myfluffy.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +37,9 @@ public class NotificationServiceImpl implements INotificationService {
 
     @Override
     @Transactional
-    public NotificationCreateResponseDto createNotification(User user, NotificationCreateDto notificationCreateDto) {
+    public NotificationCreateResponseDto createNotification(User user,
+            NotificationCreateDto notificationCreateDto) {
+
         Notification notification = new Notification();
         notification.setTitle(notificationCreateDto.getTitle());
         notification.setMessage(notificationCreateDto.getMessage());
@@ -54,7 +48,31 @@ public class NotificationServiceImpl implements INotificationService {
 
         notificationRepository.save(notification);
 
-        return NotificationCreateResponseMapper.mapToNotificationCreateResponseDto(notification, new NotificationCreateResponseDto());
+        return NotificationCreateResponseMapper.mapToNotificationCreateResponseDto(notification,
+                new NotificationCreateResponseDto());
+    }
+
+    @Override
+    @Transactional
+    public NotificationCreateResponseDto createNotificationReward(
+            User user,
+            NotificationRewardCreateDto notificationRewardCreateDto) {
+        User sender = userRepository.findById(notificationRewardCreateDto.getNotificationSenderId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email",
+                        Integer.toString(notificationRewardCreateDto.getNotificationSenderId())));
+
+        Notification notification = new Notification();
+        notification.setTitle(notificationRewardCreateDto.getTitle());
+        notification.setMessage(notificationRewardCreateDto.getMessage());
+        notification.setNotificationType(notificationRewardCreateDto.getNotificationType());
+        notification.setRewardAmountToPay(notificationRewardCreateDto.getRewardAmountToPay());
+        notification.setNotificationOwner(user);
+        notification.setNotificationSender(sender);
+
+        notificationRepository.save(notification);
+
+        return NotificationCreateResponseMapper.mapToNotificationCreateResponseDto(notification,
+                new NotificationCreateResponseDto());
     }
 
     private User getAuthenticatedUser(OAuth2User oAuth2User) {

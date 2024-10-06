@@ -26,6 +26,9 @@ public class Notification {
     @Column(name = "message")
     private String message;
 
+    @Column(name = "reward_amount_to_pay")
+    private double rewardAmountToPay;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private NotificationType notificationType;
@@ -37,4 +40,9 @@ public class Notification {
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinColumn(name = "owner_id")
     private User notificationOwner;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinColumn(name = "sender_id")
+    private User notificationSender;
+
 }

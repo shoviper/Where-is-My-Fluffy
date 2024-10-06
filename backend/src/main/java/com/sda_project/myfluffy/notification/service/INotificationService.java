@@ -4,6 +4,7 @@ import com.sda_project.myfluffy.common.utils.enums.NotificationType;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateDto;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateResponseDto;
 import com.sda_project.myfluffy.notification.dto.NotificationDto;
+import com.sda_project.myfluffy.notification.dto.NotificationRewardCreateDto;
 import com.sda_project.myfluffy.user.model.User;
 
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -12,7 +13,11 @@ import java.util.List;
 
 public interface INotificationService {
 
-    NotificationCreateResponseDto createNotification(User user, NotificationCreateDto notificationCreateDto);
+    NotificationCreateResponseDto createNotification(User user,
+            NotificationCreateDto notificationCreateDto);
+
+    NotificationCreateResponseDto createNotificationReward(User user,
+            NotificationRewardCreateDto notificationRewardCreateDto);
 
     NotificationDto fetchNotificationById(int id);
 
