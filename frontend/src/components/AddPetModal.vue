@@ -154,89 +154,119 @@
 <script>
 import axios from 'axios';
 export default {
-	props: {
-		pettypes: Array, // Passed down from the parent component
-	},
-	data() {
-		return {
-			name: '',
-			age: null,
-			selected: '',
-			description: '',
-			location: '',
-			pettypes: [],
-		};
-	},
-	mounted() {
-		this.getPetType();
-		// this.addPet();
-	},
-	methods: {
-		closeModal() {
-			this.$emit('close'); // Emit event to close the modal
-		},
-		async submitPet() {
-			const newPet = {
-				name: this.name,
-				age: this.age,
-				animalType: this.selected,
-				description: this.description,
-				location: this.location,
-				status: 'MISSING', // Hardcoded status for missing pets
-			};
+  props: {
+    pettypes: Array, // Passed down from the parent component
+  },
+  data() {
+    return {
+      name: '',
+      age: null,
+      selected: '',
+      description: '',
+      location: '',
+      pettypes: [],
+    };
+  },
+  mounted() {
+    this.getPetType(); // Fetch the pet types
+  },
+  methods: {
+    // Close the modal
+    closeModal() {
+      this.$emit('close');
+	  this.$emit('refresh');
+    },
 
-			try {
-				// Step 1: Create the pet
-				const response = await axios.post(
-					'http://localhost:8080/pets',
-					newPet,
-					{
-						withCredentials: true,
-					}
-				);
+    // Submit the new pet data and upload image
+    async submitPet() {
+		const fileInput = this.$refs.file_input.files[0];
+  			if (!fileInput) {
+    			alert('Please upload an image before submitting.');
+    		return;
+		}
+      const newPet = {
+        name: this.name,
+        age: this.age,
+        animalType: this.selected,
+        description: this.description,
+        location: this.location,
+        status: 'MISSING', // Hardcoded status for missing pets
+      };
 
-				const petData = await response.data;
-				console.log('Creating success', petData);
+      try {
+        // Step 1: Create the pet
+        const response = await axios.post('http://localhost:8080/pets', newPet, {
+          withCredentials: true,
+        });
 
-				// Step 2: Upload the pet image
-				const fileInput = this.$refs.file_input.files[0];
-				const formData = new FormData();
-				formData.append('file', fileInput);
-				formData.append('petId', petData.id); // Assuming petData contains the ID of the created pet
+        const petData = await response.data;
+        console.log('Creating success', petData);
 
-				await axios.put(
-					`http://localhost:8080/pets/${petData.id}/uploadImage`,
-					formData,
-					{
-						headers: {
-							'Content-Type': 'multipart/form-data',
-						},
-						withCredentials: true,
-					}
-				);
+        // Step 2: Upload the pet image if file exists
+        const fileInput = this.$refs.file_input.files[0];
+        if (fileInput) {
+          const formData = new FormData();
+          formData.append('file', fileInput);
+          formData.append('petId', petData.id);
 
-				alert('Pet and image uploaded successfully!');
-			} catch (error) {
-				console.log(
-					'Error creating new pet or uploading image:',
-					error
-				);
-				alert('Error occurred during pet creation or image upload.');
-			}
-		},
-		async getPetType() {
-			try {
-				const response = await axios.get(
-					'http://localhost:8080/animal-type',
-					{
-						withCredentials: true,
-					}
-				);
-				this.pettypes = response.data;
-			} catch (error) {
-				console.error('Error fetching animal types:', error);
-			}
-		},
-	},
+          await axios.put(
+            `http://localhost:8080/pets/${petData.id}/uploadImage`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+              withCredentials: true,
+            }
+          );
+        }
+
+        alert('Pet and image uploaded successfully!');
+        
+        // Reset the form fields
+        this.resetForm();
+
+        // Close the modal
+        this.closeModal();
+
+      } catch (error) {
+        console.log('Error creating new pet or uploading image:', error);
+        alert('Error occurred during pet creation or image upload.');
+      }
+    },
+
+    // Reset the form fields after submission
+    resetForm() {
+      this.name = '';
+      this.age = null;
+      this.selected = '';
+      this.description = '';
+      this.location = '';
+      this.$refs.file_input.value = ''; // Clear the file input
+    },
+
+    // Fetch the available pet types from the server
+    async getPetType() {
+      try {
+        const response = await axios.get('http://localhost:8080/animal-type', {
+          withCredentials: true,
+        });
+        this.pettypes = response.data;
+      } catch (error) {
+        console.error('Error fetching animal types:', error);
+      }
+    },
+	validateFile() {
+    const fileInput = this.$refs.file_input.files[0];
+    if (!fileInput) {
+      this.imageError = 'Image is required';
+      this.isSubmitDisabled = true;
+      alert('Please upload an image to proceed.');
+    } else {
+      this.imageError = ''; 
+      this.isSubmitDisabled = false; 
+    }
+  },
+  },
 };
 </script>

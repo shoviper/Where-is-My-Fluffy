@@ -61,6 +61,7 @@
           v-if="isModalVisible"
           :pettypes="pettypes"
           @close="toggleModal"
+          @refresh="fetchPets"
         />
         </div>
 
@@ -78,8 +79,14 @@
             class="border-2 rounded-md h-full w-full"
           />
         </div>
-
-        <!-- Upload file section removed -->
+        <!-- add reward section -->
+        <div class="flex flex-row mt-1.5">
+          <p class="text-TEXTCOLOR text-lg mt-1.5">Reward:</p>
+          <input
+            v-model="formData.reward"
+            placeholder=" reward"
+            class="border-2 rounded-md ml-2"
+          /></div>
       </div>
       <div class="flex justify-end">
         <button
@@ -101,17 +108,24 @@
 
 <script>
 import axios from 'axios';
+import AddPetModal from './AddPetModal.vue';
 
 export default {
+  components: {
+    AddPetModal,
+  },
   data() {
     return {
       formData: {
         title: '',
         content: '',
         petId: null, // Stores the selected petId
+        reward: 500,
       },
       pets: [],
-      showSuccessModal: false, // Used to show/hide success modal
+      showSuccessModal: false,
+      isModalVisible: false,   // Controls the visibility of the modal
+      pettypes: []
     };
   },
   mounted() {
@@ -139,40 +153,51 @@ export default {
       }
     },
     async submitForm() {
-      try {
-        this.formData.type = "MISSING";
-        console.log('Submitting formData:', this.formData);
+  // Ensure all fields are filled before submitting
+  if (!this.formData.title || !this.formData.content || !this.formData.petId || !this.formData.reward) {
+    alert('Please fill out all fields before submitting the form.');
+    return;
+  }
 
-        // Make the POST request
-        const response = await axios.post('http://localhost:8080/posts', this.formData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          withCredentials: true,
-        });
+  try {
+    this.formData.type = "MISSING";
+    console.log('Submitting formData:', this.formData);
 
-        console.log('Form submitted successfully:', response.data);
+    // Make the POST request
+    const response = await axios.post('http://localhost:8080/posts', this.formData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    });
 
-        // Clear the form
-        this.formData = {
-          title: '',
-          content: '',
-          petId: null,
-        };
+    console.log('Form submitted successfully:', response.data);
 
-        // Show success modal
-        this.showSuccessModal = true;
-      } catch (error) {
-        if (error.response) {
-          console.error('Error response data:', error.response.data);
-        } else {
-          console.error('Error submitting form:', error.message);
-        }
-      }
-    },
+    // Clear the form after successful submission
+    this.formData = {
+      title: '',
+      content: '',
+      petId: null,
+      reward: 500,  // Reset the reward to default value
+    };
+
+    // Show success modal
+    this.showSuccessModal = true;
+  } catch (error) {
+    if (error.response) {
+      console.error('Error response data:', error.response.data);
+    } else {
+      console.error('Error submitting form:', error.message);
+    }
+  }
+},
+
     goToMainPage() {
       this.showSuccessModal = false;
       this.$router.push({ path: '/mainpage' });
+    },
+    toggleModal() {
+      this.isModalVisible = !this.isModalVisible;
     },
   },
 };
