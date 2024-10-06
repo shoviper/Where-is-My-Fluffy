@@ -26,6 +26,7 @@
             icon="iconamoon:profile"
             class="text-slate-700 w-10 h-7"
             @click="goto({ path: '/' })"
+    
           />
         </button>
       </div>
@@ -73,7 +74,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
