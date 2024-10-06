@@ -12,6 +12,8 @@ public class PostCreationDto {
 
     private PostType type;  // You can also use PostType enum if preferred
 
+    private double rewardAmount;
+
     private int petId;
 
     // No need to include ownerId, it will be fetched from the authenticated user

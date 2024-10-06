@@ -68,6 +68,7 @@ public class PostServiceImpl implements IPostService {
         post.setTitle(postCreationDto.getTitle());
         post.setContent(postCreationDto.getContent());
         post.setType(postCreationDto.getType());
+        post.setRewardAmount(postCreationDto.getRewardAmount());
         post.setPet(pet);
         post.setPostOwner(owner);
 

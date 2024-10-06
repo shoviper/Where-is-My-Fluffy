@@ -70,5 +70,5 @@ public interface IPetService {
      */
     List<PetDto> getAllPets();
 
-    PetDto updatePetImageBase64(int petId, String filePath);
+    PetDto updatePetImageBase64(int petId, String base64Image);
 }

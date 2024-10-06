@@ -27,15 +27,17 @@ public class PostCreatedListener {
     }
 
     private void sendNotification(User author, Post post) {
+        String title = "Post created: " + post.getTitle();
         String message = "Dear " + author.getName() + ", your post '" + post.getTitle() + "' has been published.";
         System.out.println("Sending notification: " + message);
 
         NotificationCreateDto notificationCreateDto = new NotificationCreateDto();
+        notificationCreateDto.setTitle(title);
         notificationCreateDto.setMessage(message);
         notificationCreateDto.setNotificationType(NotificationType.NOTIFICATION_CREATED);
         iNotificationService.createNotification(author, notificationCreateDto);
 
-        NotificationFactory PostNotificationFactory = new PostNotificationFactory(message);
+        NotificationFactory PostNotificationFactory = new PostNotificationFactory(title, message);
         PostNotificationFactory.sendNotification(NotificationType.NOTIFICATION_CREATED);
     }
 }

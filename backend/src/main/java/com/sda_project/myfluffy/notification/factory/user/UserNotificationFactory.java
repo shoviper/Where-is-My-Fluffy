@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserNotificationFactory extends NotificationFactory {
 
+    private String title;
     private String message;
 
     @Override
@@ -20,16 +21,19 @@ public class UserNotificationFactory extends NotificationFactory {
         if (type.equals(NotificationType.NOTIFICATION_CREATED)) {
             notification = new CreatedNotification();
             notification.setName("User Created");
+            notification.setTitle(title);
             notification.setMessage(message);
             notification.setType(type);
         } else if (type.equals(NotificationType.NOTIFICATION_MODIFIED)) {
             notification = new ModifiedNotification();
             notification.setName("User Modified");
+            notification.setTitle(title);
             notification.setMessage(message);
             notification.setType(type);
         } else if (type.equals(NotificationType.NOTIFICATION_REMOVED)) {
             notification = new RemovedNotification();
             notification.setName("User Removed");
+            notification.setTitle(title);
             notification.setMessage(message);
             notification.setType(type);
         }

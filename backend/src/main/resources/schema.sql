@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) NOT NULL UNIQUE,
     phone VARCHAR(20),
     user_image VARCHAR(255),
-    user_location_id INT
-    FOREIGN KEY (`user_location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE,
+    user_location_id INT,
+    FOREIGN KEY (`user_location_id`) REFERENCES `locations`(`id`) ON DELETE CASCADE
 );
 
 -- Create Animal type Table
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS notifications (
     owner_id INT,
     notification_image_id INT,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`owner_id`) REFERENCES `users`(id) ON DELETE CASCADE
+    FOREIGN KEY (`owner_id`) REFERENCES `users`(id) ON DELETE CASCADE,
     FOREIGN KEY (`notification_image_id`) REFERENCES `notification_images`(`id`) ON DELETE CASCADE
 );
 

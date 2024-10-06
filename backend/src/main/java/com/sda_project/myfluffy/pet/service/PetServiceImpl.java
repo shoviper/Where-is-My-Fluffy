@@ -72,8 +72,6 @@ public class PetServiceImpl implements IPetService {
 
         petRepository.save(pet);
 
-        eventPublisher.publishEvent(new PetStatusChangeEvent(this, pet));
-
         return PetCreateResponseMapper.mapToPetCreateResponseDto(pet, new PetCreateResponseDto());
     }
 

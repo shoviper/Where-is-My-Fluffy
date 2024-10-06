@@ -34,6 +34,9 @@ public class Post {
     @Column(name = "type")
     private PostType type;
 
+    @Column(name = "reward_amount")
+    private double rewardAmount;
+
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinColumn(name = "pet_id")
     private Pet pet;
@@ -41,8 +44,5 @@ public class Post {
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinColumn(name = "owner_id")
     private User postOwner;
-
-    @Column(name = "reward_amount")
-    private double rewardAmount;
 
 }

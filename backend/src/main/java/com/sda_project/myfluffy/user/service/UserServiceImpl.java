@@ -202,10 +202,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     private UserDto mapToUser(User user) {
-        LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
-
         UserDto userDto = UserMapper.mapToUserDto(user, new UserDto());
-        userDto.setUserLocation(locationDto);
+
+        if (user.getUserLocation() != null) {
+            LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
+            userDto.setUserLocation(locationDto);
+        }
 
         return userDto;
     }

@@ -29,16 +29,18 @@ public class PetStatusChangeListener {
 
     private void sendNotification(User owner, Pet pet) {
         Status status = pet.getStatus();
+        String title = "Your " + pet.getName() + " is " + status + "!!!";
         String message = "Dear " + owner.getName() + ", your pet '" + pet.getName() + "' has been marked as " + status
                 + ".";
         System.out.println("Sending notification: " + message);
 
         NotificationCreateDto notificationCreateDto = new NotificationCreateDto();
+        notificationCreateDto.setTitle(title);
         notificationCreateDto.setMessage(message);
         notificationCreateDto.setNotificationType(NotificationType.NOTIFICATION_MODIFIED);
         iNotificationService.createNotification(owner, notificationCreateDto);
 
-        NotificationFactory PetNotificationFactory = new PetNotificationFactory(message);
+        NotificationFactory PetNotificationFactory = new PetNotificationFactory(title, message);
         PetNotificationFactory.sendNotification(NotificationType.NOTIFICATION_MODIFIED);
     }
 }
