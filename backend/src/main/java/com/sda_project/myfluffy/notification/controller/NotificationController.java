@@ -7,6 +7,7 @@ import com.sda_project.myfluffy.common.utils.enums.NotificationType;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateDto;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateResponseDto;
 import com.sda_project.myfluffy.notification.dto.NotificationDto;
+import com.sda_project.myfluffy.notification.dto.NotificationRewardCreateDto;
 import com.sda_project.myfluffy.notification.service.INotificationService;
 
 import com.sda_project.myfluffy.pet.dto.PetCreateDto;
@@ -37,10 +38,13 @@ public class NotificationController {
 
     @Operation(summary = "Create Notification send to user id")
     @PostMapping("/{userId}/user")
-    public ResponseEntity<NotificationCreateResponseDto> createPet(@PathVariable int userId ,
-                                                                   @RequestBody NotificationCreateDto notificationCreateDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", Integer.toString(userId)));
-        NotificationCreateResponseDto notificationCreateResponseDto = iNotificationService.createNotification(user, notificationCreateDto);
+    public ResponseEntity<NotificationCreateResponseDto> createNotification(
+            @PathVariable int userId,
+            @RequestBody NotificationRewardCreateDto notificationRewardCreateDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", Integer.toString(userId)));
+        NotificationCreateResponseDto notificationCreateResponseDto = iNotificationService
+                .createNotificationReward(user, notificationRewardCreateDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(notificationCreateResponseDto);
     }
@@ -118,9 +122,9 @@ public class NotificationController {
         }
     }
 
-
     @PutMapping("/{notificationId}/update-notification-status/{notificationType}")
-    public ResponseEntity<ResponseDto> updateNotificationStatus(@PathVariable int notificationId, @PathVariable NotificationType notificationType) {
+    public ResponseEntity<ResponseDto> updateNotificationStatus(@PathVariable int notificationId,
+            @PathVariable NotificationType notificationType) {
         boolean isUpdated = iNotificationService.updateNotificationStatus(notificationId, notificationType);
         if (isUpdated) {
             return ResponseEntity

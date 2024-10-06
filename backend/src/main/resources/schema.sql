@@ -77,9 +77,12 @@ CREATE TABLE IF NOT EXISTS notifications (
     message VARCHAR(255) NOT NULL,
     type enum('NOTIFICATION_CREATED', 'NOTIFICATION_MODIFIED', 'NOTIFICATION_REMOVED', 'NOTIFICATION_PENDING', 'NOTIFICATION_APPROVED', 'NOTIFICATION_REJECTED' ),
     owner_id INT,
+    sender_id INT,
     notification_image_id INT,
+    reward_amount_to_pay DOUBLE DEFAULT 0.0,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`owner_id`) REFERENCES `users`(id) ON DELETE CASCADE,
+    FOREIGN KEY (`sender_id`) REFERENCES `users`(id) ON DELETE CASCADE,
     FOREIGN KEY (`notification_image_id`) REFERENCES `notification_images`(`id`) ON DELETE CASCADE
 );
 

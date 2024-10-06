@@ -10,6 +10,7 @@ import com.sda_project.myfluffy.common.utils.enums.Status;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateDto;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateResponseDto;
 import com.sda_project.myfluffy.notification.dto.NotificationDto;
+import com.sda_project.myfluffy.notification.dto.NotificationRewardCreateDto;
 import com.sda_project.myfluffy.notification.mapper.NotificationCreateResponseMapper;
 import com.sda_project.myfluffy.notification.mapper.NotificationMapper;
 import com.sda_project.myfluffy.notification.model.Notification;
@@ -45,7 +46,9 @@ public class NotificationServiceImpl implements INotificationService {
 
     @Override
     @Transactional
-    public NotificationCreateResponseDto createNotification(User user, NotificationCreateDto notificationCreateDto) {
+    public NotificationCreateResponseDto createNotification(User user,
+            NotificationCreateDto notificationCreateDto) {
+
         Notification notification = new Notification();
         notification.setTitle(notificationCreateDto.getTitle());
         notification.setMessage(notificationCreateDto.getMessage());
@@ -54,7 +57,31 @@ public class NotificationServiceImpl implements INotificationService {
 
         notificationRepository.save(notification);
 
-        return NotificationCreateResponseMapper.mapToNotificationCreateResponseDto(notification, new NotificationCreateResponseDto());
+        return NotificationCreateResponseMapper.mapToNotificationCreateResponseDto(notification,
+                new NotificationCreateResponseDto());
+    }
+
+    @Override
+    @Transactional
+    public NotificationCreateResponseDto createNotificationReward(
+            User user,
+            NotificationRewardCreateDto notificationRewardCreateDto) {
+        User sender = userRepository.findById(notificationRewardCreateDto.getNotificationSenderId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email",
+                        Integer.toString(notificationRewardCreateDto.getNotificationSenderId())));
+
+        Notification notification = new Notification();
+        notification.setTitle(notificationRewardCreateDto.getTitle());
+        notification.setMessage(notificationRewardCreateDto.getMessage());
+        notification.setNotificationType(notificationRewardCreateDto.getNotificationType());
+        notification.setRewardAmountToPay(notificationRewardCreateDto.getRewardAmountToPay());
+        notification.setNotificationOwner(user);
+        notification.setNotificationSender(sender);
+
+        notificationRepository.save(notification);
+
+        return NotificationCreateResponseMapper.mapToNotificationCreateResponseDto(notification,
+                new NotificationCreateResponseDto());
     }
 
     private User getAuthenticatedUser(OAuth2User oAuth2User) {
