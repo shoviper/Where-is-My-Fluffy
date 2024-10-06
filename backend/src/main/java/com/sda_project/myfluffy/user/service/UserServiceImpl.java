@@ -6,11 +6,16 @@ import com.sda_project.myfluffy.user.dto.UserLocationUpdateDto;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.common.exception.UnauthorizedException;
 import com.sda_project.myfluffy.common.exception.UserAlreadyExistsException;
+import com.sda_project.myfluffy.common.utils.enums.NotificationType;
 import com.sda_project.myfluffy.geolocation.dto.LocationCreateDto;
 import com.sda_project.myfluffy.geolocation.dto.LocationDto;
 import com.sda_project.myfluffy.geolocation.model.Location;
 import com.sda_project.myfluffy.geolocation.service.ILocationService;
+import com.sda_project.myfluffy.notification.dto.NotificationCreateDto;
+import com.sda_project.myfluffy.notification.service.INotificationService;
+import com.sda_project.myfluffy.payment.dto.PaymentDto;
 import com.sda_project.myfluffy.user.mapper.UserMapper;
+import com.sda_project.myfluffy.pet.model.PetImage;
 import com.sda_project.myfluffy.pet.repository.PetRepository;
 import com.sda_project.myfluffy.user.model.User;
 import com.sda_project.myfluffy.user.repository.UserRepository;
@@ -34,6 +39,7 @@ public class UserServiceImpl implements IUserService {
     private UserRepository userRepository;
     private PetRepository petRepository;
     private ILocationService iLocationService;
+    private INotificationService iNotificationService;
 
     /**
      * @param email - String email
@@ -68,6 +74,7 @@ public class UserServiceImpl implements IUserService {
         user.setName(oAuth2User.getAttribute("name"));
         user.setEmail(oAuth2User.getAttribute("email"));
         user.setUserImage(oAuth2User.getAttribute("picture"));
+        user.setBalance(10000.00);
 
         userRepository.save(user);
     }
@@ -85,10 +92,11 @@ public class UserServiceImpl implements IUserService {
         String email = oAuth2User.getAttribute("email");
         User user = getUserByEmail(email);
 
-        LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
-
         UserDto userDto = UserMapper.mapToUserDto(user, new UserDto());
-        userDto.setUserLocation(locationDto);
+        if (user.getUserLocation() != null) {
+            LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
+            userDto.setUserLocation(locationDto);
+        }
 
         return userDto;
     }
@@ -102,10 +110,11 @@ public class UserServiceImpl implements IUserService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User", "email", email));
 
-        LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
-
         UserDto userDto = UserMapper.mapToUserDto(user, new UserDto());
-        userDto.setUserLocation(locationDto);
+        if (user.getUserLocation() != null) {
+            LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
+            userDto.setUserLocation(locationDto);
+        }
 
         return userDto;
     }
@@ -210,5 +219,40 @@ public class UserServiceImpl implements IUserService {
         }
 
         return userDto;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateBalance(PaymentDto paymentDto) {
+        boolean isUpdated = false;
+
+        User sender = userRepository.findById(paymentDto.getSenderId()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", Integer.toString(paymentDto.getSenderId())));
+
+        User receiver = userRepository.findById(paymentDto.getReceiverId()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", Integer.toString(paymentDto.getReceiverId())));
+
+        if (paymentDto.getAmount() >= 0) {
+            sender.setBalance(sender.getBalance() - paymentDto.getAmount());
+            receiver.setBalance(receiver.getBalance() + paymentDto.getAmount());
+            isUpdated = true;
+
+            NotificationCreateDto notificationCreateDtoSender = new NotificationCreateDto();
+            notificationCreateDtoSender.setTitle("Transfer Money");
+            notificationCreateDtoSender
+                    .setMessage("Send " + paymentDto.getAmount() + " baht to " + receiver.getName() + ".");
+            notificationCreateDtoSender.setNotificationType(NotificationType.NOTIFICATION_APPROVED);
+            iNotificationService.createNotification(sender, notificationCreateDtoSender);
+
+            NotificationCreateDto notificationCreateDtoReceiver = new NotificationCreateDto();
+            notificationCreateDtoReceiver.setTitle("Receive Money");
+            notificationCreateDtoReceiver
+                    .setMessage("Receive " + paymentDto.getAmount() + " baht from " + sender.getName() + ".");
+            notificationCreateDtoReceiver.setNotificationType(NotificationType.NOTIFICATION_APPROVED);
+            iNotificationService.createNotification(receiver, notificationCreateDtoReceiver);
+        }
+
+        return isUpdated;
+
     }
 }

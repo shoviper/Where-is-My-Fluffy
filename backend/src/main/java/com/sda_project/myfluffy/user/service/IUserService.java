@@ -1,6 +1,7 @@
 package com.sda_project.myfluffy.user.service;
 
 import com.sda_project.myfluffy.user.dto.UserPhoneUpdateDto;
+import com.sda_project.myfluffy.payment.dto.PaymentDto;
 import com.sda_project.myfluffy.user.dto.UserDto;
 import com.sda_project.myfluffy.user.dto.UserLocationUpdateDto;
 
@@ -49,4 +50,5 @@ public interface IUserService {
 
     List<UserDto> fetchAllUsers(int page, int size, String sortBy, String sortDir);
 
+    boolean updateBalance(PaymentDto paymentDto);
 }
