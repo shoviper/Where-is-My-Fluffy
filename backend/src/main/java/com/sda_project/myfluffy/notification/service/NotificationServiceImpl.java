@@ -34,7 +34,6 @@ public class NotificationServiceImpl implements INotificationService {
     private NotificationRepository notificationRepository;
     private UserRepository userRepository;
     private NotificationImageRepository notificationImageRepository;
-    private INotificationService iNotificationService;
 
     @Override
     @Transactional
@@ -175,8 +174,8 @@ public class NotificationServiceImpl implements INotificationService {
                             + ", that pet you found has been approved. waiting to receive the reward from "
                             + reciever.getName() + " , Reward amount: " + notification.getRewardAmountToPay()
                             + " baht.");
-            notificationCreateDtoSender.setNotificationType(NotificationType.NOTIFICATION_REJECTED);
-            iNotificationService.createNotification(sender, notificationCreateDtoSender);
+            notificationCreateDtoSender.setNotificationType(NotificationType.NOTIFICATION_APPROVED);
+            this.createNotification(sender, notificationCreateDtoSender);
 
             isUpdated = true;
         }
@@ -191,7 +190,7 @@ public class NotificationServiceImpl implements INotificationService {
             notificationCreateDtoSender
                     .setMessage("Dear " + sender.getName() + ", that pet you found has been rejected.");
             notificationCreateDtoSender.setNotificationType(NotificationType.NOTIFICATION_REJECTED);
-            iNotificationService.createNotification(sender, notificationCreateDtoSender);
+            this.createNotification(sender, notificationCreateDtoSender);
 
             isUpdated = true;
         }
