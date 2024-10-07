@@ -34,9 +34,7 @@ export default {
   name: 'payment',
   data() {
     return {
-      notificationId: this.$route.params.id, // Get notification ID from route parameters
-      rewardAmount: null, // Default reward amount
-      notificationOwner: null, // Store pet owner information
+      notification: {},
     };
   },
   mounted() {
@@ -49,7 +47,10 @@ export default {
           withCredentials: true,
         });
 
-        return response.data;
+        const data = response.data;
+        this.notification = {
+          reward: `Your pet has been found!`,
+        };
 
       } catch (error) {
         console.error('Error fetching payment details:', error);
