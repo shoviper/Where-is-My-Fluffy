@@ -47,12 +47,12 @@ export default {
         const response = await axios.get("http://localhost:8080/notifications/me", {
           withCredentials: true,
         });
-        this.notification = response.data;
+        this.notification = response.data.reverse();
       } catch (error) {
         console.error("Error fetching animal types:", error);
       }
     },
-    
+
     goto(page) {
           if (page.name && page.name !== this.$route.name) {
             this.$router.push({ name: page.name });

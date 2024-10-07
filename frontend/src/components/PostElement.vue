@@ -78,7 +78,8 @@
       </div>
     </div>
     <p class="font-normal text-left mt-4 text-TEXTCOLOR">
-      {{ post.content }}{{ post.pet.location.addressUrl }}
+      {{ post.content }}
+      <!-- {{ post }} -->
     </p>
     <div class="w-full h-64 mt-4">
       <img
