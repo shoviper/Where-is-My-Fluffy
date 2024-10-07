@@ -4,14 +4,11 @@ import com.sda_project.myfluffy.common.dto.response.ResponseDto;
 import com.sda_project.myfluffy.common.exception.ResourceNotFoundException;
 import com.sda_project.myfluffy.common.utils.constants.AppConstants;
 import com.sda_project.myfluffy.common.utils.enums.NotificationType;
-import com.sda_project.myfluffy.notification.dto.NotificationCreateDto;
 import com.sda_project.myfluffy.notification.dto.NotificationCreateResponseDto;
 import com.sda_project.myfluffy.notification.dto.NotificationDto;
 import com.sda_project.myfluffy.notification.dto.NotificationRewardCreateDto;
 import com.sda_project.myfluffy.notification.service.INotificationService;
 
-import com.sda_project.myfluffy.pet.dto.PetCreateDto;
-import com.sda_project.myfluffy.user.dto.UserPhoneUpdateDto;
 import com.sda_project.myfluffy.user.model.User;
 import com.sda_project.myfluffy.user.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
