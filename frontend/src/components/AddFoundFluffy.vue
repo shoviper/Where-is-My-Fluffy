@@ -63,7 +63,7 @@
           message: "",
           image: null,
         },
-        rewardAmountToPay: 0, // Assuming 0 by default
+        rewardAmountToPay: null, // Assuming 0 by default
         user: null, // Initially null, will be set by the GET request
       };
     },
@@ -87,54 +87,67 @@
       onFileChange(event) {
         this.modalData.image = event.target.files[0]; // Store the selected file in modalData
       },
+
+      async fetchReward() {
+      try {
+        const response = await axios.get('http://localhost:8080/posts', {
+          params: {
+            page: 0, // you can adjust this as needed
+            size: 10, // adjust as needed
+            sortBy: 'id',
+            sortDir: 'asc',
+          },
+          withCredentials: true, // make sure "true" is lowercase
+        });
+        // Assuming you want the first post's reward amount
+        return response.data[0].rewardAmount; // Modify this if you want a different post's reward
+      } catch (error) {
+        console.log("Error fetching reward", error);
+        return null;
+      }
+    },
+
   
-      async sendMessage() {
-        // Ensure notificationSenderId has been fetched before proceeding
-        if (!this.user || !this.user.id) {
-          console.error("Notification sender ID is not set yet.");
+    async sendMessage() {
+      if (!this.user || !this.user.id) {
+        console.error("Notification sender ID is not set yet.");
+        return;
+      }
+
+      if (!this.modalData.image) {
+        alert("Please upload an image before sending the message.");
+        return;
+      }
+
+      console.log("Sending message...");
+      console.log("Post ID:", this.postId);
+      console.log("User ID:", this.userId);
+      console.log("Notification Sender ID:", this.user.id);
+
+      try {
+        // Fetch the reward data first
+        const rewardAmount = await this.fetchReward();
+        
+        if (rewardAmount === null) {
+          alert("Failed to fetch reward amount");
           return;
         }
 
-        if (!this.modalData.image) {
-          alert("Please upload an image before sending the message.");
-          return;
-        }
-  
-        console.log("Sending message...");
-        console.log("Post ID:", this.postId);
-        console.log("User ID:", this.userId);
-        console.log("Notification Sender ID:", this.user.id);
-  
-        try {
-          // Perform the PUT request with the postId
-          // const response = await axios.put(
-          //   `http://localhost:8080/posts/${this.postId}`,
-          //   {
-          //     title: this.modalData.title,
-          //     content: this.modalData.message,
-          //     type: "MISSING",
-          //     petId: this.postId,
-          //   }
-          // );
-  
-          // console.log("Post update response:", response.data);
+        const notificationResponse = await axios.post(
+          `http://localhost:8080/notifications/${this.userId}/user`,
+          {
+            title: this.modalData.title,
+            message: this.modalData.message,
+            notificationType: "NOTIFICATION_PENDING",
+            notificationSenderId: this.user.id, // Sender ID from GET request
+            rewardAmountToPay: rewardAmount, // Use the rewardAmount from fetchReward
+          }
+        );
+        console.log("Notification sent:", notificationResponse.data);
 
-          // Perform the POST request to notifications with the userId
-          const notificationResponse = await axios.post(
-            `http://localhost:8080/notifications/${this.userId}/user`,
-            {
-              title: this.modalData.title,
-              message: this.modalData.message,
-              notificationType: "NOTIFICATION_PENDING",
-              notificationSenderId: this.user.id, // Sender ID from GET request
-              rewardAmountToPay: this.rewardAmountToPay,
-            }
-          );
-  
-          console.log("Notification sent:", notificationResponse.data);
-
-          const notificationId = notificationResponse.data.id;
-        console.log("Notification created successfully:", notificationResponse.data);
+        const notificationId = notificationResponse.data.id;
+      console.log("Notification created successfully:", notificationResponse.data);
+      
 
         // Step 2: Upload the image with the notificationId
         const formData = new FormData();

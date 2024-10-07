@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       notificationId: this.$route.params.id, // Get notification ID from route parameters
-      rewardAmount: 0, // Default reward amount
+      rewardAmount: null, // Default reward amount
       notificationOwner: null, // Store pet owner information
     };
   },
@@ -45,15 +45,11 @@ export default {
   methods: {
     async fetchPaymentDetails() {
       try {
-        const response = await axios.get(`http://localhost:8080/notifications/${this.notificationId}`, {
+        const response = await axios.get(`http://localhost:8080/notifications/${id}`, {
           withCredentials: true,
         });
 
-        // Assuming the reward amount is part of the API response
-        this.rewardAmount = response.data.rewardAmount; // Update with actual reward amount from API
-
-        // Assuming the notification contains owner details
-        this.notificationOwner = response.data.notificationOwner; // Pet owner details
+        return response.data;
 
       } catch (error) {
         console.error('Error fetching payment details:', error);

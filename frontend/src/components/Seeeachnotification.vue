@@ -27,14 +27,13 @@
   
         <!-- Message section -->
         <div class="mb-4">
-            <p class="text-lg text-gray-500 mb-2">{{ notification.from }}</p>
             <p class="text-lg text-gray-500 mb-2">{{ notification.to }}</p>
             <p class="text-base text-gray-700 whitespace-pre-line">
                 {{ notification.message }}
             </p>
             <div class="mt-4">
               <a href="#"
-                @click="notificationUpdate('NOTIFICATION_APPROVED')"
+                @click="notificationUpdate('NOTIFICATION_APPROVED') && goto({ path: `/payment` })"
                 class="py-3 px-6 ml-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
                 Accept
               </a>
@@ -69,34 +68,30 @@
     },
     methods: {
       async fetchNotification(id) {
-        try {
-          const response = await axios.get(`http://localhost:8080/notifications/${id}`, {
-            withCredentials: true,
-          });
-  
-          const data = response.data;
-          this.notification = {
-            title: `Your pet has been found!`,
-            from: `From: pet founder`,
-            to: `To: ${data.notificationOwner.name}`,
-            message: `${data.message}
-            Please confirm that if this is your pet`,
-            type: data.notificationType,
-            // owner: `${data.notificationOwner.name} (${data.notificationOwner.email})`,
-            timestamp: data.timestamp || null,
-          };
+  try {
+    const response = await axios.get(`http://localhost:8080/notifications/${id}`, {
+      withCredentials: true,
+    });
 
-          // Fetch the pet image if available
-          const petImageResponse = await this.fetchPetImage(id);
-          if (petImageResponse && petImageResponse.image) {
-            this.notification.image = `data:image/jpeg;base64,${petImageResponse.image}`;
-          }
+    const data = response.data;
+    this.notification = {
+      title: `Your pet has been found!`,
+      to: `To: ${data.notificationOwner.name}`,
+      message: `Please confirm if this is your pet`,
+      type: data.notificationType,
+      timestamp: data.timestamp || null,
+    };
 
+    // Fetch the pet image if available
+    const petImageResponse = await this.fetchPetImage(id);
+    if (petImageResponse && petImageResponse.image) {
+      this.notification.image = `data:image/jpeg;base64,${petImageResponse.image}`;
+    }
+  } catch (error) {
+    console.error('Error fetching notification details:', error);
+  }
+},
 
-        } catch (error) {
-          console.error('Error fetching notification details:', error);
-        }
-      },
 
       async fetchPetImage(id) {
       try {
