@@ -10,8 +10,11 @@
     <div class="space-y-4 ">
       
 
-      <div class="border-t border-gray-300 py-2" v-for="(mesg, index) in notification" :key="index">
-        <div @click="goto({ path: `/seeeachnotification/${mesg.id}` })">
+      <div class="border-t border-gray-300 py-2 cursor-pointer" v-for="(mesg, index) in notification" :key="index">
+        <div
+          :class="{ 'cursor-not-allowed': mesg.notificationType !== 'NOTIFICATION_PENDING' }"
+          @click="mesg.notificationType === 'NOTIFICATION_PENDING' && goto({ path: `/seeeachnotification/${mesg.id}` })"
+        >
           <p class="text-sm text-TEXTCOLOR text-left">
             {{ mesg.message }}
           </p>
@@ -44,11 +47,12 @@ export default {
         const response = await axios.get("http://localhost:8080/notifications/me", {
           withCredentials: true,
         });
-        this.notification = response.data;
+        this.notification = response.data.reverse();
       } catch (error) {
         console.error("Error fetching animal types:", error);
       }
     },
+
     goto(page) {
           if (page.name && page.name !== this.$route.name) {
             this.$router.push({ name: page.name });

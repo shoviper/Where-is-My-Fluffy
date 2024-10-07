@@ -91,10 +91,11 @@ public class UserServiceImpl implements IUserService {
         String email = oAuth2User.getAttribute("email");
         User user = getUserByEmail(email);
 
-        LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
-
         UserDto userDto = UserMapper.mapToUserDto(user, new UserDto());
-        userDto.setUserLocation(locationDto);
+        if (user.getUserLocation() != null) {
+            LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
+            userDto.setUserLocation(locationDto);
+        }
 
         return userDto;
     }
@@ -108,10 +109,11 @@ public class UserServiceImpl implements IUserService {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User", "email", email));
 
-        LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
-
         UserDto userDto = UserMapper.mapToUserDto(user, new UserDto());
-        userDto.setUserLocation(locationDto);
+        if (user.getUserLocation() != null) {
+            LocationDto locationDto = iLocationService.fetchLocationById(user.getUserLocation().getId());
+            userDto.setUserLocation(locationDto);
+        }
 
         return userDto;
     }
@@ -246,7 +248,7 @@ public class UserServiceImpl implements IUserService {
             notificationCreateDtoReceiver
                     .setMessage("Receive " + paymentDto.getAmount() + " baht from " + sender.getName() + ".");
             notificationCreateDtoReceiver.setNotificationType(NotificationType.NOTIFICATION_APPROVED);
-            iNotificationService.createNotification(sender, notificationCreateDtoReceiver);
+            iNotificationService.createNotification(receiver, notificationCreateDtoReceiver);
         }
 
         return isUpdated;

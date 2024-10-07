@@ -163,11 +163,35 @@ public class NotificationServiceImpl implements INotificationService {
 
         if (newType == NotificationType.NOTIFICATION_APPROVED) {
             notification.setNotificationType(newType);
+
+            User sender = notification.getNotificationSender();
+            User reciever = notification.getNotificationOwner();
+
+            NotificationCreateDto notificationCreateDtoSender = new NotificationCreateDto();
+            notificationCreateDtoSender.setTitle("Approved pet found!");
+            notificationCreateDtoSender
+                    .setMessage("Dear " + sender.getName()
+                            + ", that pet you found has been approved. waiting to receive the reward from "
+                            + reciever.getName() + " , Reward amount: " + notification.getRewardAmountToPay()
+                            + " baht.");
+            notificationCreateDtoSender.setNotificationType(NotificationType.NOTIFICATION_APPROVED);
+            this.createNotification(sender, notificationCreateDtoSender);
+
             isUpdated = true;
         }
 
         if (newType == NotificationType.NOTIFICATION_REJECTED) {
             notification.setNotificationType(newType);
+
+            User sender = notification.getNotificationSender();
+
+            NotificationCreateDto notificationCreateDtoSender = new NotificationCreateDto();
+            notificationCreateDtoSender.setTitle("Rejected pet found!");
+            notificationCreateDtoSender
+                    .setMessage("Dear " + sender.getName() + ", that pet you found has been rejected.");
+            notificationCreateDtoSender.setNotificationType(NotificationType.NOTIFICATION_REJECTED);
+            this.createNotification(sender, notificationCreateDtoSender);
+
             isUpdated = true;
         }
 

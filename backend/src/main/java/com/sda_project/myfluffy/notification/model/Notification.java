@@ -1,7 +1,6 @@
 package com.sda_project.myfluffy.notification.model;
 
 import com.sda_project.myfluffy.common.utils.enums.NotificationType;
-import com.sda_project.myfluffy.pet.model.PetImage;
 import com.sda_project.myfluffy.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
