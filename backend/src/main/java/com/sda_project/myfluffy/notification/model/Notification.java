@@ -16,17 +16,32 @@ public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="message")
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "message")
     private String message;
 
+    @Column(name = "reward_amount_to_pay")
+    private double rewardAmountToPay;
+
     @Enumerated(EnumType.STRING)
-    @Column(name="type")
+    @Column(name = "type")
     private NotificationType notificationType;
 
-    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name="owner_id")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "notification_image_id")
+    private NotificationImage notificationImage;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinColumn(name = "owner_id")
     private User notificationOwner;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinColumn(name = "sender_id")
+    private User notificationSender;
+
 }

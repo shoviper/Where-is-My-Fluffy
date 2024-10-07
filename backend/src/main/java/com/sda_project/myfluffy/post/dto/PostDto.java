@@ -22,6 +22,8 @@ public class PostDto {
 
     private String timestamp;
 
+    private double rewardAmount;
+
     private PostType type;
 
     private UserDto user;

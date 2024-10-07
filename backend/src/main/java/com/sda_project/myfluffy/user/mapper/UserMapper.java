@@ -10,6 +10,8 @@ public class UserMapper {
         userDto.setName(user.getName());
         userDto.setEmail(user.getEmail());
         userDto.setPhone(user.getPhone());
+        userDto.setUserImage(user.getUserImage());
+        userDto.setBalance(user.getBalance());
         return userDto;
     }
 
@@ -18,6 +20,8 @@ public class UserMapper {
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setPhone(userDto.getPhone());
+        user.setUserImage(userDto.getUserImage());
+        user.setBalance(userDto.getBalance());
         return user;
     }
 

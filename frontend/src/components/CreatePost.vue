@@ -1,5 +1,19 @@
 <template>
   <div>
+    <!-- Modal for Success Message -->
+    <div v-if="showSuccessModal" class="fixed z-10 inset-0 overflow-y-auto">
+      <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+          <h2 class="text-lg font-semibold text-gray-800">Success!</h2>
+          <p class="text-sm text-gray-600 mt-2">Post created successfully!</p>
+          <div class="mt-4 flex justify-end">
+            <button @click="goToMainPage" class="px-4 py-2 bg-purple-600 text-white rounded-lg">
+              Go to Main Page
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       class="absolute inset-x-0 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
       aria-hidden="true"
@@ -47,6 +61,7 @@
           v-if="isModalVisible"
           :pettypes="pettypes"
           @close="toggleModal"
+          @refresh="fetchPets"
         />
         </div>
 
@@ -64,19 +79,19 @@
             class="border-2 rounded-md h-full w-full"
           />
         </div>
-
-        <label class="block my-2 text-md text-TEXTCOLOR" for="file_input"
-          >Upload file</label
-        >
-        <input
-          class="block w-full p-4 text-sm text-gray-500 border border-gray-300 rounded-lg cursor-pointer bg-white focus:outline-none"
-          id="file_input"
-          type="file"
-        />
+        <!-- add reward section -->
+        <div class="flex flex-row mt-1.5">
+          <p class="text-TEXTCOLOR text-lg mt-1.5">Reward:</p>
+          <input
+            v-model="formData.rewardAmount"
+            placeholder=" reward"
+            class="border-2 rounded-md ml-2"
+          /></div>
       </div>
       <div class="flex justify-end">
         <button
           class="inline-flex items-center rounded-md bg-gray-50 px-4 py-2 mt-4 mx-4 text-xs font-semibold text-gray-500 ring-1 ring-inset ring-pink-700/10"
+          @click="goto({ path: '/mainpage' })"
         >
           cancel
         </button>
@@ -90,38 +105,60 @@
     </div>
   </div>
 </template>
+
 <script>
 import axios from 'axios';
+import AddPetModal from './AddPetModal.vue';
 
 export default {
+  components: {
+    AddPetModal,
+  },
   data() {
     return {
       formData: {
         title: '',
         content: '',
         petId: null, // Stores the selected petId
+        rewardAmount: null,
       },
       pets: [],
+      showSuccessModal: false,
+      isModalVisible: false,   // Controls the visibility of the modal
+      pettypes: []
     };
   },
   mounted() {
-    
     this.fetchPets();
   },
   methods: {
+    goto(page) {
+      if (page.name && page.name !== this.$route.name) {
+        this.$router.push({ name: page.name });
+        return;
+      }
+      if (page.path && page.path !== this.$route.path) {
+        this.$router.push({ path: page.path });
+        return;
+      }
+    },
     async fetchPets() {
       try {
-        const response = await axios.get('http://localhost:8080/pets/me',
-          {
-            withCredentials: true,
-          }
-        );
-        this.pets = response.data; 
+        const response = await axios.get('http://localhost:8080/pets/me', {
+          withCredentials: true,
+        });
+        this.pets = response.data;
       } catch (error) {
         console.error('Error fetching pets:', error);
       }
     },
     async submitForm() {
+  // Ensure all fields are filled before submitting
+  if (!this.formData.title || !this.formData.content || !this.formData.petId || !this.formData.rewardAmount) {
+    alert('Please fill out all fields before submitting the form.');
+    return;
+  }
+
   try {
     this.formData.type = "MISSING";
     console.log('Submitting formData:', this.formData);
@@ -135,6 +172,17 @@ export default {
     });
 
     console.log('Form submitted successfully:', response.data);
+
+    // Clear the form after successful submission
+    this.formData = {
+      title: '',
+      content: '',
+      petId: null,
+      rewardAmount: 500,  // Reset the reward to default value
+    };
+
+    // Show success modal
+    this.showSuccessModal = true;
   } catch (error) {
     if (error.response) {
       console.error('Error response data:', error.response.data);
@@ -143,6 +191,14 @@ export default {
     }
   }
 },
+
+    goToMainPage() {
+      this.showSuccessModal = false;
+      this.$router.push({ path: '/mainpage' });
+    },
+    toggleModal() {
+      this.isModalVisible = !this.isModalVisible;
+    },
   },
 };
 </script>

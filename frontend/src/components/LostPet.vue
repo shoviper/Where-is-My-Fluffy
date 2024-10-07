@@ -1,5 +1,5 @@
 <template>
-  <div class="w-5/6 h-auto bg-white p-4 rounded-md">
+  <div class="w-5/6  bg-white p-4 rounded-md  h-80 overflow-y-auto scroll-smooth">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-base font-semibold">Lost Pets</h2>
       <a href="/seealllostpet" class="text-base text-blue-500">See all</a>
@@ -11,8 +11,8 @@
         class="flex items-center border-t border-gray-300 py-2"
       >
         <img
-          src="../assets/pets/petpic1.png"
-          alt="Pet 1"
+          :src="pet.image ? `data:image/jpeg;base64,${pet.image}` : '../assets/pets/default-pet-image.png'"
+          alt="Pet Image"
           class="w-11 h-11 object-cover rounded-md"
         />
         <div class="flex flex-col items-start pl-2">
@@ -51,10 +51,8 @@ export default {
         const response = await axios.get("http://localhost:8080/pets", {
           withCredentials: true,
         });
-        // console.log("API Response:", response.data);
-        const data = await response.data.filter((pet) => pet.status === "MISSING");;
-        this.pets = data; 
-        // console.log("Missing Pets:", data); 
+        const data = response.data.filter((pet) => pet.status === "MISSING");
+        this.pets = data;
       } catch (error) {
         console.error("Error fetching pets:", error);
       }

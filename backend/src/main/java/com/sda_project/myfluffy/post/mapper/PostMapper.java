@@ -1,12 +1,7 @@
 package com.sda_project.myfluffy.post.mapper;
 
-
-import com.sda_project.myfluffy.pet.dto.PetDto;
-import com.sda_project.myfluffy.pet.mapper.PetMapper;
 import com.sda_project.myfluffy.post.dto.PostDto;
 import com.sda_project.myfluffy.post.model.Post;
-import com.sda_project.myfluffy.user.dto.UserDto;
-import com.sda_project.myfluffy.user.mapper.UserMapper;
 
 public class PostMapper {
 
@@ -15,6 +10,7 @@ public class PostMapper {
         postDto.setTitle(post.getTitle());
         postDto.setContent(post.getContent());
         postDto.setTimestamp(post.getTimestamp());
+        postDto.setRewardAmount(post.getRewardAmount());
         postDto.setType(post.getType());
         return postDto;
     }
@@ -24,6 +20,7 @@ public class PostMapper {
         post.setContent(postDto.getContent());
         post.setContent(postDto.getContent());
         post.setTimestamp(postDto.getTimestamp());
+        post.setRewardAmount(postDto.getRewardAmount());
         post.setType(postDto.getType());
         return post;
     }

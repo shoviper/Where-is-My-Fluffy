@@ -22,45 +22,43 @@ public class Pet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="age")
+    @Column(name = "age")
     private double age;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="pet_image_path")
-    private String imagePath;
-
     @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Column(name = "status")
     private Status status;
 
-    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name="owner_id")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "pet_image_id")
+    private PetImage petImage;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinColumn(name = "owner_id")
     private User petOwner;
 
-    @OneToOne(cascade=CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="location_id")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "location_id")
     private Location location;
 
-    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name="animal_type")
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinColumn(name = "animal_type")
     private AnimalType animalType;
 
-    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name="founder_id")
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinColumn(name = "founder_id")
     private User founder;
 
-    @OneToMany(mappedBy="pet", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
     private List<Post> posts;
-
-    @Column(name="reward_amount")
-    private double rewardAmount;
 
 }
