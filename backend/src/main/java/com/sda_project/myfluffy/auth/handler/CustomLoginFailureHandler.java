@@ -28,8 +28,8 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        AuthenticationException exception) throws IOException, ServletException  {
+            HttpServletResponse response,
+            AuthenticationException exception) throws IOException, ServletException {
 
         logger.warn("Authentication failed: " + exception.getMessage());
 

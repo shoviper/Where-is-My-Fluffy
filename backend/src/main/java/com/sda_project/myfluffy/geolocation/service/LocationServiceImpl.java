@@ -9,7 +9,6 @@ import com.sda_project.myfluffy.geolocation.repository.LocationRepository;
 import com.sda_project.myfluffy.geolocation.mapper.LocationCreateMapper;
 import com.sda_project.myfluffy.geolocation.mapper.LocationMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +37,7 @@ public class LocationServiceImpl implements ILocationService {
     @Override
     public LocationDto fetchLocationById(int id) {
         Location location = locationRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Location", "id", Integer.toString(id))
-        );
+                () -> new ResourceNotFoundException("Location", "id", Integer.toString(id)));
         LocationDto locationDto = LocationMapper.mapToLocationDto(location, new LocationDto());
 
         String encodedAddress = URLEncoder.encode(location.getAddress(), StandardCharsets.UTF_8);

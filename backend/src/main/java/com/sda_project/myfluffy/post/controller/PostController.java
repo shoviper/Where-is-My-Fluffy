@@ -1,6 +1,5 @@
 package com.sda_project.myfluffy.post.controller;
 
-import com.sda_project.myfluffy.pet.dto.PetDto;
 import com.sda_project.myfluffy.post.dto.PostCreationDto;
 import com.sda_project.myfluffy.post.dto.PostUpdateDto;
 import com.sda_project.myfluffy.common.dto.response.ResponseDto;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/posts", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = "/posts", produces = { MediaType.APPLICATION_JSON_VALUE })
 @AllArgsConstructor
 public class PostController {
 
@@ -27,9 +26,9 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<ResponseDto> createPost(@RequestBody PostCreationDto postCreationDto,
-                                                @AuthenticationPrincipal OAuth2User principal) {
-            iPostService.createPost(postCreationDto, principal);
-            return ResponseEntity
+            @AuthenticationPrincipal OAuth2User principal) {
+        iPostService.createPost(postCreationDto, principal);
+        return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ResponseDto.builder()
                         .statusCode(AppConstants.STATUS_201)
@@ -72,14 +71,11 @@ public class PostController {
                 .body(postDtos);
     }
 
-    @Operation(
-            summary = "Get My Post: OAuth2User"
-    )
+    @Operation(summary = "Get My Post: OAuth2User")
     @GetMapping("/me")
     public ResponseEntity<List<PostDto>> fetchMyPostDetails(@AuthenticationPrincipal OAuth2User principal) {
         List<PostDto> postDtos = iPostService.fetchMyPost(principal);
-        return ResponseEntity.
-                status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(postDtos);
     }
 
@@ -90,9 +86,9 @@ public class PostController {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(ResponseDto.builder()
-                        .statusCode(AppConstants.STATUS_200)
-                        .statusMsg(AppConstants.MESSAGE_200)
-                        .build());
+                            .statusCode(AppConstants.STATUS_200)
+                            .statusMsg(AppConstants.MESSAGE_200)
+                            .build());
         } else {
             return ResponseEntity
                     .status(HttpStatus.EXPECTATION_FAILED)
@@ -100,18 +96,17 @@ public class PostController {
                             .statusCode(AppConstants.STATUS_417)
                             .statusMsg(AppConstants.MESSAGE_417_DELETE)
                             .build());
-    }
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updatePost(@PathVariable int id, @RequestBody PostUpdateDto postUpdateDto) {
-        // postUpdateDto.setId(id);  // Ensure the ID is set from the path
+        // postUpdateDto.setId(id); // Ensure the ID is set from the path
         boolean isUpdated = iPostService.updatePost(id, postUpdateDto);
         if (isUpdated) {
             return new ResponseEntity<>("Post updated successfully!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Failed to update post.", HttpStatus.BAD_REQUEST);
     }
-
 
 }
