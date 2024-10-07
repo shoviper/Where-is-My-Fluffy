@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto">
-      <AddFoundFluffy @close="closeModal" :post-id="selectedPostId"/>
+      <AddFoundFluffy @close="closeModal" :post-id="selectedPostId" :user-id="selectedUserId"/>
     </div>
   </div>
   <div
@@ -17,7 +17,7 @@
         />
         <div class="ml-2">
           <h5 class="text-base font-bold text-TEXTCOLOR">
-            {{ post.user.name }}
+            {{ post.user.name }} {{ post.user.id }}
           </h5>
           <p class="text-sm text-gray-400 text-left">
             {{ formatTimestamp(post.timestamp) }}
@@ -70,11 +70,7 @@ export default {
       posts: [],
       showModal: false,
       selectedPostId: null,
-      modalData: {
-        title: "",
-        message: "",
-        image: null,
-      },
+      selectedUserId: null,
     };
   },
   mounted() {
@@ -142,13 +138,14 @@ export default {
         message: "",
         imageFile: null,
       };
-      
+      this.selectedUserId = post.user.id
       this.selectedPostId = post.id;
       this.showModal = true;
     },
 
     closeModal() {
       this.showModal = false;
+      this.selectedUserId = null
       this.selectedPostId = null
     },
 

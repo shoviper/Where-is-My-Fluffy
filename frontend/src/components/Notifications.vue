@@ -49,6 +49,7 @@ export default {
         console.error("Error fetching animal types:", error);
       }
     },
+    
     goto(page) {
           if (page.name && page.name !== this.$route.name) {
             this.$router.push({ name: page.name });

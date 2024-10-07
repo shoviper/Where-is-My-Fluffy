@@ -1,102 +1,139 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen">
-    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-      <!-- TITLE -->
-      <label class="block text-gray-700 text-sm font-bold mb-2">Title</label>
-      <input
-        v-model="modalData.title"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        type="text"
-        placeholder="Enter title"
-      />
-
-      <!-- MESSAGE -->
-      <label class="block text-gray-700 text-sm font-bold mt-4 mb-2"
-        >Message{{ postId }}   </label
-      >
-      <textarea
-        v-model="modalData.message"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        placeholder="Enter message"
-      ></textarea>
-
-      <!-- IMAGE -->
-      <label class="block text-gray-700 text-sm font-bold mt-4 mb-2"
-        >Upload Image</label
-      >
-      <input
-        @change="onFileChange"
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        type="file"
-        accept="image/*"
-      />
-
-      <div class="mt-4 flex justify-end">
-        <button
-          @click="sendMessage"
-          class="px-4 py-2 bg-pink-500 text-white rounded-lg"
-        >
-          Send
-        </button>
-        <button
-          @click="closeModal"
-          class="px-4 py-2 bg-gray-600 text-white rounded-lg ml-2"
-        >
-          Close
-        </button>
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <!-- TITLE -->
+        <label class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+        <input
+          v-model="modalData.title"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          type="text"
+          placeholder="Enter title"
+        />
+  
+        <!-- MESSAGE -->
+        <label class="block text-gray-700 text-sm font-bold mt-4 mb-2">Message</label>
+        <!-- Only render the user.id when user is not null -->
+        <p v-if="user">User ID: {{ user.id }}</p>
+        <textarea
+          v-model="modalData.message"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          placeholder="Enter message"
+        ></textarea>
+  
+        <!-- IMAGE -->
+        <label class="block text-gray-700 text-sm font-bold mt-4 mb-2">Upload Image</label>
+        <input
+          @change="onFileChange"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          type="file"
+          accept="image/*"
+        />
+  
+        <div class="mt-4 flex justify-end">
+          <button @click="sendMessage" class="px-4 py-2 bg-pink-500 text-white rounded-lg">
+            Send
+          </button>
+          <button @click="closeModal" class="px-4 py-2 bg-gray-600 text-white rounded-lg ml-2">
+            Close
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-</template>
-
-<script>
-import axios from "axios";
-
-export default {
-  name: "AddFoundFluffy",
-  props: {
-    postId: { // Add prop to receive postId from parent
-      type: Number,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      posts: [],
-      modalData: {
-        title: "",
-        message: "",
-        image: null,
+  </template>
+  <script>
+  import axios from "axios";
+  
+  export default {
+    name: "AddFoundFluffy",
+    props: {
+      postId: {
+        type: Number,
+        required: true,
       },
-    };
-  },
-  mounted() {
-  },
-  methods: {
-    async sendMessage() {
-        console.log('Sending message...');
-      console.log('Post ID:', this.postId); // Verify the correct postId is being passed
-      console.log('Data:', this.modalData);  // Verify that the form data is correct
-      try {
-        // Perform the PUT request with the postId
-        const response = await axios.put(`http://localhost:8080/posts/${this.postId}`, {
-          title: this.modalData.title,
-          content: this.modalData.message,
-          type: 'MISSING', // You can dynamically assign the type as needed
-          petId: this.postId, // Assuming you want to use the postId as petId
-        });
-
-        console.log('Response:', response.data);
-        this.closeModal();
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
+      userId: {
+        type: Number,
+        required: true,
+      },
     },
-    closeModal() {
-      this.$emit("close"); // Emit the close event to the parent
+    data() {
+      return {
+        modalData: {
+          title: "",
+          message: "",
+          image: null,
+        },
+        rewardAmountToPay: 0, // Assuming 0 by default
+        user: null, // Initially null, will be set by the GET request
+      };
     },
-
-
-  },
-};
-</script>
+    mounted() {
+      this.fetchUserProfile();
+    },
+    methods: {
+      // Fetch the notification sender ID (user ID) from the /users/me endpoint
+      async fetchUserProfile() {
+        try {
+          const response = await axios.get("http://localhost:8080/users/me", {
+            withCredentials: true,
+          });
+          this.user = response.data; // Set the fetched user data
+          console.log("Fetched user profile:", this.user);
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+        }
+      },
+  
+      async sendMessage() {
+        // Ensure notificationSenderId has been fetched before proceeding
+        if (!this.user || !this.user.id) {
+          console.error("Notification sender ID is not set yet.");
+          return;
+        }
+  
+        console.log("Sending message...");
+        console.log("Post ID:", this.postId);
+        console.log("User ID:", this.userId);
+        console.log("Notification Sender ID:", this.user.id);
+  
+        try {
+          // Perform the PUT request with the postId
+          const response = await axios.put(
+            `http://localhost:8080/posts/${this.postId}`,
+            {
+              title: this.modalData.title,
+              content: this.modalData.message,
+              type: "MISSING",
+              petId: this.postId,
+            }
+          );
+  
+          console.log("Post update response:", response.data);
+  
+          // Perform the POST request to notifications with the userId
+          const notificationResponse = await axios.post(
+            `http://localhost:8080/notifications/${this.userId}/user`,
+            {
+              title: this.modalData.title,
+              message: this.modalData.message,
+              notificationType: "NOTIFICATION_PENDING",
+              notificationSenderId: this.user.id, // Sender ID from GET request
+              rewardAmountToPay: this.rewardAmountToPay,
+            }
+          );
+  
+          console.log("Notification sent:", notificationResponse.data);
+  
+          // Close the modal after successful operations
+          this.closeModal();
+        } catch (error) {
+          console.error("Error sending message or notification:", error);
+        }
+      },
+  
+      closeModal() {
+        this.$emit("close");
+      },
+    },
+  };
+  </script>
+  
