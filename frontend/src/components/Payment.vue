@@ -1,54 +1,69 @@
 <template>
-    <div class="min-h-screen bg-[#FFF3EB] flex flex-col items-center p-6">
-      <h2 class="text-2xl font-semibold mb-4">Payment Details</h2>
+  <div class="min-h-screen bg-[#FFF3EB] flex flex-col items-center p-6">
+    <!-- Title -->
+    <h2 class="text-2xl font-semibold mb-4">Payment Details</h2>
+
+    <!-- Payment details box -->
+    <div class="w-full max-w-md bg-white shadow-md rounded-lg p-6">
+      <!-- Display Notification ID -->
+      <h3 class="text-lg font-semibold">Notification ID: {{ notificationId }}</h3>
+
+      <!-- Reward Amount -->
+      <p class="text-gray-600 mb-4">Reward Amount: ${{ rewardAmount }}</p>
       
-      <div class="w-full max-w-md bg-white shadow-md rounded-lg p-6">
-        <h3 class="text-lg font-semibold">Notification ID: {{ notificationId }}</h3>
-        <p class="text-gray-600 mb-4">Reward Amount: ${{ rewardAmount }}</p>
-        <!-- Additional payment details can go here -->
-  
-        <button
-          class="py-3 px-6 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
-          @click="confirmPayment"
-        >
-          Confirm Payment
-        </button>
+      <!-- Owner's Name and Pet Information -->
+      <div v-if="notificationOwner">
+        <p class="text-gray-600 mb-4">Pet Owner: {{ notificationOwner.name }}</p>
       </div>
+
+      <!-- Confirm Payment Button -->
+      <button
+        class="py-3 px-6 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+        @click="confirmPayment"
+      >
+        Confirm Payment
+      </button>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    name: 'payment',
-    data() {
-      return {
-        notificationId: this.$route.params.id, // Get notification ID from route parameters
-        rewardAmount: 0, // Default reward amount
-      };
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'payment',
+  data() {
+    return {
+      notificationId: this.$route.params.id, // Get notification ID from route parameters
+      rewardAmount: 0, // Default reward amount
+      notificationOwner: null, // Store pet owner information
+    };
+  },
+  mounted() {
+    this.fetchPaymentDetails();
+  },
+  methods: {
+    async fetchPaymentDetails() {
+      try {
+        const response = await axios.get(`http://localhost:8080/notifications/${this.notificationId}`, {
+          withCredentials: true,
+        });
+
+        // Assuming the reward amount is part of the API response
+        this.rewardAmount = response.data.rewardAmount; // Update with actual reward amount from API
+
+        // Assuming the notification contains owner details
+        this.notificationOwner = response.data.notificationOwner; // Pet owner details
+
+      } catch (error) {
+        console.error('Error fetching payment details:', error);
+      }
     },
-    mounted() {
-      this.fetchPaymentDetails();
+    confirmPayment() {
+      // Logic for confirming payment goes here
+      console.log('Payment confirmed for Notification ID:', this.notificationId);
+      // Redirect or perform any other actions as needed after payment confirmation
     },
-    methods: {
-      async fetchPaymentDetails() {
-        try {
-          const response = await axios.get(`http://localhost:8080/notifications/${this.notificationId}`, {
-            withCredentials: true,
-          });
-          // Assuming the reward amount is in the response
-          this.rewardAmount = response.data.rewardAmount; // Adjust based on your API response
-        } catch (error) {
-          console.error('Error fetching payment details:', error);
-        }
-      },
-      confirmPayment() {
-        // Logic for confirming payment goes here
-        console.log('Payment confirmed for Notification ID:', this.notificationId);
-        // Redirect or perform any other actions as needed
-      },
-    },
-  };
-  </script>
-  
+  },
+};
+</script>
