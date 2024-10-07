@@ -51,7 +51,7 @@ const routes = [
 		component: Seeeachnotification,
 	},
 	{
-		path: '/payment',
+		path: '/payment/:id',
 		name: 'Payment',
 		component: Payment,
 	}

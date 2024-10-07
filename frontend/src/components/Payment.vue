@@ -9,7 +9,12 @@
       <h3 class="text-lg font-semibold">Notification ID: {{ notificationId }}</h3>
 
       <!-- Reward Amount -->
-      <p class="text-gray-600 mb-4">Reward Amount: ${{ rewardAmount }}</p>
+      <p v-if="notification.reward_amount_to_pay" class="text-gray-600 mb-4">
+        Reward Amount: ${{ notification.reward_amount_to_pay }}
+      </p>
+      <p v-else class="text-gray-600 mb-4">
+        Reward Amount: Not Available
+      </p>
       
       <!-- Owner's Name and Pet Information -->
       <div v-if="notificationOwner">
@@ -34,24 +39,29 @@ export default {
   name: 'payment',
   data() {
     return {
+      notificationId: this.$route.params.id, // Get notification ID from route
       notification: {},
+      notificationOwner: {},
+      reward: null,
     };
   },
   mounted() {
     this.fetchPaymentDetails();
+    console.log(notificationId);
+    console.log(notification);
+    console.log(notificationOwner);
   },
   methods: {
     async fetchPaymentDetails() {
       try {
-        const response = await axios.get(`http://localhost:8080/notifications/${id}`, {
+        const response = await axios.get(`http://localhost:8080/notifications/${this.notificationId}`, {
           withCredentials: true,
         });
 
         const data = response.data;
-        this.notification = {
-          reward: `Your pet has been found!`,
-        };
-
+        console.log(data);
+        this.notification = data; // Store the notification data
+        this.notificationOwner = data.notificationOwner; // Store the notification owner details
       } catch (error) {
         console.error('Error fetching payment details:', error);
       }
