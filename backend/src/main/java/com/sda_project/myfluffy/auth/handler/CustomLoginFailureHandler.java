@@ -6,9 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,8 +26,8 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        AuthenticationException exception) throws IOException, ServletException  {
+            HttpServletResponse response,
+            AuthenticationException exception) throws IOException, ServletException {
 
         logger.warn("Authentication failed: " + exception.getMessage());
 

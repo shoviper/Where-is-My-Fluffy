@@ -1,7 +1,5 @@
 package com.sda_project.myfluffy.notification.model;
 
-import com.sda_project.myfluffy.pet.model.Pet;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

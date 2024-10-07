@@ -15,7 +15,6 @@ import com.sda_project.myfluffy.notification.dto.NotificationCreateDto;
 import com.sda_project.myfluffy.notification.service.INotificationService;
 import com.sda_project.myfluffy.payment.dto.PaymentDto;
 import com.sda_project.myfluffy.user.mapper.UserMapper;
-import com.sda_project.myfluffy.pet.model.PetImage;
 import com.sda_project.myfluffy.pet.repository.PetRepository;
 import com.sda_project.myfluffy.user.model.User;
 import com.sda_project.myfluffy.user.repository.UserRepository;

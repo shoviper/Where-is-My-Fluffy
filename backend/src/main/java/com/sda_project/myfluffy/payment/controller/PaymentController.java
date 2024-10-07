@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sda_project.myfluffy.common.dto.response.ResponseDto;
 import com.sda_project.myfluffy.common.utils.constants.AppConstants;
-import com.sda_project.myfluffy.notification.service.INotificationService;
 import com.sda_project.myfluffy.payment.dto.PaymentDto;
 import com.sda_project.myfluffy.user.service.IUserService;
 
