@@ -101,10 +101,16 @@ public class NotificationServiceImpl implements INotificationService {
     }
 
     private NotificationDto mapNotificationToDto(Notification notification) {
+        NotificationDto notificationDto = NotificationMapper.mapToNotificationDto(notification, new NotificationDto());
+
         UserDto ownerDto = UserMapper.mapToUserDto(notification.getNotificationOwner(), new UserDto());
 
-        NotificationDto notificationDto = NotificationMapper.mapToNotificationDto(notification, new NotificationDto());
         notificationDto.setNotificationOwner(ownerDto);
+
+        if (notification.getNotificationSender() != null) {
+            UserDto senderDto = UserMapper.mapToUserDto(notification.getNotificationSender(), new UserDto());
+            notificationDto.setNotificationSender(senderDto);
+        }
 
         if (notification.getNotificationImage() != null) {
             Optional<NotificationImage> notificationImage = notificationImageRepository

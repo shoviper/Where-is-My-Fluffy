@@ -10,6 +10,7 @@ public class NotificationMapper {
         notificationDto.setTitle(notification.getTitle());
         notificationDto.setMessage(notification.getMessage());
         notificationDto.setNotificationType(notification.getNotificationType());
+        notificationDto.setReward_amount_to_pay(notification.getRewardAmountToPay());
         return notificationDto;
     }
 
@@ -18,6 +19,7 @@ public class NotificationMapper {
         notificationDto.setTitle(notification.getTitle());
         notification.setMessage(notificationDto.getMessage());
         notification.setNotificationType(notificationDto.getNotificationType());
+        notification.setRewardAmountToPay(notificationDto.getReward_amount_to_pay());
         return notification;
     }
 }
