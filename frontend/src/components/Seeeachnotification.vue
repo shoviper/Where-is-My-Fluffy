@@ -33,14 +33,16 @@
                 {{ notification.message }}
             </p>
             <div class="mt-4">
-                <a href="#"
-                    class="py-3 px-6 ml-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
-                    Accept
-                </a>
-                <a href="#"
-                    class="py-3 px-6 ml-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
-                    Reject
-                </a>
+              <a href="#"
+                @click="notificationUpdate('NOTIFICATION_APPROVED')"
+                class="py-3 px-6 ml-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">
+                Accept
+              </a>
+              <a href="#"
+                @click="notificationUpdate('NOTIFICATION_REJECTED')"
+                class="py-3 px-6 ml-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700">
+                Reject
+              </a>
             </div>
         </div>
       </div>
@@ -135,6 +137,34 @@
             return;
           }
         },
+
+        async notificationUpdate(notificationType) {
+      try {
+        const notificationId = this.$route.params.id; 
+        if (!notificationId) {
+          console.error("Notification ID is undefined");
+          return;
+        }
+
+        // API call to update the notification status
+        const response = await axios.put(
+          `http://localhost:8080/notifications/${notificationId}/update-notification-status/${notificationType}`,
+          {},
+          {
+            withCredentials: true,
+          }
+        );
+
+        console.log(`Notification updated to: ${notificationType}`, response.data);
+
+        if (notificationType === 'NOTIFICATION_REJECTED') {
+          this.$router.push('/mainpage'); // Redirect to the main page if rejected
+        }
+
+      } catch (error) {
+        console.error('Error updating notification status:', error);
+      }
+    },
     },
   };
   </script>

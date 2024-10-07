@@ -21,7 +21,7 @@
           v-model="location"
           id="location"
           type="text"
-          :placeholder="user.location || 'Enter your location'"
+          :placeholder="user.userLocation?.address || 'Enter your location'"
           class="border-2 border-gray-300 p-2 mt-2 rounded-md"
         />
 
@@ -122,39 +122,54 @@ export default {
         this.user = data;
 
         // Check if location and phone are already set
-        this.location = this.user.location || "";
+        this.location = this.user.userLocation?.address || "";
         this.phone = this.user.phone || "";
       } catch (error) {
         console.error("Error fetching user profile:", error);
       }
     },
-    saveDetails() {
+    async saveDetails() {
       // Ensure both fields are filled before saving
       if (!this.location || !this.phone) {
         alert("Both location and phone number are required.");
         return;
       }
 
-      // Update location and phone number in the backend
-      Promise.all([
-        axios.put(
-          "http://localhost:8080/users/update-location",
-          { location: this.location },
-          { withCredentials: true }
-        ),
-        axios.put(
-          "http://localhost:8080/users/update-phone-number",
-          { phone: this.phone },
-          { withCredentials: true }
-        ),
-      ])
-        .then(() => {
-          alert("Details saved successfully!");
-        })
-        .catch((error) => {
-          alert("Error saving details. Please try again.");
-          console.error("Error saving details:", error);
-        });
+      // Update location and phone number
+      try {
+      // Update location in the backend
+      await axios.put(
+        "http://localhost:8080/users/update-location",
+        {
+          location: this.location,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Update phone number in the backend
+      await axios.put(
+        "http://localhost:8080/users/update-phone-number",
+        {
+          phone: this.phone,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      alert("Details saved successfully!");
+
+      } catch (error) {
+        console.error("Error saving details:", error);
+        alert("Failed to save details. Please try again.");
+      }
     },
     gotoMainPage() {
       // Check if location is filled
