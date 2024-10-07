@@ -16,6 +16,14 @@
             {{ notification.title }}
           </h2>
         </div>
+
+        <div v-if="notification.image" class="mb-4">
+        <img
+          :src="notification.image"
+          alt="Pet Image"
+          class="w-full h-64 object-cover rounded-lg"
+        />
+      </div>
   
         <!-- Message section -->
         <div class="mb-4">
@@ -75,10 +83,35 @@
             // owner: `${data.notificationOwner.name} (${data.notificationOwner.email})`,
             timestamp: data.timestamp || null,
           };
+
+          // Fetch the pet image if available
+          const petImageResponse = await this.fetchPetImage(id);
+          if (petImageResponse && petImageResponse.image) {
+            this.notification.image = `data:image/jpeg;base64,${petImageResponse.image}`;
+          }
+
+
         } catch (error) {
           console.error('Error fetching notification details:', error);
         }
       },
+
+      async fetchPetImage(id) {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/notifications/${id}`,
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
+        return response.data; // Assuming this contains the Base64 image
+      } catch (error) {
+        console.error("Error fetching pet image:", error);
+      }
+    },
+    
       formatDate(dateString) {
         if (!dateString) return 'No date available';  
         const date = new Date(dateString);
