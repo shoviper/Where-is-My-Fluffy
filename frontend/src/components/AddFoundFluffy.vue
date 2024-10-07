@@ -24,6 +24,7 @@
         <label class="block text-gray-700 text-sm font-bold mt-4 mb-2">Upload Image</label>
         <input
           @change="onFileChange"
+          ref="file_input"
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           type="file"
           accept="image/*"
@@ -82,11 +83,20 @@
           console.error("Error fetching user profile:", error);
         }
       },
+
+      onFileChange(event) {
+        this.modalData.image = event.target.files[0]; // Store the selected file in modalData
+      },
   
       async sendMessage() {
         // Ensure notificationSenderId has been fetched before proceeding
         if (!this.user || !this.user.id) {
           console.error("Notification sender ID is not set yet.");
+          return;
+        }
+
+        if (!this.modalData.image) {
+          alert("Please upload an image before sending the message.");
           return;
         }
   
@@ -122,6 +132,26 @@
           );
   
           console.log("Notification sent:", notificationResponse.data);
+
+          const notificationId = notificationResponse.data.id;
+        console.log("Notification created successfully:", notificationResponse.data);
+
+        // Step 2: Upload the image with the notificationId
+        const formData = new FormData();
+        formData.append("file", this.modalData.image);
+
+        await axios.put(
+          `http://localhost:8080/notifications/${notificationId}/uploadImage`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+          }
+        );
+
+        console.log("Image uploaded successfully");
   
           // Close the modal after successful operations
           this.closeModal();
