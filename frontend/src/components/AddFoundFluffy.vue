@@ -97,18 +97,18 @@
   
         try {
           // Perform the PUT request with the postId
-          const response = await axios.put(
-            `http://localhost:8080/posts/${this.postId}`,
-            {
-              title: this.modalData.title,
-              content: this.modalData.message,
-              type: "MISSING",
-              petId: this.postId,
-            }
-          );
+          // const response = await axios.put(
+          //   `http://localhost:8080/posts/${this.postId}`,
+          //   {
+          //     title: this.modalData.title,
+          //     content: this.modalData.message,
+          //     type: "MISSING",
+          //     petId: this.postId,
+          //   }
+          // );
   
-          console.log("Post update response:", response.data);
-  
+          // console.log("Post update response:", response.data);
+
           // Perform the POST request to notifications with the userId
           const notificationResponse = await axios.post(
             `http://localhost:8080/notifications/${this.userId}/user`,
