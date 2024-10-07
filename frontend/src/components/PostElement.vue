@@ -1,7 +1,45 @@
 <template>
   <div>
     <div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto">
-      <AddFoundFluffy @close="closeModal" :post-id="selectedPostId" :user-id="selectedUserId"/>
+      <AddFoundFluffy
+        @close="closeModal"
+        :post-id="selectedPostId"
+        :user-id="selectedUserId"
+      />
+    </div>
+
+    <div
+      v-if="showMap !== null"
+      class="fixed z-50 inset-0 flex items-center justify-center overflow-y-auto"
+    >
+      <div
+        class="fixed inset-0"
+        aria-hidden="true"
+        @click="closeMapModal"
+      ></div>
+      <div
+        class="relative bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-3xl w-full"
+        @click.stop
+      >
+        <iframe
+          v-if="posts[showMap].pet.location.addressUrl"
+          :src="
+            formatGoogleMapsEmbedUrl(posts[showMap].pet.location.addressUrl)
+          "
+          width="100%"
+          height="450"
+          style="border: 0; display: block; margin: 0 auto"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+        <button
+          @click="closeMapModal"
+          class="mt-4 bg-PINK text-white p-2 rounded mx-auto block"
+        >
+          Close Map
+        </button>
+      </div>
     </div>
   </div>
   <div
@@ -17,22 +55,30 @@
         />
         <div class="ml-2">
           <h5 class="text-base font-bold text-TEXTCOLOR">
-            {{ post.user.name }} {{ post.user.id }}
+            {{ post.user.name }}
           </h5>
           <p class="text-sm text-gray-400 text-left">
             {{ formatTimestamp(post.timestamp) }}
           </p>
         </div>
       </div>
-      <button
-        class="inline-flex items-center justify-center rounded-md bg-PINK hover:bg-PURPLE px-2 py-1 my-2 text-sm font-medium text-white ring-1 ring-inset ring-pink-700/10"
-        @click="openModal(post)"
-      >
-        Found Fluffy !
-      </button>
+      <div class="flex flex-row">
+        <div
+          class="bg-PINK text-white px-2 py-1 my-2 rounded-full mr-2 cursor-pointer"
+          @click="toggleMap(index)"
+        >
+          <Icon icon="material-symbols:map" class="text-white"></Icon>
+        </div>
+        <button
+          class="inline-flex items-center justify-center rounded-md bg-PINK hover:bg-PURPLE px-2 py-1 my-2 text-sm font-medium text-white ring-1 ring-inset ring-pink-700/10"
+          @click="openModal(post)"
+        >
+          Found Fluffy !
+        </button>
+      </div>
     </div>
     <p class="font-normal text-left mt-4 text-TEXTCOLOR">
-      {{ post.content }}
+      {{ post.content }}{{ post.pet.location.addressUrl }}
     </p>
     <div class="w-full h-64 mt-4">
       <img
@@ -63,7 +109,7 @@ export default {
   name: "PostElement",
   components: {
     Icon,
-    AddFoundFluffy
+    AddFoundFluffy,
   },
   data() {
     return {
@@ -71,6 +117,7 @@ export default {
       showModal: false,
       selectedPostId: null,
       selectedUserId: null,
+      showMap: null,
     };
   },
   mounted() {
@@ -132,26 +179,44 @@ export default {
         hour12: true, // Use 12-hour format
       });
     },
+    formatGoogleMapsEmbedUrl(addressUrl) {
+      // Extracting the apiKey and encodedAddress from the given URL
+      const url = new URL(addressUrl);
+
+      // Extract the query parameters
+      const apiKey = url.searchParams.get("key");
+      const encodedAddress = url.searchParams.get("q");
+
+      // Now you can format a new URL or return it as needed
+      return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodedAddress}`;
+    },
     openModal(post) {
       this.modalData = {
         title: "",
         message: "",
         imageFile: null,
       };
-      this.selectedUserId = post.user.id
+      this.selectedUserId = post.user.id;
       this.selectedPostId = post.id;
       this.showModal = true;
     },
 
     closeModal() {
       this.showModal = false;
-      this.selectedUserId = null
-      this.selectedPostId = null
+      this.selectedUserId = null;
+      this.selectedPostId = null;
     },
 
     sendMessage() {
       alert("Message sent with title: " + this.modalData.title);
       this.closeModal();
+    },
+    toggleMap(index) {
+      this.showMap = index; // Show the map modal for the clicked post
+    },
+
+    closeMapModal() {
+      this.showMap = null; // Close the map modal
     },
   },
 };
