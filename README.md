@@ -1,3 +1,12 @@
+# Where's My Fluffy
+a full-stack web platform for pet location tracking using Java Spring Boot, Vue.js, and Tailwind CSS.
+
+1. Suriya Chaobay
+2. Arayan Tiwari
+3. Inthat Sappipat
+4. Ravinan Woraratyanon
+5. Thatchapon Chatthanes
+
 # run backend
 
 brew install maven
